@@ -1,4 +1,4 @@
 package internals.roundManagement;
 
-public class Bet {
+public class Bet extends Round {
 }
