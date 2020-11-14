@@ -1,6 +1,10 @@
 package internals.question;
 
+import internals.roundManagement.Round;
+
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.Stack;
 
 public class QuestionCategory {
@@ -9,8 +13,11 @@ public class QuestionCategory {
     private Stack<Question> questionStack;
     private boolean automaticShuffle;
 
-    public QuestionCategory() {
-
+    public QuestionCategory(String categoryName, boolean automaticShuffle) {
+        this.categoryName = categoryName;
+        this.questionStore = new HashMap<>();
+        this.automaticShuffle = automaticShuffle;
+        this.reshuffle();
     }
 
     public String getCategoryName() {
@@ -26,14 +33,21 @@ public class QuestionCategory {
     }
 
     public Question getRandomQuestion(){
-
+        return questionStack.pop();
     }
 
     public int getRemainingQuestion(){
-
+        return questionStack.size();
     }
 
     public QuestionCategory reshuffle(){
+        questionStack=new Stack<>();
+        for(Map.Entry<String,Question> q: questionStore.entrySet()){
+            questionStack.push(q.getValue());
+        }
+
+        java.util.Collections.shuffle(questionStack);
+        return this;
 
     }
 

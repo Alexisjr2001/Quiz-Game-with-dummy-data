@@ -22,7 +22,7 @@ public class PlayerController {
     }
 
     public boolean removePlayer(String playerName){
-        return playerStore.remove(playerName) == null;
+        return playerStore.remove(playerName) != null;
     }
 
     public boolean changePlayerName(String playerName, String newName){
@@ -31,9 +31,10 @@ public class PlayerController {
         if (p == null){
             return false;
         }
-
-        p.setName(newName);
-        return true;
+        else{
+            p.setName(newName);
+            return true;
+        }
     }
 
     /**
@@ -59,7 +60,8 @@ public class PlayerController {
 
         if (p == null){
             return 0;
-        } else {
+        }
+        else {
             return p.getScore();
         }
     }
@@ -70,9 +72,12 @@ public class PlayerController {
         if (p == null){
             return false;
         }
+        else{
+            p.scoreGain(gain);
+            return true;
+        }
 
-        p.scoreGain(gain);
-        return true;
+
     }
 
     public int getPlayerHighscore(String playerName){

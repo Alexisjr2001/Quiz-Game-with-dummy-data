@@ -30,6 +30,6 @@ public class Question {
     }
 
     public boolean isRight(String answerToCheck){
-        return question.equals(answerToCheck);
+        return rightAnswer.equals(answerToCheck);
     }
 }

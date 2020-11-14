@@ -19,9 +19,9 @@ public class RoundController {
     public RoundController reshuffle(){
         roundTypeNamesStack = new Stack<>();
 
-        for (Round r : roundTypes){
-            if (minPlayers<=r.getMinPlayers() && r.getMaxPlayers()<=maxPlayers) {
-                roundTypeNamesStack.push(r.getRoundName());
+        for (Round aRound : roundTypes){
+            if (minPlayers<=aRound.getMinPlayers() && aRound.getMaxPlayers()<=maxPlayers) {
+                roundTypeNamesStack.push(aRound.getRoundName());
             }
         }
 
