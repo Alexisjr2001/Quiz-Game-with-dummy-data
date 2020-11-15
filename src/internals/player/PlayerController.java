@@ -39,7 +39,7 @@ public class PlayerController {
 
     /**
      *
-     * @return Δισδιάστος πίνακας που αναπαριστά τον πίνακα με τα σκόρ.
+     * @return Δισδιάστος πίνακας που αναπαριστά τον πίνακα με τα σκόρ όλων των παιχτών(ενεργών και μη).
      * Έχει γραμμές πλήθους ίσο με το πλήθος των παιχτών
      * και 2 στήλες: η πρώτη για το όνομα το παίχτη και η δεύτερη για το σκόρ του.
      */
@@ -50,6 +50,7 @@ public class PlayerController {
         for (Player p : playerStore.values()){
             temp[i][0] = p.getName();
             temp[i][1] = Integer.toString(p.getScore());
+            i++;
         }
 
         return temp;

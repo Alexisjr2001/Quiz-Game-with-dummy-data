@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public class QuestionCategory {
     private String categoryName;
-    private HashMap<String, Question> questionStore;
+    private HashMap<String, Question> questionStore;    //String: Εκφώνηση της ερώτησης
     private Stack<Question> questionStack;
     private boolean automaticShuffle;
 
