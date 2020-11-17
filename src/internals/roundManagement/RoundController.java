@@ -6,13 +6,11 @@ public class RoundController {
     private Stack<String> roundTypeNamesStack;
     private static final Round[] roundTypes = {new RightAnswer(), new Bet()};
     private boolean automaticShuffle;
-    private int minPlayers;
-    private int maxPlayers;
+    private int currentRoundPlayers;
 
-    public RoundController(boolean automaticShuffle, int minPlayers, int maxPlayers) {
+    public RoundController(boolean automaticShuffle, int currentRoundPlayers) {
         this.automaticShuffle = automaticShuffle;
-        this.minPlayers = minPlayers;
-        this.maxPlayers = maxPlayers;
+        this.currentRoundPlayers = currentRoundPlayers;
         reshuffle();
     }
 
@@ -20,7 +18,7 @@ public class RoundController {
         roundTypeNamesStack = new Stack<>();
 
         for (Round aRound : roundTypes){
-            if (minPlayers<=aRound.getMinPlayers() && aRound.getMaxPlayers()<=maxPlayers) {
+            if (aRound.allowsPlayerNumber(currentRoundPlayers)) {
                 roundTypeNamesStack.push(aRound.getRoundName());
             }
         }

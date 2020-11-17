@@ -44,7 +44,14 @@ public class QuestionLibrary {
     }
 
     public QuestionCategory[] getAllQuestionCategories(){
-        return categoryStore.values().toArray(new QuestionCategory[0]);
+        QuestionCategory[] temp = new QuestionCategory[categoryStore.size()];
+
+        int i = 0; // Μετρητής στοιχείων του πίνακα αντιγράφων.
+        for (QuestionCategory qc : categoryStore.values()){
+            temp[i++] = qc;
+        }
+
+        return temp;
     }
 
 }
