@@ -3,31 +3,36 @@ package internals.roundManagement;
 import internals.question.Question;
 import internals.question.QuestionLibrary;
 
+import java.util.Random;
+
 /**
  * Η {@code Round} μοντελοποιεί το χαρακτηριστικό των γύρων της εφαρμογής.
  * Αυτή η κλάση ορίζει ένα κοινό πρότυπο (πεδία και μεθόδους) που πρέπει να ακολουθήσουν οι κλάσεις που την κληρονομούν
  * και συνεπώς δεν υπάρχει πρακτική χρησιμότητα στην δημιουργία αντικειμένων της κλάσης αυτής.
  *
- * @version 2020.11.14
+ * @version 2020.11.27
  */
-public class Round {
-    protected QuestionLibrary questionStore; // Αντίγραφο (αναφορά σε αντικείμενο της) κλάσης QuestionLibrary, απο όπου μπορεί να λάβει άμεσα τυχαίες (ή μη τυχαίες) κατηγορίες και έμμεσα τυχαίες ερωτήσεις.
+public abstract class Round {
+    private QuestionLibrary questionStore; // Αντίγραφο (αναφορά σε αντικείμενο της) κλάσης QuestionLibrary, απο όπου μπορεί να λάβει άμεσα τυχαίες (ή μη τυχαίες) κατηγορίες και έμμεσα τυχαίες ερωτήσεις.
 
-    protected Question roundQuestion; // Αποθηκεύει αναφορά στην ερώτηση σε αυτή την φάση του γύρου
+    private Question roundQuestion; // Αποθηκεύει αναφορά στην ερώτηση σε αυτή την φάση του γύρου
 
-    protected int requiredNumberOfPlayers; // Αποθηκεύει τον ελάχιστο αριθμό των παιχτών που απαιτούνται για τον συγκεκριμένο γύρο
+    private int minPlayers; // Αποθηκεύει τον ελάχιστο αριθμό των παιχτών που απαιτούνται για τον συγκεκριμένο γύρο
+    private int maxPlayers; // Αποθηκεύει τον μέγιστο αριθμό των παιχτών που επιτρέπονται για τον συγκεκριμένο γύρο
 
-    protected int questionNumber; // Αποθηκεύει τον αριθμό των ερωτήσεων που πρέπει να απαντηθούν σε αυτόν τον γύρο
+    private int questionNumber; // Αποθηκεύει τον αριθμό των ερωτήσεων που πρέπει να απαντηθούν σε αυτόν τον γύρο
 
     /**
      * Ο τυπικός κατασκευαστής της κλάσης Round
      * @param questionStore Μία αναφορά σε ένα αντικείμενο της κλάσης QuestionLibrary
-     * @param requiredNumberOfPlayers Ο ελάχιστος απαιτούμενος αριθμός παιχτών για τον γύρο
+     * @param minPlayers  Ο ελάχιστος απαιτούμενος αριθμός παιχτών για τον γύρο
+     * @param maxPlayers Ο μέγιστος επιτρεπόμενος αριθμός παιχτών για τον γύρο
      * @param questionNumber Ο αριθμός των ερωτήσεων που πρέπει να απαντηθούν σε αυτόν τον γύρο
      */
-    public Round(QuestionLibrary questionStore, int requiredNumberOfPlayers, int questionNumber) {
+    public Round(QuestionLibrary questionStore, int minPlayers, int maxPlayers, int questionNumber) {
         this.questionStore = questionStore;
-        this.requiredNumberOfPlayers = requiredNumberOfPlayers;
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
         this.questionNumber = questionNumber;
     }
 
@@ -35,25 +40,19 @@ public class Round {
      * Επιστρέφει το όνομα του τύπου γύρου. Πρέπει να γίνει override απο κάθε κλάση που κληρονομεί την τρέχουσα.
      * @return όνομα του τύπου του γύρου.
      */
-    public String getRoundName() {
-        return "Όνομα γύρου"; // Επιστρέφει placeholder τιμή
-    }
+    public abstract String getRoundName();
 
     /**
      * Επιστρέφει την περιγραφή του τύπου γύρου. Πρέπει να γίνει override απο κάθε κλάση που κληρονομεί την τρέχουσα.
      * @return περιγραφή του τύπου του γύρου.
      */
-    public String getRoundDescription() {
-        return "Περιγραφή τύπου γύρου"; // Επιστρέφει placeholder τιμή
-    }
+    public abstract String getRoundDescription();
 
     /**
      * Σηματοδοτεί την έναρξη του γύρου και εκτελεί τις απαραίτητες προετοιμασίες (αν αυτές χρειάζονται) για την έναρξη του γύρου.
      * Πρέπει να εκτελείται πάντα πριν την χρήση της κλάσης (ή αυτών που την κληρονομούν).
      */
-    public void beginRound(){
-
-    }
+    public abstract void beginRound();
 
     /**
      * @return κατάσταση εκτέλεσης του γύρου. true, αν έχει τελειώσει (έχει χρησιμοποιηθεί ο αριθμός των ερωτήσεων που δόθηκε ως όρισμα στην κατασκευή)
@@ -92,11 +91,22 @@ public class Round {
     }
 
     /**
-     * Επιστρέφει έναν πίνακα με τα αντίγραφα των πιθανών απαντήσεων για την ερώτηση.
+     * Επιστρέφει έναν πίνακα με τα αντίγραφα (σε τυχαία σειρά) των πιθανών απαντήσεων για την ερώτηση.
      * @return πίνακα των απαντήσεων για την ερώτηση.
      */
     public String[] getQuestionAnswers(){
-        return roundQuestion.getAnswers();
+        String[] tempArray = roundQuestion.getAnswers();
+        Random randomGenerator = new Random();
+
+
+        for (int i = 0; i < tempArray.length; i++){ // Τυχαιοποιεί τις θέσεις των στοιχείων του πίνακα
+            int tempPosition = randomGenerator.nextInt(tempArray.length);
+            String tempElement = tempArray[tempPosition];
+            tempArray[tempPosition] = tempArray[i];
+            tempArray[i] = tempElement;
+        }
+
+        return tempArray;
     }
 
     /**
@@ -105,9 +115,7 @@ public class Round {
      * @param answer Η απάντηση που έδωσε ο παίχτης.
      * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση του ορίσματος.
      */
-    public int answerQuestion(String answer) {
-        return 0; // Επιστρέφει placeholder τιμή
-    }
+    public abstract int answerQuestion(String answer);
 
     /**
      * Ελέγχει αν ο γύρος μπορεί να υποστηρίξει τον αριθμό παιχτών που δίνεται ως όρισμα.
@@ -115,8 +123,8 @@ public class Round {
      * @param playerNumber αριθμός παιχτών που ελέγχεται για συμβατότητα με τον γύρο.
      * @return true αν ο γύρος μπορεί να υποστηρίξει τον αριθμό παιχτών που δίνεται, διαφορετικά false.
      */
-    public boolean allowsPlayerNumber(int playerNumber){
-        return playerNumber >= requiredNumberOfPlayers;
+    public boolean playerNumberIsCompatible(int playerNumber){
+        return playerNumber>=minPlayers && playerNumber<=maxPlayers;
     }
 
 }

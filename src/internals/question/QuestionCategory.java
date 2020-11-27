@@ -23,12 +23,17 @@ public class QuestionCategory {
     /**
      * Τυπικός κατασκευαστής της κλάσης.
      * @param categoryName Όνομα κατηγορίας
-     * @param automaticShuffle κατάσταση αυτόματου "ανακατέματος". true για ενεργοποίηση, false διαφορετικά.
+     * @param inputQuestions Πίνακας με τις ερωτήσεις που πρέπει να αποθηκευτούν στην κατηγορία
+     * @param automaticShuffle κατάσταση αυτόματου "ανακατέματος". true για ενεργοποίηση, false διαφορετικά
      */
-    public QuestionCategory(String categoryName, boolean automaticShuffle) {
+    public QuestionCategory(String categoryName, Question[] inputQuestions, boolean automaticShuffle) {
         this.categoryName = categoryName;
+
         this.questionStore = new HashMap<>();
-        // fill hashmap ...
+        for (Question q : inputQuestions){
+            questionStore.put(q.getQuestion(), q);
+        }
+
         this.automaticShuffle = automaticShuffle;
         reshuffle();
     }
@@ -68,8 +73,8 @@ public class QuestionCategory {
 
     /**
      * Επιστρέφει τυχαία ερώτηση της κατηγορίας.
-     * Αν έχουν ήδη επιστραφεί όλες οι ερωτήσεις τότε άν έχει επιτραπεί το αυτόματο "ανακάτεμα" οι ερωτήσεις ξανά-ανακατεύονται οι ίδιες (ξαναγίνονται διαθέσιμες)
-     * και επιστρέφεται μία τυχαία απο αυτές.
+     * Αν έχουν ήδη επιστραφεί όλες οι ερωτήσεις τότε άν έχει επιτραπεί το αυτόματο "ανακάτεμα" οι ερωτήσεις ξανά-ανακατεύονται
+     * (οι ερωτήσεις που έχουν ηδη εμφανιστεί ξαναγίνονται διαθέσιμες και τυχαιοποιείται η σειρά τους στην δομή) και επιστρέφεται μία τυχαία απο αυτές.
      *
      * Διαφορετικά, στην περίπτωση που έχουν ήδη επιστραφεί όλες οι ερωτήσεις και δεν έχει επιτραπεί το αυτόματο "ανακάτεμα", επιστρέφεται null.
      * @return μία τυχαία ερώτηση
@@ -112,7 +117,5 @@ public class QuestionCategory {
         return this;
 
     }
-
-
 
 }

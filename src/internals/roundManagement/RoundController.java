@@ -1,25 +1,36 @@
 package internals.roundManagement;
 
+import internals.question.QuestionLibrary;
+
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class RoundController {
-    private Stack<String> roundTypeNamesStack;
-    private static final Round[] roundTypes = {new RightAnswer(), new Bet()};
+    private Stack<Round> roundTypeNamesStack;
+    private final ArrayList<Round> availableRoundTypes;
     private boolean automaticShuffle;
-    private int currentRoundPlayers;
+    private int playerNumber;
+    private QuestionLibrary questionStore;
 
-    public RoundController(boolean automaticShuffle, int currentRoundPlayers) {
+    public RoundController(boolean automaticShuffle, int playerNumber, QuestionLibrary questionStore, int numberOfQuestionsPerRound) {
         this.automaticShuffle = automaticShuffle;
-        this.currentRoundPlayers = currentRoundPlayers;
-        reshuffle();
+        this.playerNumber = playerNumber;
+        this.questionStore = questionStore;
+        availableRoundTypes = new ArrayList<>();
+
+        availableRoundTypes.add(new RightAnswer(questionStore, numberOfQuestionsPerRound));
+        availableRoundTypes.add(new Bet(questionStore, numberOfQuestionsPerRound));
+
+        reshuffle(); // Εισαγωγή και τυχαιοποίηση σειράς στοιχείων στην δομή roundTypeNamesStack;
     }
+
 
     public RoundController reshuffle(){
         roundTypeNamesStack = new Stack<>();
 
-        for (Round aRound : roundTypes){
-            if (aRound.allowsPlayerNumber(currentRoundPlayers)) {
-                roundTypeNamesStack.push(aRound.getRoundName());
+        for (Round aRound : availableRoundTypes){
+            if (aRound.playerNumberIsCompatible(playerNumber)) {
+                roundTypeNamesStack.push(aRound);
             }
         }
 
@@ -27,11 +38,11 @@ public class RoundController {
         return this;
     }
 
-    public int getRemainingRoundTypes(){
+    public int getRemainingRoundsNumber(){
         return roundTypeNamesStack.size();
     }
 
-    public String getRandomRoundType(){
+    public Round getRandomRoundType(){
         if (roundTypeNamesStack.empty()) {
             if (automaticShuffle) {
                 reshuffle();

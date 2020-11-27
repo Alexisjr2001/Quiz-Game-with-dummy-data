@@ -1,6 +1,7 @@
 package internals.question;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Stack;
 
 public class QuestionLibrary {
@@ -8,10 +9,10 @@ public class QuestionLibrary {
     private Stack<QuestionCategory> categoryStack;
     private boolean automaticShuffle;
 
-    public QuestionLibrary(QuestionCategory[] categoryStore, boolean automaticShuffle) {
-
+    public QuestionLibrary(boolean automaticShuffle) {
+        this.automaticShuffle = automaticShuffle;
+        loadQuestions();
     }
-
 
     public QuestionCategory getRandomQuestionCategory(){
 
@@ -31,12 +32,8 @@ public class QuestionLibrary {
         return this;
     }
 
-    public int getRemainingCategories(){
+    public int getRemainingCategoriesNumber(){
         return categoryStack.size();
-    }
-
-    private void loadCategories(){
-
     }
 
     public QuestionCategory getQuestionCategory(String category){
@@ -52,6 +49,13 @@ public class QuestionLibrary {
         }
 
         return temp;
+    }
+
+    /**
+     * Φορτώνει την δομή categoryStore με ερωτήσεις (που έχουν πρότυπη μορφή) με σκοπό δοκιμής σωστής λειτουργίας κλάσης.
+     */
+    private void loadQuestions(){
+
     }
 
 }
