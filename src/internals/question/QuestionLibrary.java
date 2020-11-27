@@ -15,7 +15,16 @@ public class QuestionLibrary {
     }
 
     public QuestionCategory getRandomQuestionCategory(){
+        if (categoryStack.size()==0){
+            if (automaticShuffle) {
+                reshuffle();
+            }
+            else {
+                return null;
+            }
+        }
 
+        return categoryStack.pop();
     }
 
     /**
@@ -37,7 +46,7 @@ public class QuestionLibrary {
     }
 
     public QuestionCategory getQuestionCategory(String category){
-
+       return categoryStore.get(category);
     }
 
     public QuestionCategory[] getAllQuestionCategories(){
@@ -55,7 +64,18 @@ public class QuestionLibrary {
      * Φορτώνει την δομή categoryStore με ερωτήσεις (που έχουν πρότυπη μορφή) με σκοπό δοκιμής σωστής λειτουργίας κλάσης.
      */
     private void loadQuestions(){
+        Random randomGetter = new Random();
+        final int questionNumber = 100;
+        String[] answers = {"Ερώτηση 1", "Ερώτηση 2", "Ερώτηση 3", "Ερώτηση 4"};
+        for(int categoryNumber = 0; categoryNumber <= questionNumber; categoryNumber++){
+            String categoryName = "Όνομα κατηγορίας " + categoryNumber;
+            Question[] questionTempStore = new Question[questionNumber];
 
+            for (int questionIterator = 0; questionIterator < questionTempStore.length; questionIterator++){
+                questionTempStore[questionIterator] = new Question("Ερώτηση " + questionIterator, answers, answers[randomGetter.nextInt(4)], categoryName);
+            }
+            QuestionCategory temp = new QuestionCategory(categoryName, questionTempStore, true);
+        }
     }
 
 }

@@ -31,7 +31,7 @@ public class PlayerController {
      */
     public String createPlayer(String playerName){
         if (playerStore.containsKey(playerName)){
-            return "Δεν υπάρχει παίχτης με αυτό το όνομα";
+            return "Υπάρχει ήδη παίχτης με αυτό το όνομα";
         } else {
             playerStore.put(playerName, new Player(playerName));
             return "Επιτυχία";

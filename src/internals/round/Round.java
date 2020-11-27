@@ -1,4 +1,4 @@
-package internals.roundManagement;
+package internals.round;
 
 import internals.question.Question;
 import internals.question.QuestionLibrary;
@@ -13,14 +13,16 @@ import java.util.Random;
  * @version 2020.11.27
  */
 public abstract class Round {
-    private QuestionLibrary questionStore; // Αντίγραφο (αναφορά σε αντικείμενο της) κλάσης QuestionLibrary, απο όπου μπορεί να λάβει άμεσα τυχαίες (ή μη τυχαίες) κατηγορίες και έμμεσα τυχαίες ερωτήσεις.
+    private QuestionLibrary questionStore; // Aναφορά σε αντικείμενο της κλάσης QuestionLibrary, απο όπου μπορεί να λάβει άμεσα τυχαίες (ή μη τυχαίες) κατηγορίες και έμμεσα τυχαίες ερωτήσεις.
 
-    private Question roundQuestion; // Αποθηκεύει αναφορά στην ερώτηση σε αυτή την φάση του γύρου
+    private Question roundQuestion; // Αποθηκεύει αναφορά στην ερώτηση σε αυτό το στάδιο του γύρου
 
     private int minPlayers; // Αποθηκεύει τον ελάχιστο αριθμό των παιχτών που απαιτούνται για τον συγκεκριμένο γύρο
     private int maxPlayers; // Αποθηκεύει τον μέγιστο αριθμό των παιχτών που επιτρέπονται για τον συγκεκριμένο γύρο
 
     private int questionNumber; // Αποθηκεύει τον αριθμό των ερωτήσεων που πρέπει να απαντηθούν σε αυτόν τον γύρο
+
+    private String[] questionAnswers; // Αποθηκεύει ένα αντίγραφο του πίνακα των πιθανών απαντήσεων της τρέχουσας ερώτησης.
 
     /**
      * Ο τυπικός κατασκευαστής της κλάσης Round
@@ -74,6 +76,8 @@ public abstract class Round {
             roundQuestion = null;
         }
 
+        questionAnswers = null;
+
         return this;
     }
 
@@ -91,31 +95,49 @@ public abstract class Round {
     }
 
     /**
+     * Επιστρέφει αντικείμενο της ερώτησης σε αυτό το στάδιο του γύρου για χρήση κλάσεων που κληρονομούν την {@code Round}.
+     * @return αντικείμενο της ερώτησης σε αυτό το στάδιο του γύρου
+     */
+    protected Question getQuestionInstance(){
+        return roundQuestion;
+    }
+
+    /**
      * Επιστρέφει έναν πίνακα με τα αντίγραφα (σε τυχαία σειρά) των πιθανών απαντήσεων για την ερώτηση.
      * @return πίνακα των απαντήσεων για την ερώτηση.
      */
     public String[] getQuestionAnswers(){
-        String[] tempArray = roundQuestion.getAnswers();
-        Random randomGenerator = new Random();
+        if (questionAnswers == null){
+            String[] tempArray = roundQuestion.getAnswers();
+            Random randomGenerator = new Random();
 
 
-        for (int i = 0; i < tempArray.length; i++){ // Τυχαιοποιεί τις θέσεις των στοιχείων του πίνακα
-            int tempPosition = randomGenerator.nextInt(tempArray.length);
-            String tempElement = tempArray[tempPosition];
-            tempArray[tempPosition] = tempArray[i];
-            tempArray[i] = tempElement;
+            for (int i = 0; i < tempArray.length; i++){ // Τυχαιοποιεί τις θέσεις των στοιχείων του πίνακα
+                int tempPosition = randomGenerator.nextInt(tempArray.length);
+                String tempElement = tempArray[tempPosition];
+                tempArray[tempPosition] = tempArray[i];
+                tempArray[i] = tempElement;
+            }
+
+            questionAnswers = tempArray;
         }
 
-        return tempArray;
+        String[] temp = new String[4];
+        temp[0] = questionAnswers[0];
+        temp[1] = questionAnswers[1];
+        temp[2] = questionAnswers[2];
+        temp[3] = questionAnswers[3];
+
+        return temp;
     }
 
-    /**
-     * Υπολογίζει και επιστρέφει την αριθμό πόντων που (πιθανόν μπορεί να) κερδίζει ο παίχτης δεδομένης της απάντησης που έδωσε.
-     * Πρέπει να γίνει override απο κάθε κλάση που κληρονομεί την τρέχουσα.
-     * @param answer Η απάντηση που έδωσε ο παίχτης.
-     * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση του ορίσματος.
-     */
-    public abstract int answerQuestion(String answer);
+    public String getQuestionCategory(){
+        if (questionNumber > 0){
+            return roundQuestion.getCategory();
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Ελέγχει αν ο γύρος μπορεί να υποστηρίξει τον αριθμό παιχτών που δίνεται ως όρισμα.
