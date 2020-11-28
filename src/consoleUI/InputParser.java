@@ -14,6 +14,10 @@ public class InputParser {
         System.out.print("> ");
         return userInput.nextLine();
     }
+    public String prompt(){
+        System.out.print("> ");
+        return userInput.nextLine();
+    }
 
     private boolean isAcceptedCommand(String aPossibleCommand, Command[] acceptedCommands){
         Command aCommand = Command.valueOfGreek(aPossibleCommand);
@@ -34,20 +38,20 @@ public class InputParser {
     public Command promptCommand(String userMessage, Command[] acceptedCommands){
         boolean isIncomplete;
         String aPrompt = prompt(userMessage);
-        isIncomplete = isAcceptedCommand(aPrompt, acceptedCommands);
+        isIncomplete = !isAcceptedCommand(aPrompt, acceptedCommands);
         while(isIncomplete){
             System.out.println("Λάθος είσοδος! Προσπάθησε ξανά...");
             aPrompt = prompt(userMessage);
-            isIncomplete = isAcceptedCommand(aPrompt, acceptedCommands);
+            isIncomplete = !isAcceptedCommand(aPrompt, acceptedCommands);
         }
         return Command.valueOfGreek(aPrompt);
     }
 
     public int promptPositiveInt(String userMessage){
-        int aPositiveNumber = Integer.parseInt(userMessage);
+        int aPositiveNumber = Integer.parseInt(prompt(userMessage));
         while(aPositiveNumber<=0){
             System.out.println("Πρέπει να δώσεις θετικό αριθμό!");
-            aPositiveNumber = Integer.parseInt(userMessage);
+            aPositiveNumber = Integer.parseInt(prompt(userMessage));
         }
         return aPositiveNumber;
     }
@@ -61,5 +65,34 @@ public class InputParser {
         return aNumber;
     }
 
+    public int promptAnswer(){
+        boolean isIncomplete = true;
+        String aPrompt;
+        int answer = 0;
 
+        do{
+            aPrompt = prompt();
+            switch (aPrompt){
+                case "1":
+                    answer = 1;
+                    isIncomplete = false;
+                    break;
+                case "2":
+                    answer = 2;
+                    isIncomplete = false;
+                    break;
+                case "3":
+                    answer = 3;
+                    isIncomplete = false;
+                    break;
+                case "4":
+                    answer = 4;
+                    isIncomplete = false;
+                    break;
+                default: break;
+            }
+        } while(isIncomplete);
+
+        return  answer;
+    }
 }

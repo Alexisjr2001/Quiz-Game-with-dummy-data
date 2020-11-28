@@ -35,7 +35,7 @@ public abstract class Round {
         this.questionStore = questionStore;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
-        this.questionNumber = questionNumber;
+        this.questionNumber = questionNumber+1;
     }
 
     /**
@@ -88,6 +88,10 @@ public abstract class Round {
      */
     public String getQuestion() {
         if (questionNumber > 0){
+            if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
+                proceed();
+            }
+
             return roundQuestion.getQuestion();
         } else {
             return null;
@@ -99,6 +103,9 @@ public abstract class Round {
      * @return αντικείμενο της ερώτησης σε αυτό το στάδιο του γύρου
      */
     protected Question getQuestionInstance(){
+        if (questionNumber > 0 && roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
+            proceed();
+        }
         return roundQuestion;
     }
 
@@ -107,6 +114,11 @@ public abstract class Round {
      * @return πίνακα των απαντήσεων για την ερώτηση.
      */
     public String[] getQuestionAnswers(){
+        if (questionNumber > 0 && roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
+             proceed();
+        }
+
+
         if (questionAnswers == null){
             String[] tempArray = roundQuestion.getAnswers();
             Random randomGenerator = new Random();
@@ -131,8 +143,25 @@ public abstract class Round {
         return temp;
     }
 
+    public String getRightQuestionAnswer(){
+        if (questionNumber > 0){
+            if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
+                proceed();
+            }
+
+            return roundQuestion.getRightAnswer();
+        } else {
+            return null;
+        }
+
+    }
+
     public String getQuestionCategory(){
         if (questionNumber > 0){
+            if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
+                proceed();
+            }
+
             return roundQuestion.getCategory();
         } else {
             return null;

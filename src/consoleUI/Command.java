@@ -45,7 +45,8 @@ public enum Command {
             case "κύριο μενού":
             case "κυριο μενου": return MAIN_MENU;
 
-
+            case "βοήθεια":
+            case "βοηθεια": return HELP;
 
             default: return null;
         }

@@ -71,10 +71,10 @@ public class PlayerController {
 
         if (p == null){
             return "Δεν υπάρχει παίχτης με αυτό το όνομα";
-        } else if (playerStore.get(newName) == null){
-            playerStore.remove(p);
+        } else if (!playerExists(newName).equals("Επιτυχία")){
+            playerStore.remove(playerName);
             p.setName(newName);
-            playerStore.put(playerName, p);
+            playerStore.put(newName, p);
             return "Επιτυχία";
         } else {
             return "Υπάρχει ήδη παίχτης με αυτό το όνομα";
@@ -162,4 +162,32 @@ public class PlayerController {
         return p.getHighScore();
     }
 
+
+    /**
+     *
+     * @return
+     */
+    public String[] listPlayers(){
+        String[] playerNames = new String[playerStore.size()];
+        int i=0;
+        for(String aPlayerName : playerStore.keySet()){
+            playerNames[i] = aPlayerName;
+            i++;
+        }
+
+        return playerNames;
+    }
+
+    public String playerExists(String playerName){
+        if (playerStore.containsKey(playerName)){
+            return "Επιτυχία";
+        }
+        else{
+            return "Δεν υπάρχει παίχτης με το συγκεκριμένο όνομα";
+        }
+    }
+
+    public int getNumberOfPlayers(){
+        return playerStore.size();
+    }
 }

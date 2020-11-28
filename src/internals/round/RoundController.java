@@ -6,19 +6,21 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class RoundController {
-    private Stack<Round> roundTypeNamesStack;
+    private Stack<Round> roundTypesStack;
     private final ArrayList<Round> availableRoundTypes;
     private boolean automaticShuffle;
     private int playerNumber;
     private QuestionLibrary questionStore;
+    private int numberOfQuestionsPerRound;
 
     public RoundController(boolean automaticShuffle, QuestionLibrary questionStore) {
         this.automaticShuffle = automaticShuffle;
         this.questionStore = questionStore;
         playerNumber = 1;
         availableRoundTypes = new ArrayList<>();
+        numberOfQuestionsPerRound = 1;
 
-        reshuffle(); // Εισαγωγή και τυχαιοποίηση σειράς στοιχείων στην δομή roundTypeNamesStack;
+        reshuffle(); // Εισαγωγή και τυχαιοποίηση σειράς στοιχείων στην δομή roundTypesStack;
     }
 
     public String setPlayerNumber(int playerNumber){
@@ -28,7 +30,7 @@ public class RoundController {
         else if(playerNumber<=0){
             if(playerNumber!=1) {
                 playerNumber = 1;
-                reshuffle();
+                repopulateAvailableRoundTypes();
             }
 
             return "Μη αποδεκτός αριθμός παιχτών! Θεωρείται αριθμός παιχτών ίσος με ένα!";
@@ -41,33 +43,40 @@ public class RoundController {
 
     public String setNumberOfQuestionsPerRound(int numberOfQuestionsPerRound){
         if (numberOfQuestionsPerRound>0) {
-            availableRoundTypes.clear();
-            availableRoundTypes.add(new RightAnswer(questionStore, numberOfQuestionsPerRound));
-            availableRoundTypes.add(new Bet(questionStore, numberOfQuestionsPerRound));
+            this.numberOfQuestionsPerRound = numberOfQuestionsPerRound;
+            reshuffle();
             return "Επιτυχία";
         }
         return "Μη αποδεκτός αριθμός ερωτήσεων για έναν γύρο";
     }
 
+    private void repopulateAvailableRoundTypes(){
+        availableRoundTypes.clear();
+        availableRoundTypes.add(new RightAnswer(questionStore, numberOfQuestionsPerRound));
+        availableRoundTypes.add(new Bet(questionStore, numberOfQuestionsPerRound));
+    }
+
     public RoundController reshuffle(){
-        roundTypeNamesStack = new Stack<>();
+        repopulateAvailableRoundTypes();
+
+        roundTypesStack = new Stack<>();
 
         for (Round aRound : availableRoundTypes){
             if (aRound.playerNumberIsCompatible(playerNumber)) {
-                roundTypeNamesStack.push(aRound);
+                roundTypesStack.push(aRound);
             }
         }
 
-        java.util.Collections.shuffle(roundTypeNamesStack);
+        java.util.Collections.shuffle(roundTypesStack);
         return this;
     }
 
     public int getRemainingRoundsNumber(){
-        return roundTypeNamesStack.size();
+        return roundTypesStack.size();
     }
 
     public Round getRandomRoundType(){
-        if (roundTypeNamesStack.empty()) {
+        if (roundTypesStack.empty()) {
             if (automaticShuffle) {
                 reshuffle();
             } else {
@@ -75,7 +84,7 @@ public class RoundController {
             }
         }
 
-        return roundTypeNamesStack.pop();
+        return roundTypesStack.pop();
     }
 
 }

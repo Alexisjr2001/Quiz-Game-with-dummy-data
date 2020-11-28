@@ -11,7 +11,9 @@ public class QuestionLibrary {
 
     public QuestionLibrary(boolean automaticShuffle) {
         this.automaticShuffle = automaticShuffle;
+        categoryStore = new HashMap<>();
         loadQuestions();
+        reshuffle();
     }
 
     public QuestionCategory getRandomQuestionCategory(){
@@ -32,6 +34,7 @@ public class QuestionLibrary {
      * @return
      */
     public QuestionLibrary reshuffle(){
+
         categoryStack = new Stack<>();
         for (QuestionCategory qc : categoryStore.values()){
             categoryStack.push(qc);
@@ -66,7 +69,7 @@ public class QuestionLibrary {
     private void loadQuestions(){
         Random randomGetter = new Random();
         final int questionNumber = 100;
-        String[] answers = {"Ερώτηση 1", "Ερώτηση 2", "Ερώτηση 3", "Ερώτηση 4"};
+        String[] answers = {"Απάντηση 1", "Απάντηση 2", "Απάντηση 3", "Απάντηση 4"};
         for(int categoryNumber = 0; categoryNumber <= questionNumber; categoryNumber++){
             String categoryName = "Όνομα κατηγορίας " + categoryNumber;
             Question[] questionTempStore = new Question[questionNumber];
@@ -75,6 +78,7 @@ public class QuestionLibrary {
                 questionTempStore[questionIterator] = new Question("Ερώτηση " + questionIterator, answers, answers[randomGetter.nextInt(4)], categoryName);
             }
             QuestionCategory temp = new QuestionCategory(categoryName, questionTempStore, true);
+            categoryStore.put(temp.getCategoryName(), temp);
         }
     }
 
