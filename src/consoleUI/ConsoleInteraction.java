@@ -8,6 +8,7 @@ import internals.round.Bet;
 import internals.round.Round;
 import internals.round.RoundController;
 
+
 /**
  * Η κλάση που μοντελοποιεί την αλληλεπίδραση της εφαρμογής με τον χρήστη (με διεπαφή κονσόλας)
  */
@@ -16,6 +17,7 @@ public class ConsoleInteraction {
     private PlayerController playerController;
     private QuestionLibrary questionLibrary;
     private RoundController roundController;
+    private Round runningRound;
 
     public ConsoleInteraction(){
         parser = new InputParser();
@@ -38,7 +40,7 @@ public class ConsoleInteraction {
         System.out.println();
 
         while(executionContinues){
-            printCommandMenu(availableCommands);
+            UserAssistingMessages.printCommandMenu(availableCommands);
             Command userAnswer = parser.promptCommand("Επίλεξε μία απο τις παραπάνω ενέργειες για συνέχεια ή πάτησε \"Βοήθεια\" για λεπτομέρειες σχετικά με τις ενέργειες",
                     availableCommands);
             switch (userAnswer){
@@ -49,7 +51,7 @@ public class ConsoleInteraction {
                     executionContinues =false;
                     break;
                 case HELP:
-                    printHelpMenu(availableCommands);
+                    UserAssistingMessages.printHelpMenu(availableCommands);
                     parser.prompt("Πάτησε οτιδήποτε για συνέχεια...");
                     break;
                 case MANAGE_PLAYERS:
@@ -61,21 +63,6 @@ public class ConsoleInteraction {
         }
     }
 
-    private void printCommandMenu(Command[] commands){
-        System.out.println("-----   Διαθέσιμες Ενέργειες   -----");
-        for(Command c : commands){
-            System.out.println("\t* " + c.greekName);
-        }
-        System.out.println("------------------------------------");
-    }
-
-    private void printHelpMenu(Command[] commands){
-        System.out.println("-----   Διαθέσιμες Ενέργειες   -----");
-        for(Command c : commands){
-            System.out.println("\t* " + c.greekName + ":\t" + c.description);
-        }
-        System.out.println("------------------------------------");
-    }
 
     /**
      * Κομμάτι του μενού που διαχειρίζεται τους παίχτες
@@ -86,7 +73,7 @@ public class ConsoleInteraction {
         boolean executionContinues = true;
 
         while(executionContinues){
-            printCommandMenu(availableCommands);
+            UserAssistingMessages.printCommandMenu(availableCommands);
             Command userAnswer = parser.promptCommand("Επίλεξε μία απο τις παραπάνω ενέργειες για συνέχεια ή πάτησε \"Βοήθεια\" για λεπτομέρειες σχετικά με τις ενέργειες",
                     availableCommands);
             String userResponce, userSecondResponce;
@@ -123,7 +110,7 @@ public class ConsoleInteraction {
                     break;
 
                 case HELP:
-                    printHelpMenu(availableCommands);
+                    UserAssistingMessages.printHelpMenu(availableCommands);
                     break;
 
                 case MAIN_MENU:
@@ -145,7 +132,7 @@ public class ConsoleInteraction {
         boolean executionContinues = true;
 
         while(executionContinues){
-            printCommandMenu(availableCommands);
+            UserAssistingMessages.printCommandMenu(availableCommands);
             Command userAnswer = parser.promptCommand(
                     String.format("Επίλεξε \"Εκκίνηση παιχνιδιού\" για να ξεκινήσεις το παιχνίδι ή \"Κύριο μενού\" για επιστροφή στο κύριο μενού %n" +
                             "Διαφορετικά επίλεξε \"Βοήθεια\" για λεπτομέρειες σχετικά αυτές τις ενέργειες"),
@@ -163,7 +150,7 @@ public class ConsoleInteraction {
                     executionContinues = false;
                     break;
                 case HELP:
-                    printHelpMenu(availableCommands);
+                    UserAssistingMessages.printHelpMenu(availableCommands);
                     break;
                 default:
                     break;
@@ -204,93 +191,52 @@ public class ConsoleInteraction {
     }
 
     private void playRightAnswer(RightAnswer currentRound, String playerName){
-
-        printRoundInfo(currentRound);
+        UserAssistingMessages.printRoundInfo(currentRound);
+        parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
 
         while (! currentRound.isOver() ){ // Δίνουμε ερωτήσεις που πρέπει να απαντήσει ο παίκτης μέχρι αυτές να τελειώσουν (Αυτό καθορίζεται απο την μέθοδο isOver() της round)
+            System.out.printf("Κατηγορία ερώτησης: %s%n%n", currentRound.getQuestionCategory());
+
             parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να εμφανιστεί η ερώτηση...");
+            UserAssistingMessages.printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers());
 
-            System.out.println("Κατηγορία ερώτησης: " + currentRound.getQuestionCategory());
-            System.out.println();
-
-
-            printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers());
             int gain = currentRound.answerQuestion(currentRound.getQuestionAnswers()[parser.promptAnswer()-1]);
             playerController.playerCalculateGain(playerName, gain);
 
-            if (gain>0) {
-                System.out.println("Σωστή Απάντηση!");
-                System.out.printf("Κέρδισες %d πόντους!", gain);
-            }
-            else {
-                System.out.println("Λάθος απάντηση...");
-                System.out.printf("Η σωστή ήταν η \"%s\"", currentRound.getRightQuestionAnswer());
-            }
+            UserAssistingMessages.printGain(gain, currentRound.getRightQuestionAnswer());
 
             currentRound.proceed();
         }
-        System.out.println("-----   Τέλος Γύρου   -----");
-        System.out.println();
+        System.out.printf("-----   Τέλος Γύρου: Σωστή Ερώτηση   -----%n%n");
     }
 
     private void playBet(Bet currentRound, String playerName){
-        printRoundInfo(currentRound);
+        UserAssistingMessages.printRoundInfo(currentRound);
+        parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
         String userBetState;
 
 
         while (! currentRound.isOver() ){ // Δίνουμε ερωτήσεις που πρέπει να απαντήσει ο παίκτης μέχρι αυτές να τελειώσουν (Αυτό καθορίζεται απο την μέθοδο isOver() της round)
             parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να εμφανιστεί η κατηγορία της ερώτησης...");
 
-            System.out.println("Κατηγορία ερώτησης: " + currentRound.getQuestionCategory());
-            System.out.println();
+            System.out.printf("Κατηγορία ερώτησης: %s%n%n", currentRound.getQuestionCategory());
 
             do{
                 userBetState = currentRound.placeBet(playerName, parser.promptPositiveInt("Πόσους πόντους θες να ποντάρεις; Επιλογές: 250, 500, 750, 1000."));
                 System.out.println(userBetState + "!");
             }while (!userBetState.equals("Επιτυχία"));
 
-
             parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να εμφανιστεί η ερώτηση...");
+            UserAssistingMessages.printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers());
 
-            printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers());
             int gain = currentRound.answerQuestion(currentRound.getQuestionAnswers()[parser.promptAnswer()-1], playerName);
             playerController.playerCalculateGain(playerName, gain);
 
-            if (gain>0) {
-                System.out.println("Σωστή Απάντηση!");
-                System.out.printf("Κέρδισες %d πόντους!", gain);
-            }
-            else {
-                System.out.println("Λάθος απάντηση...");
-                System.out.println("Έχασες τους πόντους που πόνταρες...");
-                System.out.printf("Η σωστή ήταν η \"%s\"%n", currentRound.getRightQuestionAnswer());
-            }
+            UserAssistingMessages.printGain(gain, currentRound.getRightQuestionAnswer());
 
             currentRound.proceed();
         }
-        System.out.println("-----   Τέλος Γύρου   -----");
-        System.out.println();
-    }
-
-    private void printRoundInfo(Round aRound){
-        System.out.println("Αυτος ο γύρος είναι ο:");
-        System.out.println(aRound.getRoundName());
-        System.out.println();
-        System.out.println("Περιγραφή:");
-        System.out.println(aRound.getRoundDescription());
-
-
-
-        parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
-    }
-
-    private void printQuestion(String roundQuestion, String[] validAnswers){
-        System.out.println(roundQuestion);
-        System.out.println();
-        for (int i=0; i<validAnswers.length; i++){
-            System.out.println((i+1)+"." +validAnswers[i]);
-
-        }
+        System.out.printf("-----   Τέλος Γύρου: Ποντάρισμα   -----%n%n");
     }
 
     private String selectPlayer(){
@@ -298,7 +244,7 @@ public class ConsoleInteraction {
         if (playerList.length != 0){
             String userResponse;
 
-            printList("Επίλεξε ένα από τα ονόματα παιχτών", playerList);
+            UserAssistingMessages.printList("Επίλεξε ένα από τα ονόματα παιχτών", playerList);
             userResponse= parser.prompt("");
             String playerExistsResult = playerController.playerExists(userResponse);
 
@@ -306,7 +252,7 @@ public class ConsoleInteraction {
                 System.out.println(playerExistsResult);
                 System.out.println("Προσπάθησε ξανά...");
 
-                printList("Επίλεξε ένα από τα ονόματα παιχτών", playerList);
+                UserAssistingMessages.printList("Επίλεξε ένα από τα ονόματα παιχτών", playerList);
                 userResponse= parser.prompt("");
                 playerExistsResult = playerController.playerExists(userResponse);
             }
@@ -322,12 +268,5 @@ public class ConsoleInteraction {
         }
     }
 
-    private void printList(String listLabel, String[] listContents){
-        System.out.printf("-----   %s   -----%n", listLabel);
-        for (String aListElement : listContents) {
-            System.out.println("\t* " + aListElement);
-        }
-        System.out.printf("--------%s--------%n", "-".repeat(listLabel.length()));
-    }
 
 }
