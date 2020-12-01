@@ -10,52 +10,62 @@ import internals.round.RoundController;
 
 
 /**
- * Η κλάση που μοντελοποιεί την αλληλεπίδραση της εφαρμογής με τον χρήστη (με διεπαφή κονσόλας)
+ * Η κλάση που μοντελοποιεί την αλληλεπίδραση της εφαρμογής με τον χρήστη (με διεπαφή κονσόλας).
+ * Ουσιαστικά, διαχειρίζεται και χρησιμοποιεί αντικείμενα κλάσεων τύπου Controller και υλοποιεί την λογική του παιχνιδιού,
+ * ενω χειρίζεται την είσοδο / έξοδο  απο / προς τον χρήστη.
  */
 public class ConsoleInteraction {
-    private InputParser parser;
-    private PlayerController playerController;
-    private QuestionLibrary questionLibrary;
-    private RoundController roundController;
-    private Round runningRound;
+    private InputParser parser; // Χρησιμοποιούμε το parser για είσοδο απο τον χρήστη
+    private PlayerController playerController; // Χρησιμοποιούμε το playerController για διαχείριση των δεδομένων των παιχτών
+    private QuestionLibrary questionLibrary; // Χρησιμοποιούμε το questionLibrary για διαχείριση των δεδομένων των ερωτήσεων
+    private RoundController roundController; // Χρησιμοποιούμε το roundController για τυχαία επιλογή των τύπων γύρων και απόκτηση δεδομένων και διαδικασιών που υλοποιύν αντικείμενα τύπου Round
 
+    /**
+     * Αρχικοποιεί τα δεδομένα της κλάσης.
+     * Για τα αντικείμενα των πεδίων, όταν είναι δυνατό, ενεργοποιείται η λειτουργία "αυτόματου ανακατέματος" που αποσκοποεί στο να περιοριστεί η επανεμφάνιση ίδιων
+     * κατηγοριών / ερωτήσεων / γύρων στην ίδια συνεδρία παιχνιδιού (δηλαδή για παράδειγμα άν έχω αποθηκευμένες 100 ερωτήσεις στο σύνολο σε 100 ξεχωριστές κατηγορίες, αν τελειώσει ένα παιχνίδι
+     * όπου έχουν χρησιμοποιηθεί 5, αυτές οι 5 δεν θα ξαναεμφανιστούν σε επόμενο παιχνίδι μέχρι να "Χρησιμοποιηθούν" οι υπόλοιπες 95).
+     */
     public ConsoleInteraction(){
         parser = new InputParser();
         playerController = new PlayerController();
         questionLibrary = new QuestionLibrary(true);
         roundController = new RoundController(true, questionLibrary);
+
+        playerController.createPlayer("deb"); // TODO: DEBUGGING, remove for release.
     }
 
     /**
-     * Ξεκινάει την εκτέλεση της εφαρμογής
+     * Ξεκινάει την εκτέλεση της εφαρμογής.
+     * Γίνεται (θεωρητικά) είσοδος στο κύριο μενού
      */
     public void beginApp(){
-        Command[] availableCommands = {Command.BEGIN_GAME, Command.MANAGE_PLAYERS, Command.EXIT_GAME, Command.HELP};
+        Command[] availableCommands = {Command.BEGIN_GAME, Command.MANAGE_PLAYERS, Command.EXIT_GAME, Command.HELP}; // Οι επιτρεπτές / διαθέσιμες ενέργειες χρήστη σε αυτό το μενού
 
-        boolean executionContinues = true;
+        boolean executionContinues = true; // Μεταβλητή που ρυθμίζει την έξοδο απο το παιχνίδι. Αρχικά, θεωρώ ότι δεν γίνεται έξοδος.
 
-        System.out.println("============================================================");
+        System.out.println("============================================================"); // Εισαγωγικό γραφικό μήνυμα
         System.out.println("|            Καλώς ήρθες στο παιχνίδι γνώσεων Buzz         |");
         System.out.println("============================================================");
         System.out.println();
 
-        while(executionContinues){
-            UserAssistingMessages.printCommandMenu(availableCommands);
+        while(executionContinues){ // Η επανάληψη εκτελείται μέχρι ο χρήστης να επιλέξει την ενέργει
+            UserAssistingMessages.printCommandMenu(availableCommands); // Τυπώνω τις διαθέσιμες ενέργειες χρήστης
             Command userAnswer = parser.promptCommand("Επίλεξε μία απο τις παραπάνω ενέργειες για συνέχεια ή πάτησε \"Βοήθεια\" για λεπτομέρειες σχετικά με τις ενέργειες",
-                    availableCommands);
-            switch (userAnswer){
+                    availableCommands); // Ζητάω επιλογή απο τις ενέργειες.
+            switch (userAnswer){ // Επέλεξε "Εκκίνηση παιχνιδιού"
                 case BEGIN_GAME:
-                    beginGame();
+                    beginGame(); // Μεταφορά εκτέλεσης σε αντίστοιχο (αρμόδιο) τμήμα κώδικα
                     break;
-                case EXIT_GAME:
-                    executionContinues =false;
+                case EXIT_GAME: // Επέλεξε "Έξοδος"
+                    executionContinues =false; // Αλλάζω την μεταβλητή ελέγχου ώστε να τερματίσει η επανάληψη
                     break;
-                case HELP:
-                    UserAssistingMessages.printHelpMenu(availableCommands);
+                case HELP: // Επέλεξε "Βοήθεια"
+                    UserAssistingMessages.printHelpMenu(availableCommands); // Εκτυπώνω λεπτομέρειες διαθέσιμων εντολών.
                     parser.prompt("Πάτησε οτιδήποτε για συνέχεια...");
                     break;
-                case MANAGE_PLAYERS:
-                    playerManagement();
+                case MANAGE_PLAYERS: // Επίλεξε "Διαχείριση παίχτη"
+                    playerManagement();  // Μεταφορά εκτέλεσης σε αντίστοιχο (αρμόδιο) τμήμα κώδικα
                     break;
                 default:
                     break;
@@ -169,28 +179,39 @@ public class ConsoleInteraction {
             System.out.println("Καλείσαι να απαντήσεις σε αυτές τις ερωτήσεις δίνοντας τον αριθμό που αντιστοιχεί στην απάντηση που θέλεις να επιλέξεις " +
                     "(πρέπει να δώσεις τον αριθμό 1, 2, 3 ή 4 αντίστοιχα).");
             System.out.println("Σημειώνεται ότι κάθε γύρος ίσως να έχει κάποιες παραλλαγές σε σχέση με αυτές τις οδηγίες, οι οποίες εξηγούνται προτού αρχίσει ο συγκεκριμένος γύρος.");
+            System.out.println();
         }
 
-        int roundNumber = parser.promptPositiveInt("Πόσους γύρους θες να παίξεις;");
-        roundController.setPlayerNumber(1);
-        int questionNumber = parser.promptPositiveInt("Πόσες ερωτήσεις θες να έχει ο γύρος;");
-        roundController.setNumberOfQuestionsPerRound(questionNumber);
+        roundController.setPlayerNumber(1); // Ορίζω αριθμό παιχτών = 1, απο ζητούμενα εφαρμογής
 
+        int roundNumber = parser.promptIntInRange("Πόσους γύρους θες να παίξεις; (δώσε αριθμο απο 1 μέχρι 20)", 1 ,20); // Αποθηκεύω αριθμό γύρων
+        int questionNumber = parser.promptIntInRange("Πόσες ερωτήσεις θες να έχει ο γύρος; (δώσε αριθμο απο 1 μέχρι 10)", 1 ,10); // Αποθηκεύω αριθμό ερωτήσεων ανα γύρο.
+        roundController.setNumberOfQuestionsPerRound(questionNumber); // Ορίζω αριθμό ερωτήσεων ανα γύρο στην roundController για να επιστρέφει αντίστοιχα αντικείμενα γύρων
+
+
+        int gamePointSum = 0;
 
         while(roundNumber--!=0){
             Round currentRound = roundController.getRandomRoundType();
 
             if (currentRound instanceof RightAnswer){
-                playRightAnswer((RightAnswer) currentRound, selectedPlayer);
+                gamePointSum += playRightAnswer((RightAnswer) currentRound, selectedPlayer);
             } else if (currentRound instanceof  Bet){
-                playBet((Bet) currentRound, selectedPlayer);
+                gamePointSum += playBet((Bet) currentRound, selectedPlayer);
             }
 
         }
+
+        System.out.println("Σύνολο πόντων που κερδίθηκαν αυτό το παιχνίδι: " + gamePointSum);
+        System.out.println("Τρέχον σκόρ παίχτη " + selectedPlayer + " :" + playerController.getPlayerScore(selectedPlayer));
+        System.out.println("Μέγιστο σκόρ παίχτη (highscore) " + selectedPlayer + " :" + playerController.getPlayerHighscore(selectedPlayer));
+
         return true;
     }
 
-    private void playRightAnswer(RightAnswer currentRound, String playerName){
+    private int playRightAnswer(RightAnswer currentRound, String playerName){
+        int pointSum = 0;
+
         UserAssistingMessages.printRoundInfo(currentRound);
         parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
 
@@ -201,6 +222,7 @@ public class ConsoleInteraction {
             UserAssistingMessages.printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers());
 
             int gain = currentRound.answerQuestion(currentRound.getQuestionAnswers()[parser.promptAnswer()-1]);
+            pointSum += gain;
             playerController.playerCalculateGain(playerName, gain);
 
             UserAssistingMessages.printGain(gain, currentRound.getRightQuestionAnswer());
@@ -208,9 +230,12 @@ public class ConsoleInteraction {
             currentRound.proceed();
         }
         System.out.printf("-----   Τέλος Γύρου: Σωστή Ερώτηση   -----%n%n");
+        return pointSum;
     }
 
-    private void playBet(Bet currentRound, String playerName){
+    private int playBet(Bet currentRound, String playerName){
+        int pointSum = 0;
+
         UserAssistingMessages.printRoundInfo(currentRound);
         parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
         String userBetState;
@@ -230,6 +255,7 @@ public class ConsoleInteraction {
             UserAssistingMessages.printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers());
 
             int gain = currentRound.answerQuestion(currentRound.getQuestionAnswers()[parser.promptAnswer()-1], playerName);
+            pointSum += gain;
             playerController.playerCalculateGain(playerName, gain);
 
             UserAssistingMessages.printGain(gain, currentRound.getRightQuestionAnswer());
@@ -237,6 +263,7 @@ public class ConsoleInteraction {
             currentRound.proceed();
         }
         System.out.printf("-----   Τέλος Γύρου: Ποντάρισμα   -----%n%n");
+        return pointSum;
     }
 
     private String selectPlayer(){
