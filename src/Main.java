@@ -1,5 +1,9 @@
+import consoleUI.ConsoleInteraction;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, let's play Buzz!");
+        ConsoleInteraction playGame = new ConsoleInteraction();
+        playGame.beginApp();
+        System.out.println("Bye Bye...");
     }
 }
