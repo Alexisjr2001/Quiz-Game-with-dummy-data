@@ -52,7 +52,7 @@ public class Bet extends Round {
      *
      * @param playerName Το όνομα του παίχτη
      * @param betAmount Η τιμή του πονταρίσματος (μία απο τις τιμές: 250, 500, 750, 1000)
-     * @return Η κατάσταση επιτυχίας της μεθόδου.
+     * @return Η κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" για επιτυχία, "Μη έγκυρη τιμή πονταρίσματος" διαφορετικά.
      */
     public String placeBet(String playerName, int betAmount){
 

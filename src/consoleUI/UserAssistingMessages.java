@@ -7,7 +7,7 @@ import internals.round.Round;
  * σχετικά με την τρέχουσα κατάσταση του παιχνιδιού προς τον χρήστη
  *
  * @author Ioannis Baraklilis
- * @aythor Alexandros Tsingos
+ * @author Alexandros Tsingos
  *
  * @version 2020.11.29
  */

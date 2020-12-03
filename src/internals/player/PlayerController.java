@@ -27,7 +27,7 @@ public class PlayerController {
      * Διαφορετικά, η ενέργεια δεν θα πετύχει και θα επιστραφεί συμβολοσειρά που περιγράφει το σφάλμα.
      *
      * @param playerName όνομα νέου παίχτη.
-     * @return κατάσταση επιτυχίας της μεθόδου.
+     * @return κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Υπάρχει ήδη παίχτης με αυτό το όνομα" διαφορετικά.
      */
     public String createPlayer(String playerName){
         if (playerStore.containsKey(playerName)){
@@ -45,7 +45,7 @@ public class PlayerController {
      * Διαφορετικά, η ενέργεια θα δεν πετύχει και θα επιστραφεί συμβολοσειρά που περιγράφει το σφάλμα.
      *
      * @param playerName το όνομα του παίχτη προς διαγραφή.
-     * @return η κατάσταση επιτυχίας της μεθόδου.
+     * @return η κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Δεν υπάρχει παίχτης με αυτό το όνομα" διαφορετικά.
      */
     public String removePlayer(String playerName){
         Player temp = playerStore.remove(playerName);
@@ -64,7 +64,7 @@ public class PlayerController {
      *
      * @param playerName όνομα παίχτη προς αλλαγή.
      * @param newName νέο όνομα παίχτη προς αλλαγή.
-     * @return κατάσταση επιτυχίας.
+     * @return κατάσταση επιτυχίας. "Επιτυχία" σε περίπτωση επιτυχίας, διαφορετικά επιστρέφει "Δεν υπάρχει παίχτης με αυτό το όνομα" ή  "Υπάρχει ήδη παίχτης με αυτό το όνομα" αντιστοίχως με το πρόβλημα.
      */
     public String changePlayerName(String playerName, String newName){
         Player p = playerStore.get(playerName);
