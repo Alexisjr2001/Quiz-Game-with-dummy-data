@@ -3,7 +3,10 @@ package internals.player;
 /**
  * Η κλάση {@code Player}, μοντελοποιεί την οντότητα του παίχτη στην εφαρμογή.
  *
- * @version 2020.11.14
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.11.17
  */
 public class Player {
     private String name; // Το όνομα του παίχτη.
@@ -46,7 +49,7 @@ public class Player {
 
     /**
      * Υπολογίζει και αποθηκεύει το νέο σκόρ του παίχτη και το επιστρέφει.
-     * @param gain πόντοι που θα προστεθούν στο τρέχον σύνολο πόντων (μπορεί να είναι αρνητικό).
+     * @param gain πόντοι που θα προστεθούν στο τρέχον σύνολο πόντων (μπορεί να είναι και αρνητικό).
      * @return το νέο σύνολο πόντων του παίχτη.
      */
     public int scoreGain(int gain){

@@ -3,7 +3,10 @@ package internals.question;
 /**
  * Η κλάση {@code Question} μοντελοποιεί την οντότητα μίας ερώτησης που πρέπει να απαντηθεί κατά την διάρκεια ενός γύρου.
  *
- * @version 2020.11.14
+ *  @author Ioannis Baraklilis
+ *  @author Alexandros Tsingos
+ *
+ * @version 2020.11.17
  */
 public class Question {
     private String question; // Η εκφώνηση της ερώτησης.
@@ -53,12 +56,14 @@ public class Question {
         return rightAnswer;
     }
 
+
     /**
      * @return το όνομα της κατηγορίας που ανήκει η ερώτηση.
      */
     public String getCategory() {
         return category;
     }
+
 
     /**
      * Ελέγχει αν η συμβολοσειρά που δίνεται ως είσοδος είναι η σωστή απάντηση.

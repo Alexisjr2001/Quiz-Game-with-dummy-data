@@ -223,7 +223,7 @@ public class ConsoleInteraction {
         // Εκτύπωση στατιστικών παιχνιδιού στον χρήστη
         System.out.println("Σύνολο πόντων που κερδίθηκαν αυτό το παιχνίδι: " + gamePointSum);
         System.out.println("Τρέχον σκόρ παίχτη " + selectedPlayer + " :" + playerController.getPlayerScore(selectedPlayer));
-        System.out.println("Μέγιστο σκόρ παίχτη (highscore) " + selectedPlayer + " :" + playerController.getPlayerHighscore(selectedPlayer));
+        System.out.println("Μέγιστο σκόρ παίχτη (highscore) " + selectedPlayer + " :" + playerController.getPlayerHighScore(selectedPlayer));
 
         return true; // Επιτυχία εκκίνησης
     }

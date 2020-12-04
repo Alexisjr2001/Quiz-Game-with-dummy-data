@@ -168,7 +168,10 @@ public class InputParser {
                     answer = 4;
                     isIncomplete = false;
                     break;
-                default: break;
+                default:
+                    System.out.println("Μη έγκυρη απάντηση...");
+                    System.out.println("Επέλεξε 1, 2, 3 ή 4.");
+                    break;
             }
         } while(isIncomplete);
 
