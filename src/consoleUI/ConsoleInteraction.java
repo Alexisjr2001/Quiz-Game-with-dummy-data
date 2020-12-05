@@ -31,8 +31,6 @@ public class ConsoleInteraction {
         playerController = new PlayerController();
         questionLibrary = new QuestionLibrary(true);
         roundController = new RoundController(true, questionLibrary);
-
-        playerController.createPlayer("deb"); // TODO: DEBUGGING, remove for release.
     }
 
     /**
