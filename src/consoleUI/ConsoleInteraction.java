@@ -22,7 +22,7 @@ public class ConsoleInteraction {
     private InputParser parser; // Χρησιμοποιούμε το parser για είσοδο απο τον χρήστη
     private PlayerController playerController; // Χρησιμοποιούμε το playerController για διαχείριση των δεδομένων των παιχτών
     private QuestionLibrary questionLibrary; // Χρησιμοποιούμε το questionLibrary για διαχείριση των δεδομένων των ερωτήσεων
-    private RoundController roundController; // Χρησιμοποιούμε το roundController για τυχαία επιλογή των τύπων γύρων και απόκτηση δεδομένων και διαδικασιών που υλοποιύν αντικείμενα τύπου Round
+    private RoundController roundController; // Χρησιμοποιούμε το roundController για τυχαία επιλογή των τύπων γύρων και απόκτηση δεδομένων και διαδικασιών που υλοποιούν αντικείμενα τύπου Round
 
     /**
      * Αρχικοποιεί τα δεδομένα της κλάσης.

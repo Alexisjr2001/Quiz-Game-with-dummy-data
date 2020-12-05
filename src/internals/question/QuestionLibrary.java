@@ -27,7 +27,7 @@ public class QuestionLibrary {
     public QuestionLibrary(boolean automaticShuffle) {
         this.automaticShuffle = automaticShuffle;
         categoryStore = new HashMap<>();
-        loadQuestions(); // "Φορτωση" ερωτήσεων στην κλάση.
+        loadQuestions(); // "Φόρτωση" ερωτήσεων στην κλάση.
         reshuffle(); // Πρέπει αμέσως μετά την δημιουργία να μπορώ να πάρω τυχαίες κατηγορίες, οπότε κάνω τυχαιοποίηση τους.
     }
 
