@@ -5,9 +5,17 @@ import internals.question.QuestionLibrary;
 
 import java.util.HashMap;
 
+/**
+ * Η {@code Bet} επεκτείνει την {@code Round}, μοντελοποιώντας τον τύπο γύρου Ποντάρισμα.
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.3
+ */
+
 public class Bet extends Round {
 
-    private HashMap<String , Integer> bets;
+    private HashMap<String , Integer> bets; //Αποθηκεύει το μέγεθος του στοιχήματος, παρέχοντας την δυνατότητα να αντιστοιχίσουμε εύκολα το όνομα του παίχτη με την αντίστοιχη ποσότητα στοιχήματος.
 
     public Bet(QuestionLibrary questionStore, int questionNumber) {
         super(questionStore, 1, 1, questionNumber);
@@ -34,14 +42,6 @@ public class Bet extends Round {
                 "Ο παίκτης μπορεί να ποντάρει 250, 500, 750 και 1000 πόντους.%n" +
                 "Στη συνέχεια αν απαντήσει σωστά κερδίζει τους πόντους που πόνταρε, αλλιώς τους χάνει.");
     }
-
-    /**
-     * Σηματοδοτεί την έναρξη του γύρου
-     * και εκτελεί τις απαραίτητες προετοιμασίες (αν αυτές χρειάζονται) για την έναρξη του γύρου.
-     * Πρέπει να εκτελείται πάντα πριν την χρήση της κλάσης.
-     */
-    @Override
-    public void beginRound(){}
 
     /**
      * Αποθηκεύει το ποντάρισμα του παίχτη και επιστρέφει την κατάσταση επιτυχίας αυτής της ενέργειας.

@@ -3,6 +3,15 @@ package internals.round;
 import internals.question.Question;
 import internals.question.QuestionLibrary;
 
+/**
+ * Η {@code RightAnswer} επεκτείνει την {@code Round}, μοντελοποιώντας τον τύπο γύρου Σωστή Απάντηση.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.3
+ */
+
 public class RightAnswer extends Round {
 
     public RightAnswer(QuestionLibrary questionStore, int questionNumber) {
@@ -10,7 +19,7 @@ public class RightAnswer extends Round {
     }
 
     /**
-     * Επιστρέφει το όνομα του τύπου γύρου. Πρέπει να γίνει override απο κάθε κλάση που κληρονομεί την τρέχουσα.
+     * Επιστρέφει το όνομα του τύπου γύρου
      * @return όνομα του τύπου του γύρου.
      */
     @Override
@@ -27,12 +36,6 @@ public class RightAnswer extends Round {
         return "Κάθε παίχτης που απαντάει σωστά κερδίζει 1000 πόντους";
     }
 
-    /**
-     * Σηματοδοτεί την έναρξη του γύρου και εκτελεί τις απαραίτητες προετοιμασίες (αν αυτές χρειάζονται) για την έναρξη του γύρου.
-     * Πρέπει να εκτελείται πάντα πριν την χρήση της κλάσης.
-     */
-    @Override
-    public void beginRound(){}
 
     /**
      * Υπολογίζει και επιστρέφει την αριθμό πόντων που (πιθανόν μπορεί να) κερδίζει ο παίχτης δεδομένης της απάντησης που έδωσε.
