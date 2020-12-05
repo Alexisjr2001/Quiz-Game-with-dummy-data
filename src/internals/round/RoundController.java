@@ -15,26 +15,26 @@ import java.util.Stack;
  * @version 2020.12.3
  */
 public class RoundController {
-    private Stack<Round> roundTypesStack; //Αποθηκεύει αντίγραφο των τύπων των γύρων που επιτρέπει την εύκολη αφαίρεση των στοιχείων.
+    private Stack<Round> roundTypesStack; //Αποθηκεύει τους γύρους και επιτρέπει την εύκολη αφαίρεση των στοιχείων.
     private final ArrayList<Round> availableRoundTypes; //Αποθηκεύει όλους τους διαθέσιμους τύπους γύρων
     private boolean automaticShuffle; //Αποθηκεύει την επιλογή που δόθηκε ως όρισμα στον κατασκευαστή για αυτόματο "ανακάτεμα".
     private int playerNumber; // Αποθηκεύει τον αριθμό των παιχτών
-    private QuestionLibrary questionStore; //Αναφορά σε QuestionLibrary
-    private int numberOfQuestionsPerRound; //ΑΠοθηκεύει τον αριθμό των ερωτήσεων ανά γύρο
+    private QuestionLibrary questionStore; //Αναφορά σε QuestionLibrary, απο την οποία θα "παρθούν" οι ερωτήσεις.
+    private int numberOfQuestionsPerRound; //Αποθηκεύει τον αριθμό των ερωτήσεων ανά γύρο
 
     /**
-     *
+     * Τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
      * @param automaticShuffle κατάσταση αυτόματου "ανακατέματος". true για ενεργοποίηση, false διαφορετικά.
      * @param questionStore αναφορά σε αντικείμενο QuestionLibrary που θα επιστρέφει ερωτήσεις που θα χρησιμοποιηθούν στους διάφορους γύρους
      */
     public RoundController(boolean automaticShuffle, QuestionLibrary questionStore) {
         this.automaticShuffle = automaticShuffle;
         this.questionStore = questionStore;
-        playerNumber = 1;
+        playerNumber = 1; // Η πρώτη φάση του προγράμματος ορίζει παιχνίδι ενός παίχτη
         availableRoundTypes = new ArrayList<>();
-        numberOfQuestionsPerRound = 1;
+        numberOfQuestionsPerRound = 1; // Αρχικοποίηση σε ελάχιστο αριθμό ερωτήσεων
 
-        reshuffle(); // Εισαγωγή και τυχαιοποίηση σειράς στοιχείων στην δομή roundTypesStack;
+        reshuffle(); // Εισαγωγή και τυχαιοποίηση σειράς στοιχείων στην δομή roundTypesStack
     }
 
     /**
@@ -43,43 +43,45 @@ public class RoundController {
      * @return κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Μη αποδεκτός αριθμός παιχτών! Θεωρείται αριθμός παιχτών ίσος με ένα!" διαφορετικά.
      */
     public String setPlayerNumber(int playerNumber){
-        if(this.playerNumber == playerNumber){
+        if(this.playerNumber == playerNumber){ // Έχει ήδη οριστεί αριθμός παιχτών στην επιθυμητή τιμή
             return "Επιτυχία";
         }
-        else if(playerNumber<=0){
-            if(playerNumber!=1) {
-                playerNumber = 1;
-                repopulateAvailableRoundTypes();
+        else if(playerNumber<=0){ // Μή αποδεκτή τιμή αριθμού παιχτών
+            if(playerNumber!=1) { // Έχει ήδη οριστεί αριθμός παιχτών στην επιθυμητή τιμή
+                playerNumber = 1; // Θέτω (αυθαίρετα) σε 1
+                repopulateAvailableRoundTypes(); // "Γέμισμα" λίστας με διαθέσιμους τύπους γύρων
             }
 
             return "Μη αποδεκτός αριθμός παιχτών! Θεωρείται αριθμός παιχτών ίσος με ένα!";
         }
 
         this.playerNumber = playerNumber;
-        reshuffle();
+        reshuffle(); // Ανανέωση δομών για νέο αριθμό παιχτών
         return "Επιτυχία";
     }
 
     /**
      * Θέτει τον αριθμό των ερωτήσεων ανά γύρο ίσο με το όρισμα που δέχεται.
+     * Άν το όρισμα είναι θετικός αριθμός η εκτέλεση της μεθόδου επιτυγχάνει, διαφορετικά αποτυγχάνει και δεν κάνει καμία μεταβολή στον αριθμό των ερωτήσεων ανα γύρο.
+     * Σε κάθε περίπτωση επιστρέφει ανάλογο μήνυμα κατάστασης επιτυχίας.
      * @param numberOfQuestionsPerRound ο αριθμός των ερωτήσεων ανά γύρο
      * @return κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Μη αποδεκτός αριθμός ερωτήσεων για έναν γύρο" διαφορετικά.
      */
     public String setNumberOfQuestionsPerRound(int numberOfQuestionsPerRound){
-        if (numberOfQuestionsPerRound>0) {
+        if (numberOfQuestionsPerRound>0) { // Ελέγχω αν το όρισμα είναι αποδεκτή τιμή
             this.numberOfQuestionsPerRound = numberOfQuestionsPerRound;
-            reshuffle();
+            reshuffle(); // Ανανέωση δομών για νέο αριθμό ερωτήσεων ανα γύρο
             return "Επιτυχία";
         }
         return "Μη αποδεκτός αριθμός ερωτήσεων για έναν γύρο";
     }
 
     /**
-     *  Δημιουργεί τα αντικείμενα των γύρων που θα δοθούν αργότερα.
+     *  Δημιουργεί τα αντικείμενα των διαθέσιμων τύπων γύρων που θα δοθούν αργότερα.
      *  Η δημιουργία αντικειμένων των γύρων εξασφαλίζει ότι οι γύροι που θα δοθούν (απο άλλη μέθοδο) έχουν τις απαραίτητες αρχικοποιήσεις και δεν έχουν ξαναχρησιμοποιηθεί.
      */
     private void repopulateAvailableRoundTypes(){
-        availableRoundTypes.clear();
+        availableRoundTypes.clear(); // Αγνοώ τους τύπους που δεν έχουν εμφανιστεί για να τους συμπεριλάβω όλους εκ νέου.
         availableRoundTypes.add(new RightAnswer(questionStore, numberOfQuestionsPerRound));
         availableRoundTypes.add(new Bet(questionStore, numberOfQuestionsPerRound));
     }
@@ -92,25 +94,25 @@ public class RoundController {
      * @return αναφορά στην κλάση που καλείται με σκοπό την χρήση της σε "αλυσιδωτές" κλήσεις αυτής.
      */
     public RoundController reshuffle(){
-        repopulateAvailableRoundTypes();
+        repopulateAvailableRoundTypes(); // Δημιουργία αντικειμένων των διαθέσιμων τύπων γύρων
 
-        roundTypesStack = new Stack<>();
+        roundTypesStack = new Stack<>(); // Αγνοώ τους τύπους που δεν έχουν εμφανιστεί για να τους συμπεριλάβω όλους εκ νέου.
 
-        for (Round aRound : availableRoundTypes){
+        for (Round aRound : availableRoundTypes){ // Εισάγω κάθε συμβατό με τον ορισμένο αριθμό παιχτών τύπο γύρου στην στοίβα
             if (aRound.playerNumberIsCompatible(playerNumber)) {
                 roundTypesStack.push(aRound);
             }
         }
 
-        java.util.Collections.shuffle(roundTypesStack);
+        java.util.Collections.shuffle(roundTypesStack); //Ανακάτεμα - τυχαιοποίηση σειράς τύπων γύρων στην δομή απο την οποία θα επιστραφούν.
         return this;
     }
 
     /**
      * Επιστρέφει το πλήθος των τύπων των γύρων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomType()}.
      *
-     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστραφεί null εαν έχουν "εξαντληθεί" οι τύποι των γύρων
-     * και ο διαχειριστής της κλάσης δεν έχει κάνει reshuffle().
+     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστραφεί 0 εαν έχουν "εξαντληθεί" οι τύποι των γύρων
+     * (μέχρι ο διαχειριστής της κλάσης να έχει κάνει reshuffle()).
      * @return πλήθος των τύπων των γύρων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomType()}
      */
     public int getRemainingRoundsNumber(){
@@ -131,20 +133,20 @@ public class RoundController {
      * Παρέχεται έτσι μια προγραμματιστική ευελιξία για αυτόν που διαχειρίζεται την κλάση!
      *
      * Αν δεν έχουν ήδη επιστραφεί όλοι οι τύποι γύρων τότε:
-     * Επιστρέφεται ένας τυχαίος τύπος γύρου.
+     * Επιστρέφεται ένας γύρος τυχαίου τύπου.
      *
-     * @return ένας τυχαίος τύπος γύρου ή null
+     * @return ένας γύρος τυχαίου τύπου ή null
      */
     public Round getRandomRoundType(){
-        if (roundTypesStack.empty()) {
-            if (automaticShuffle) {
-                reshuffle();
-            } else {
+        if (roundTypesStack.empty()) { // Αν έχουν ήδη επιστραφεί όλοι οι τύποι γύρων
+            if (automaticShuffle) { // Αν έχει επιτραπεί το αυτόματο "ανακάτεμα"
+                reshuffle(); // Κάνω "ανακάτεμα"
+            } else { // Αν δεν έχει επιτραπεί το αυτόματο "ανακάτεμα"
                 return null;
             }
         }
 
-        return roundTypesStack.pop();
+        return roundTypesStack.pop(); // Επιστρέφεται ένας γύρος τυχαίου τύπου.
     }
 
 }

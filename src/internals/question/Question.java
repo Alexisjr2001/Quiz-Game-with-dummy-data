@@ -21,7 +21,7 @@ public class Question {
      * @param rightAnswer Η σωστή απάντηση.
      * @param category Το όνομα της κατηγορίας στην οποία ανήκει η ερώτηση.
      */
-    public Question(String question, String[] answers, String rightAnswer, String category) {
+    public Question(String question, String[] answers, String rightAnswer, String category) { // Ανάθεση τιμής αντίστοιχων μεταβλητών.
         this.question = question;
         this.answers = answers;
         this.rightAnswer = rightAnswer;
@@ -29,6 +29,7 @@ public class Question {
     }
 
     /**
+     * Επιστρέφει την εκφώνηση της ερώτησης
      * @return την εκφώνηση της ερώτησης
      */
     public String getQuestion(){
@@ -42,7 +43,7 @@ public class Question {
     public String[] getAnswers() {
         String[] temp = new String[answers.length];
 
-        for (int i = 0; i < answers.length; i++){
+        for (int i = 0; i < answers.length; i++){ // Δημιουργία πίνακα αντιγράφων
             temp[i] = answers[i];
         }
 
@@ -50,6 +51,7 @@ public class Question {
     }
 
     /**
+     * Επιστρέφει την σωστή απάντηση.
      * @return την σωστή απάντηση.
      */
     public String getRightAnswer() {
@@ -58,6 +60,7 @@ public class Question {
 
 
     /**
+     * Επιστρέφει το όνομα της κατηγορίας που ανήκει η ερώτηση.
      * @return το όνομα της κατηγορίας που ανήκει η ερώτηση.
      */
     public String getCategory() {

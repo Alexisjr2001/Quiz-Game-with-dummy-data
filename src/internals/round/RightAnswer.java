@@ -48,9 +48,9 @@ public class RightAnswer extends Round {
      * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση του ορίσματος.
      */
     public int answerQuestion(String answer){
-        Question temp = getQuestionInstance();
+        Question temp = getQuestionInstance(); // Παίρνω αναφορά στην τρέχουσα ερώτηση
 
-       if(temp!=null && temp.isRight(answer)){
+       if(temp!=null && temp.isRight(answer)){ // Άν υπάρχουν διαθέσιμες ερωτήσεις και ο παίχτης απάντησε σωστά
            return 1000;
        }
        else {

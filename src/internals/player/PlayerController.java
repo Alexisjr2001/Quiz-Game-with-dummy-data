@@ -1,7 +1,6 @@
 package internals.player;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 
 /**
@@ -33,10 +32,10 @@ public class PlayerController {
      * @return κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Υπάρχει ήδη παίχτης με αυτό το όνομα" διαφορετικά.
      */
     public String createPlayer(String playerName){
-        if (playerStore.containsKey(playerName)){
+        if (playerStore.containsKey(playerName)){ // Αν υπάρχει ήδη παίχτης με ίδιο όνομα
             return "Υπάρχει ήδη παίχτης με αυτό το όνομα";
         } else {
-            playerStore.put(playerName, new Player(playerName));
+            playerStore.put(playerName, new Player(playerName)); // Δημιουργώ και αποθηκεύω νέο παίχτη
             return "Επιτυχία";
         }
     }
@@ -51,10 +50,10 @@ public class PlayerController {
      * @return η κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Δεν υπάρχει παίχτης με αυτό το όνομα" διαφορετικά.
      */
     public String removePlayer(String playerName){
-        Player temp = playerStore.remove(playerName);
-        if (temp != null){
+        Player temp = playerStore.remove(playerName); // Διαγράφω απο το HashMap το αντικείμενο που αντιστοιχεί στην συμβολοσειρά ορίσματος και παίρνω αναφορά στο αντικείμενο αυτό
+        if (temp != null){ // Άν το παραπάνω αντικείμενο δεν είναι το null, τότε ο παίχτης υπάρχει και τον διέγραψα απο την δομή
             return "Επιτυχία";
-        } else {
+        } else { // Ο παίχτης δεν υπάρχει και δεν τον διέγραψα απο την δομή
             return "Δεν υπάρχει παίχτης με αυτό το όνομα";
         }
     }
@@ -74,16 +73,16 @@ public class PlayerController {
      * @return κατάσταση επιτυχίας μεθόδου.
      */
     public String changePlayerName(String playerName, String newName){
-        Player p = playerStore.get(playerName);
+        Player p = playerStore.get(playerName); // Παίρνω αναφορά στο αντικείμενο που αντιστοιχεί στο πρώτο όρισμα
 
-        if (p == null){
+        if (p == null){ // Επιστράφηκε null, το αντικείμενο δεν υπάρχει!
             return "Δεν υπάρχει παίχτης με το όνομα: " + playerName + "! Δεν μπορεί να γίνει αλλαγή όνομα παίχτη που δεν υπάρχει...";
-        } else if (!playerExists(newName).equals("Επιτυχία")){
-            playerStore.remove(playerName);
-            p.setName(newName);
-            playerStore.put(newName, p);
+        } else if (!playerExists(newName).equals("Επιτυχία")){ // Άν δεν υπάρχει αποθηκευμένος παίχτης με το νέο όνομα (δεύτερο όρισμα)
+            playerStore.remove(playerName); // Αφαιρώ την παλιά εγγραφή παίχτη
+            p.setName(newName); // Αλλάζω το όνομα
+            playerStore.put(newName, p); // Εισάγω εκ νέου τον παίχτη στην δομή
             return "Επιτυχία";
-        } else {
+        } else { // Υπάρχει αποθηκευμένος παίχτης με το νέο όνομα (δεύτερο όρισμα)
             return "Υπάρχει ήδη παίχτης με το όνομα: " + newName + "! Δεν μπορούν να υπάρχουν δύο παίχτες με το ίδιο όνομα...";
         }
     }
@@ -122,9 +121,9 @@ public class PlayerController {
      * @return το σκορ του παίχτη αν αυτός υπάρχει, διαφορετικά -1.
      */
     public int getPlayerScore(String playerName){
-        Player p = playerStore.get(playerName);
+        Player p = playerStore.get(playerName); // Παίρνω αναφορά στο αντικείμενο που αντιστοιχεί στο όρισμα
 
-        if (p == null){
+        if (p == null){ // Δεν υπάρχει ο παίχτης αφού επιστράφηκε null
             return -1;
         }
         else {
@@ -142,12 +141,12 @@ public class PlayerController {
      * @return η κατάσταση επιτυχίας της μεθόδου.
      */
     public boolean playerCalculateGain(String playerName, int gain){
-        Player p = playerStore.get(playerName);
+        Player p = playerStore.get(playerName); // Παίρνω αναφορά στο αντικείμενο που αντιστοιχεί στο πρώτο όρισμα
 
-        if (p == null){
+        if (p == null){ // Δεν υπάρχει ο παίχτης αφού επιστράφηκε null
             return false;
         }
-        else{
+        else{ // Υπολογίζεται και αποθηκεύεται το νέο σκορ του παίχτη
             p.scoreGain(gain);
             return true;
         }
@@ -165,13 +164,13 @@ public class PlayerController {
      * @return το μέγιστο σκορ (highScore) του παίχτη αν αυτός υπάρχει, διαφορετικά -1.
      */
     public int getPlayerHighScore(String playerName){
-        Player p = playerStore.get(playerName);
+        Player p = playerStore.get(playerName); // Παίρνω αναφορά στο αντικείμενο που αντιστοιχεί στο όρισμα
 
-        if (p == null){
+        if (p == null){ // Δεν υπάρχει ο παίχτης αφού επιστράφηκε null
             return -1;
         }
 
-        return p.getHighScore();
+        return p.getHighScore(); // Επιστρέφεται το μέγιστο σκορ
     }
 
 
@@ -183,7 +182,7 @@ public class PlayerController {
     public String[] listPlayers(){
         String[] playerNames = new String[playerStore.size()];
         int i=0;
-        for(String aPlayerName : playerStore.keySet()){
+        for(String aPlayerName : playerStore.keySet()){ // Εισάγω ένα-ένα τα ονόματα των παιχτών στον πίνακα
             playerNames[i] = aPlayerName;
             i++;
         }
@@ -202,17 +201,17 @@ public class PlayerController {
      * @return η κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Δεν υπάρχει παίχτης με το συγκεκριμένο όνομα" διαφορετικά.
      */
     public String playerExists(String playerName){
-        if (playerStore.containsKey(playerName)){
+        if (playerStore.containsKey(playerName)){ // Υπάρχει
             return "Επιτυχία";
         }
-        else{
+        else{ // Δεν υπάρχει
             return "Δεν υπάρχει παίχτης με το συγκεκριμένο όνομα";
         }
     }
 
 
     /**
-     * Επιστρέφει τπν αριθμό των παιχτών του παιχνιδιού.
+     * Επιστρέφει τον αριθμό των παιχτών του παιχνιδιού.
      *
      * @return ο αριθμός των παιχτών.
      */

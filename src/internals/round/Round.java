@@ -28,17 +28,18 @@ public abstract class Round {
     private String[] questionAnswers; // Αποθηκεύει ένα αντίγραφο του πίνακα των πιθανών απαντήσεων της τρέχουσας ερώτησης.
 
     /**
-     * Ο τυπικός κατασκευαστής της κλάσης Round
+     * Ο τυπικός κατασκευαστής της κλάσης Round. Αρχικοποιεί τα δεδομένα της κλάσης.
      * @param questionStore Μία αναφορά σε ένα αντικείμενο της κλάσης QuestionLibrary
      * @param minPlayers  Ο ελάχιστος απαιτούμενος αριθμός παιχτών για τον γύρο
      * @param maxPlayers Ο μέγιστος επιτρεπόμενος αριθμός παιχτών για τον γύρο
      * @param questionNumber Ο αριθμός των ερωτήσεων που πρέπει να απαντηθούν σε αυτόν τον γύρο
      */
-    public Round(QuestionLibrary questionStore, int minPlayers, int maxPlayers, int questionNumber) {
+    public Round(QuestionLibrary questionStore, int minPlayers, int maxPlayers, int questionNumber) { // Ανάθεση τιμής αντίστοιχων μεταβλητών.
         this.questionStore = questionStore;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
-        this.questionNumber = questionNumber+1; // Αν φτάσω στην τελευταία ερώτηση θα γίνει 0, ενώ υπάρχει ερώτηση που πρέπει να απαντηθεί: Η τρέχουσα.
+        this.questionNumber = questionNumber+1; // Το +1 υπάρχει γιατί: αν "φτάσω" στην τελευταία ερώτηση θα γίνει 0, ενώ υπάρχει ερώτηση που πρέπει να απαντηθεί: Η τρέχουσα.
+                                                // Αν γίνει 0 ενώ υπάρχει ερώτηση που πρέπει να απαντηθεί, δημιουργεί πρόβλημα καθώς "χάνεται" μία ερώτηση.
     }
 
     /**
@@ -67,32 +68,33 @@ public abstract class Round {
      * @return αναφορά στο ίδιο το αντικείμενο για χρήση σε "αλυσιδωτές" κλήσεις αυτού.
      */
     public Round proceed(){
-        if (questionNumber > 0){
-            roundQuestion = questionStore.getRandomQuestionCategory().getRandomQuestion();
-            questionNumber--;
-        } else {
+        if (questionNumber > 0){ // Άν υπάρχουν ερωτήσεις που δεν έχουν χρησιμοποιηθεί ακόμη
+            roundQuestion = questionStore.getRandomQuestionCategory().getRandomQuestion(); // "Φορτώνω" τυχαία ερώτηση τυχαίας κατηγορίας
+            questionNumber--; // Μία ερώτηση έχει φορτωθεί για απάντηση.
+        } else { // Έχουν χρησιμοποιηθεί όλες οι ερωτήσεις
             roundQuestion = null; //Δεν έχουμε άλλες ερωτήσεις σε αυτόν το γύρο
         }
 
         questionAnswers = null; /* Την συγκεκριμένη μεταβλητή την θέτουμε ίση με null,
-        ώστε να είναι σε θέση να υποδεχτεί την πιθανές απαντήσεις της επόμενης ερώτησης. */
+        ώστε να είναι σε θέση να υποδεχτεί την πιθανές απαντήσεις της νέας ερώτησης.
+        Επίσης, σηματοδοτεί ότι δεν έχει γίνει αρχικοποίηση του πίνακα με τις απαντήσεις της νέας ερώτησης. */
 
         return this;
     }
 
     /**
-     * Επιστρέφει συμβολοσειρά με τη εκφώνηση της ερώτησης.
+     * Επιστρέφει συμβολοσειρά με τη εκφώνηση της τρέχουσας ερώτησης.
      * Σε περίπτωση που ο αριθμός των ερωτήσεων έχουν ξεπεράσει τον αριθμό συνολικών ερωτήσεων που προβλέπονται για τον γύρο, επιστρέφει null.
      * @return την εκφώνηση της ερώτησης ή null αν οι ερωτήσεις έχουν "εξαντληθεί".
      */
     public String getQuestion() {
-        if (questionNumber > 0){
+        if (questionNumber > 0){ // Άν υπάρχουν ερωτήσεις που δεν έχουν χρησιμοποιηθεί ακόμη
             if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
                 proceed();
             }
 
             return roundQuestion.getQuestion();
-        } else {
+        } else { // Ο αριθμός των ερωτήσεων έχουν ξεπεράσει τον αριθμό συνολικών ερωτήσεων που προβλέπονται για τον γύρο
             return null;
         }
     }
@@ -119,21 +121,24 @@ public abstract class Round {
         }
 
 
-        if (questionAnswers == null){
+        if (questionAnswers == null){ // Δεν έχει γίνει αρχικοποίηση του πίνακα με τις απαντήσεις της νέας ερώτησης
             String[] tempArray = roundQuestion.getAnswers();
             Random randomGenerator = new Random();
 
 
             for (int i = 0; i < tempArray.length; i++){ // Τυχαιοποιεί τις θέσεις των στοιχείων του πίνακα
                 int tempPosition = randomGenerator.nextInt(tempArray.length);
+
+                // Αλλαγή στοιχείων των θέσεων του μετρητή επανάληψης (i) και τυχαίας θέσης (tempPosition)
                 String tempElement = tempArray[tempPosition];
                 tempArray[tempPosition] = tempArray[i];
                 tempArray[i] = tempElement;
             }
 
-            questionAnswers = tempArray;
+            questionAnswers = tempArray; // Έχει γίνει αρχικοποίηση του πίνακα με τις απαντήσεις της νέας ερώτησης
         }
 
+        // Δημιουργώ πίνακα με αντίγραφα απαντήσεων
         String[] temp = new String[4];
         temp[0] = questionAnswers[0];
         temp[1] = questionAnswers[1];
@@ -150,7 +155,7 @@ public abstract class Round {
      */
 
     public String getRightQuestionAnswer(){
-        if (questionNumber > 0){
+        if (questionNumber > 0){ //
             if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
                 proceed();
             }
@@ -169,7 +174,7 @@ public abstract class Round {
      */
 
     public String getQuestionCategory(){
-        if (questionNumber > 0){
+        if (questionNumber > 0){ // Άν υπάρχουν ερωτήσεις που δεν έχουν χρησιμοποιηθεί ακόμη
             if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
                 proceed();
             }

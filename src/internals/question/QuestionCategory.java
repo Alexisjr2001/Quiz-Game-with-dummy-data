@@ -1,7 +1,6 @@
 package internals.question;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -32,12 +31,12 @@ public class QuestionCategory {
         this.categoryName = categoryName;
 
         this.questionStore = new HashMap<>();
-        for (Question q : inputQuestions){
+        for (Question q : inputQuestions){ // Αντιστοίχηση εκφώνησης ερωτήσεων με το αντίστοιχο αντικείμενο
             questionStore.put(q.getQuestion(), q);
         }
 
         this.automaticShuffle = automaticShuffle;
-        reshuffle();
+        reshuffle(); // Πρέπει αμέσως μετά την δημιουργία να μπορώ να πάρω τυχαίες ερωτήσεις, οπότε κάνω τυχαιοποίηση τους.
     }
 
     /**
@@ -56,7 +55,7 @@ public class QuestionCategory {
         Question[] temp = new Question[questionStore.size()];
 
         int i = 0; // Μετρητής θέσης στον πίνακα temp
-        for (Question q : questionStore.values()){
+        for (Question q : questionStore.values()){ // Εισάγω στον πίνακα μία-μία τις ερωτήσεις που υπάρχουν (ως values) στο HashMap
             temp[i++] = q;
         }
 
@@ -93,23 +92,23 @@ public class QuestionCategory {
      * @return μία τυχαία ερώτηση ή null
      */
     public Question getRandomQuestion(){
-        if (questionStack.size()==0){
-            if (automaticShuffle) {
-                reshuffle();
+        if (questionStack.size()==0){ // Αν έχουν ήδη επιστραφεί όλες οι ερωτήσεις
+            if (automaticShuffle) { // Αν έχει επιτραπεί το αυτόματο "ανακάτεμα"
+                reshuffle(); // Κάνω ανακάτεμα
             } else {
-                return null;
+                return null; // Επιστρέφεται null
             }
         }
 
-        return questionStack.pop();
+        return questionStack.pop(); // Επιστρέφεται μια τυχαία ερώτηση της κατηγορίας.
     }
 
 
     /**
      * Επιστρέφει τον αριθμό των ερωτήσεων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomQuestion()}.
      *
-     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστραφεί 0 εαν έχουν "εξαντληθεί" οι ερωτήσεις
-     * και ο διαχειριστής της κλάσης δεν έχει κάνει reshuffle().
+     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστρέφει 0 εαν έχουν "εξαντληθεί" οι ερωτήσεις
+     * (μέχρι ο διαχειριστής της κλάσης να έχει κάνει reshuffle()).
      *
      * @return αριθμό των ερωτήσεων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomQuestion()}.
      */
@@ -119,18 +118,18 @@ public class QuestionCategory {
 
     /**
      * Υλοποιεί την λειτουργία "ανακατέματος" της κλάσης. Κάθε αναφορά σε "ανακάτεμα" εννοεί κλήση αυτής της μεθόδου.
-     * Όλες οι ερωτήσεις που έχουν ηδη εμφανιστεί ξαναγίνονται διαθέσιμες και τυχαιοποιείται η σειρά επιστροφής τους
-     * (όταν ζητηθεί επιστροφή μέσω της μεθόδου getRandomQuestion()).
+     * Όλες οι ερωτήσεις που έχουν ηδη εμφανιστεί ξαναγίνονται διαθέσιμες και τυχαιοποιείται η σειρά επιστροφής όλων των ερωτήσεων
+     * (επιστροφή μέσω της μεθόδου getRandomQuestion()).
      *
      * @return αναφορά στην κλάση που καλείται με σκοπό την χρήση της σε "αλυσιδωτές" κλήσεις αυτής.
      */
     public QuestionCategory reshuffle(){
-        questionStack=new Stack<>();
-        for(Question q: questionStore.values()){
+        questionStack=new Stack<>(); // Αγνοώ τις ερωτήσεις που δεν έχουν εμφανιστεί για να τις συμπεριλάβω όλες εκ νέου.
+        for(Question q: questionStore.values()){ // Εισάγω όλες τις ερωτήσεις στο stack
             questionStack.push(q);
         }
 
-        java.util.Collections.shuffle(questionStack); //Ανακάτεμα
+        java.util.Collections.shuffle(questionStack); //Ανακάτεμα - τυχαιοποίηση σειράς ερωτήσεων στην δομή απο την οποία θα επιστραφούν.
         return this;
 
     }

@@ -53,7 +53,7 @@ public class Bet extends Round {
      * Ο παίκτης μπορεί να ποντάρει 250, 500, 750 και 1000 πόντους.
      *
      * Άν το ποντάρισμα του παίχτη είναι μία από τις παραπάνω τιμές, η ενέργεια θα πετύχει και θα επιστραφεί η συμβολοσειρά "Επιτυχία".
-     * Διαφορετικά, η ενέργεια θα δεν πετύχει και θα επιστραφεί συμβολοσειρά που περιγράφει το σφάλμα.
+     * Διαφορετικά, η ενέργεια δεν θα πετύχει και θα επιστραφεί συμβολοσειρά που περιγράφει το σφάλμα.
      *
      * @param playerName Το όνομα του παίχτη
      * @param betAmount Η τιμή του πονταρίσματος (μία απο τις τιμές: 250, 500, 750, 1000)
@@ -66,7 +66,7 @@ public class Bet extends Round {
             case 500:
             case 750:
             case 1000:
-                bets.put(playerName,betAmount);
+                bets.put(playerName,betAmount); // Αντιστοίχηση όνομα παίχτη - τιμή πονταρίσματος
                 return "Επιτυχία";
             default:
                 return "Μη έγκυρη τιμή πονταρίσματος";
@@ -85,14 +85,14 @@ public class Bet extends Round {
      * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση των ορισμάτων.
      */
     public int answerQuestion(String answer, String playerName){
-        Question temp = getQuestionInstance();
+        Question temp = getQuestionInstance(); // Παίρνω αναφορά στην τρέχουσα ερώτηση
 
-        if(temp!=null && bets.containsKey(playerName)){
-            if(temp.isRight(answer)) {
-                return bets.get(playerName);
+        if(temp!=null && bets.containsKey(playerName)){ // Άν υπάρχουν διαθέσιμες ερωτήσεις και ο παίχτης με όνομα το δεύτερο όρισμα έχει κάνει ποντάρισμα
+            if(temp.isRight(answer)) { // Άν έχει απαντήσει σωστά
+                return bets.get(playerName); // Κερδίζει πόντους
             }
-            else {
-                return -1 * bets.get(playerName);
+            else { // Άν έχει απαντήσει λάθος
+                return -1 * bets.get(playerName); // Χάνει πόντους
             }
         }
         else {

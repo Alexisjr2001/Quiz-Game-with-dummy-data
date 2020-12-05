@@ -40,7 +40,8 @@ public class Player {
     }
 
     /**
-     * Επιστρέφει το μέγιστο σύνολο πόντων που έχει συγκεντρώσει μέχρι στιγμής ο παίχτης.
+     * Επιστρέφει το μέγιστο σύνολο πόντων που έχει συγκεντρώσει μέχρι στιγμής ο παίχτης
+     * (μέχρι την τελευταία κλήση της scoreGain(int)).
      * @return το μέγιστο (μέχρι τώρα) σκόρ του παίχτη.
      */
     public int getHighScore() {
@@ -54,7 +55,7 @@ public class Player {
      * @return το νέο σύνολο πόντων του παίχτη.
      */
     public int scoreGain(int gain){
-        score += gain;
+        score += gain; // Υπολογίζω και αποθηκεύω το νέο σκόρ
 
         if (score > highScore){ // Υπολογισμός του νέου (εφόσον χρειάζεται) highscore.
             highScore = score;
@@ -69,7 +70,7 @@ public class Player {
      * @return παλαιό όνομα παίχτη.
      */
     public String setName(String newName){
-        String temp = name;
+        String temp = name; // Αποθήκευση παλαιού ονόματος
 
         name = newName;
 

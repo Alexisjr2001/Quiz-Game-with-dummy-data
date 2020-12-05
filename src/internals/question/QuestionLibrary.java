@@ -27,8 +27,8 @@ public class QuestionLibrary {
     public QuestionLibrary(boolean automaticShuffle) {
         this.automaticShuffle = automaticShuffle;
         categoryStore = new HashMap<>();
-        loadQuestions();
-        reshuffle();
+        loadQuestions(); // "Φορτωση" ερωτήσεων στην κλάση.
+        reshuffle(); // Πρέπει αμέσως μετά την δημιουργία να μπορώ να πάρω τυχαίες κατηγορίες, οπότε κάνω τυχαιοποίηση τους.
     }
 
     /**
@@ -52,40 +52,40 @@ public class QuestionLibrary {
      */
 
     public QuestionCategory getRandomQuestionCategory(){
-        if (categoryStack.size()==0){
-            if (automaticShuffle) {
-                reshuffle();
+        if (categoryStack.size()==0){ // Αν έχουν ήδη επιστραφεί όλες οι κατηγορίες
+            if (automaticShuffle) { // Αν έχει επιτραπεί το αυτόματο "ανακάτεμα"
+                reshuffle(); // Κάνω ανακάτεμα
             }
-            else {
-                return null;
+            else { // Αν δεν έχει επιτραπεί το αυτόματο "ανακάτεμα"
+                return null; // Επιστρέφεται null
             }
         }
 
-        return categoryStack.pop();
+        return categoryStack.pop(); // Επιστρέφεται μια τυχαία κατηγορία ερωτήσεων.
     }
 
     /**
      * Υλοποιεί την λειτουργία "ανακατέματος" της κλάσης. Κάθε αναφορά σε "ανακάτεμα" εννοεί κλήση αυτής της μεθόδου.
-     * Όλες οι κατηγορίες που έχουν ηδη εμφανιστεί ξαναγίνονται διαθέσιμες και τυχαιοποιείται η σειρά επιστροφής τους
-     * (όταν ζητηθεί επιστροφή μέσω της μεθόδου getRandomQuestionCategory()).
+     * Όλες οι κατηγορίες που έχουν ηδη εμφανιστεί ξαναγίνονται διαθέσιμες και τυχαιοποιείται η σειρά επιστροφής όλων των ερωτήσεων
+     * (επιστροφή μέσω της μεθόδου getRandomQuestionCategory()).
      * @return αναφορά στην κλάση που καλείται με σκοπό την χρήση της σε "αλυσιδωτές" κλήσεις αυτής.
      */
     public QuestionLibrary reshuffle(){
 
-        categoryStack = new Stack<>();
-        for (QuestionCategory qc : categoryStore.values()){
+        categoryStack = new Stack<>(); // Αγνοώ τις κατηγορίες που δεν έχουν εμφανιστεί για να τις συμπεριλάβω όλες εκ νέου.
+        for (QuestionCategory qc : categoryStore.values()){ // Εισάγω όλες τις κατηγορίες στο stack
             categoryStack.push(qc);
         }
 
-        java.util.Collections.shuffle(categoryStack);
+        java.util.Collections.shuffle(categoryStack); //Ανακάτεμα - τυχαιοποίηση σειράς κατηγοριών στην δομή απο την οποία θα επιστραφούν.
         return this;
     }
 
     /**
      * Επιστρέφεται το πλήθος των κατηγοριών ερωτήσεων που είναι διαθέσιμες για επιστροφή απο την μέθοδο {@code getRandomQuestionCategory()}.
      *
-     *  Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστραφεί 0 εαν έχουν "εξαντληθεί" οι κατηγορίες
-     *  και ο διαχειριστής της κλάσης δεν έχει κάνει reshuffle().
+     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστρέφει 0 εαν έχουν "εξαντληθεί" οι κατηγορίες
+     * (μέχρι ο διαχειριστής της κλάσης να έχει κάνει reshuffle()).
      *
      * @return αριθμό των κατηγοριών που απομένουν για επιστροφή απο την μέθοδο {@code getRandomQuestionCategory()}.
      */
@@ -113,7 +113,7 @@ public class QuestionLibrary {
         QuestionCategory[] temp = new QuestionCategory[categoryStore.size()];
 
         int i = 0; // Μετρητής στοιχείων του πίνακα αντιγράφων.
-        for (QuestionCategory qc : categoryStore.values()){
+        for (QuestionCategory qc : categoryStore.values()){ // Εισάγω στον πίνακα μία-μία τις κατηγορίες που υπάρχουν (ως values) στο HashMap
             temp[i++] = qc;
         }
 
@@ -121,21 +121,24 @@ public class QuestionLibrary {
     }
 
     /**
-     * Φορτώνει την δομή categoryStore με ερωτήσεις (που έχουν πρότυπη μορφή) με σκοπό δοκιμής σωστής λειτουργίας κλάσης για το πρώτο μέρος της εργασίας.
+     * Φορτώνει την δομή categoryStore με ερωτήσεις (που έχουν πρότυπη μορφή) με σκοπό δοκιμής σωστής λειτουργίας, για το πρώτο μέρος της εργασίας.
      */
     private void loadQuestions(){
-        Random randomGetter = new Random();
-        final int questionNumber = 100;
-        String[] answers = {"Απάντηση 1", "Απάντηση 2", "Απάντηση 3", "Απάντηση 4"};
-        for(int categoryNumber = 0; categoryNumber <= questionNumber; categoryNumber++){
-            String categoryName = "Όνομα κατηγορίας " + categoryNumber;
-            Question[] questionTempStore = new Question[questionNumber];
+        Random randomGetter = new Random(); // Παραγωγός τυχαίων αριθμών
+        final int questionNumber = 100; // Αριθμός κατηγοριών και ερωτήσεων ανα κατηγορία (Σταθερά που ορίζεται απο τον προγραμματιστή)
+        String[] answers = {"Απάντηση 1", "Απάντηση 2", "Απάντηση 3", "Απάντηση 4"}; // Οι πρότυπες απαντήσεις κάθε κατηγορίας
+        for(int categoryNumber = 0; categoryNumber <= questionNumber; categoryNumber++){ // Για κάθε κατηγορία:
+            String categoryName = "Όνομα κατηγορίας " + categoryNumber; // Ορίζω όνομα κατηγορίας
+            Question[] questionTempStore = new Question[questionNumber]; // Οι ερωτήσεις αυτής της κατηγορίας
 
-            for (int questionIterator = 0; questionIterator < questionTempStore.length; questionIterator++){
+            for (int questionIterator = 0; questionIterator < questionTempStore.length; questionIterator++){ // Για κάθε ερώτηση:
+                // Η ερώτηση έχει εκφώνηση τύπου "Ερώτηση + αριθμός ερώτησης", απαντήσεις τις πρότυπες απαντήσεις,
+                // σωστή απάντηση μία τυχαία απο τις πρότυπες και όνομα κατηγορίας το όνομα που έχει η κατηγορία σε αυτή την επανάληψη του εξωτερικού βρόχου.
                 questionTempStore[questionIterator] = new Question("Ερώτηση " + questionIterator, answers, answers[randomGetter.nextInt(4)], categoryName);
             }
+            // Η κατηγορία έχει όνομα αυτό που ορίστηκε παραπάνω, ερωτήσεις αυτές που δημιουργήθηκαν στον πάνω βρόχο και επιτρέπεται το αυτόματο "ανακάτεμα"
             QuestionCategory temp = new QuestionCategory(categoryName, questionTempStore, true);
-            categoryStore.put(temp.getCategoryName(), temp);
+            categoryStore.put(temp.getCategoryName(), temp); // Αντιστοιχίζω όνομα κατηγορίας με αντικείμενο κατηγορίας
         }
     }
 
