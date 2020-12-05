@@ -2,6 +2,10 @@ package consoleUI;
 
 /**
  * Η κλάση Command μοντελοποιεί την έννοια της ενέργειας που μπορεί να κάνει (πληκτρολογήσει) ο χρήστης στα μενού.
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.3
  */
 public enum Command {
     /**

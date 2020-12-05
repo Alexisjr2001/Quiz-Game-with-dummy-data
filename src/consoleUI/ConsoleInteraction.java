@@ -13,6 +13,11 @@ import internals.round.RoundController;
  * Η κλάση που μοντελοποιεί την αλληλεπίδραση της εφαρμογής με τον χρήστη (με διεπαφή κονσόλας).
  * Ουσιαστικά, διαχειρίζεται και χρησιμοποιεί αντικείμενα κλάσεων τύπου Controller και υλοποιεί την λογική του παιχνιδιού,
  * ενω χειρίζεται την είσοδο / έξοδο  απο / προς τον χρήστη.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.3
  */
 public class ConsoleInteraction {
     private InputParser parser; // Χρησιμοποιούμε το parser για είσοδο απο τον χρήστη
@@ -289,6 +294,8 @@ public class ConsoleInteraction {
         int pointSum = 0; // Αρχικοποίηση μεταβλητής που αποθηκεύει το σύνολο των κερδισμένων πόντων σε αυτό τον γύρο
 
         UserAssistingMessages.printRoundInfo(currentRound);  // Εκτύπωση πληροφοριών γύρου
+        System.out.println();
+
         parser.prompt("Πάτησε enter για να αρχίσει ο γύρος...");
         String userBetState; // Αποθηκεύει την κατάσταση επιτυχίας της προσπάθειας πονταρίσματος
 

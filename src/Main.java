@@ -2,6 +2,11 @@ import consoleUI.ConsoleInteraction;
 
 /**
  * Υλοποιεί την μοναδική μέθοδο main της εφαρμογής και αποτελεί σημείο εκκίνησης του προγράμματος.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.3
  */
 public class Main {
     /**

@@ -14,6 +14,11 @@ import internals.question.QuestionLibrary;
 
 public class RightAnswer extends Round {
 
+    /**
+     * Τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
+     * @param questionStore αναφορά σε αντικείμενο της κλάσης QuestionLibrary, απο την οποία θα "παρθούν" οι ερωτήσεις.
+     * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο.
+     */
     public RightAnswer(QuestionLibrary questionStore, int questionNumber) {
         super(questionStore,1, 1, questionNumber);
     }
