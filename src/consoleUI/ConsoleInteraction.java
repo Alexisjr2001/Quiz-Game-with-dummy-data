@@ -55,18 +55,22 @@ public class ConsoleInteraction {
             switch (userAnswer){ // Εκτέλεση επιλεγμένης ενέργειας
                 case BEGIN_GAME: // Επέλεξε "Εκκίνηση παιχνιδιού"
                     beginGame(); // Μεταφορά εκτέλεσης σε αντίστοιχο (αρμόδιο) τμήμα κώδικα
+                    System.out.println();
                     break;
                 case EXIT_GAME: // Επέλεξε "Έξοδος"
                     executionContinues =false; // Αλλάζω την μεταβλητή ελέγχου ώστε να τερματίσει η επανάληψη
+                    System.out.println();
                     break;
                 case HELP: // Επέλεξε "Βοήθεια"
                     UserAssistingMessages.printHelpMenu(availableCommands); // Εκτυπώνω λεπτομέρειες διαθέσιμων εντολών.
                     parser.prompt("Πάτησε οτιδήποτε για συνέχεια...");
+                    System.out.println();
                     break;
                 case MANAGE_PLAYERS: // Επίλεξε "Διαχείριση παίχτη"
                     playerManagement();  // Μεταφορά εκτέλεσης σε αντίστοιχο (αρμόδιο) τμήμα κώδικα
                     break;
                 default: // Δεν επέλεξε επιτρεπτή εντολή, συνεχίζει η επανάληψη
+                    System.out.println();
                     break;
             }
         }
@@ -92,25 +96,35 @@ public class ConsoleInteraction {
                 case CREATE_PLAYER: // Επέλεξε "Δημιουργία Παίχτη"
                     userResponce = parser.prompt("Δώσε όνομα παίχτη για προσθήκη:"); // Διαβάζω όνομα παίχτη
                     System.out.println(playerController.createPlayer(userResponce) + "!"); // Προσπάθεια δημιουργίας νέου παίχτη και εκτύπωση μηνύματος με το αποτέλεσμα της προσπάθειας αυτής.
+                    System.out.println();
                     break;
                 case DELETE_PLAYER: // Επέλεξε "Διαγραφή Παίχτη"
+                    if (playerController.getNumberOfPlayers()==0){ // Έλεγχος αν υπάρχουν παίχτες. Αν δεν υπάρχουν, δεν υπάρχει λόγος να ζητήσω στην συνέχεια όνομα παίχτη
+                        System.out.println("Δεν υπάρχουν αποθηκευμένοι παίχτες, οπότε δεν μπορείς διαγράψεις κάποιον...");
+                        System.out.println();
+                        break; // Δεν υπάρχει κανένας αποθηκευμένος παίχτης, επιστροφή στο προηγούμενο μενού.
+                    }
                     userResponce = parser.prompt("Δώσε όνομα παίχτη για διαγραφή:"); // Διαβάζω όνομα παίχτη
                     System.out.println(playerController.removePlayer(userResponce) + "!"); // Προσπάθεια διαγραφής παίχτη και εκτύπωση μηνύματος με το αποτέλεσμα της προσπάθειας αυτής.
+                    System.out.println();
                     break;
                 case RENAME_PLAYER: // Επέλεξε "Μετονομασία παίχτη"
                     if (playerController.getNumberOfPlayers()==0){ // Έλεγχος αν υπάρχουν παίχτες. Αν δεν υπάρχουν δεν υπάρχει λόγος να ζητήσω στην συνέχεια παλιό και νέο όνομα παίχτη
                         System.out.println("Δεν υπάρχουν αποθηκευμένοι παίχτες, οπότε δεν μπορείς να κάνεις κάποια μετονομασία...");
+                        System.out.println();
                         break; // Δεν υπάρχει κανένας αποθηκευμένος παίχτης, επιστροφή στο προηγούμενο μενού.
                     }
                     userResponce = parser.prompt("Δώσε όνομα παίχτη που θέλεις να αλλάξεις:"); // Διαβάζω παλιό όνομα παίχτη
                     userSecondResponce = parser.prompt("Δώσε νέο όνομα"); // Διαβάζω νέο όνομα παίχτη
                     System.out.println(playerController.changePlayerName(userResponce, userSecondResponce) + "!"); // Προσπάθεια μετονομασίας παίχτη και εκτύπωση μηνύματος με το αποτέλεσμα της προσπάθειας αυτής.
+                    System.out.println();
                     break;
 
                 case SCOREBOARD: // Επέλεξε "Εμφάνιση πίνακα σκόρ"
                     String[][] scoreboard = playerController.getScoreboard(); // Αποθηκεύω τον πίνακα με τα σκόρ
                     if(scoreboard.length==0){ // Αν ο πίνακας έχει μήκος 0, τότε δεν υπάρχουν παίκτες των οποίων τα σκορ μπορώ να ελέγξω
                         System.out.println("Δεν υπάρχουν καταχωρημένοι παίχτες!");
+                        System.out.println();
                         break;
                     }
 
@@ -118,10 +132,12 @@ public class ConsoleInteraction {
                     for (String[] aStringArray : scoreboard){ // Τυπώνω όνομα παίχτη, τρέχον σκορ παίχτη, μέγιστο σκορ παίχτη για κάθε παίχτη του πίνακα
                         System.out.printf("| %-25s ||%15s | %18s |%n", aStringArray[0], aStringArray[1], aStringArray[2]);
                     }
+                    System.out.println();
                     break;
 
                 case HELP: // Επέλεξε "Βοήθεια"
                     UserAssistingMessages.printHelpMenu(availableCommands); // Εκτύπωση ονομάτων και περιγραφών των διαθέσιμων ενεργειών (εντολών)
+                    System.out.println();
                     break;
 
                 case MAIN_MENU: // Επέλεξε "Κύριο Μενού"
@@ -140,7 +156,6 @@ public class ConsoleInteraction {
      */
     private void beginGame(){
         Command[] availableCommands = {Command.BEGIN_GAME, Command.MAIN_MENU, Command.HELP}; // Οι επιτρεπτές / διαθέσιμες ενέργειες χρήστη σε αυτό το μενού
-        System.out.println();
 
         boolean executionContinues = true; // Η μεταβλητή που χειρίζεται την έξοδο απο τον βρόχο
 
@@ -153,17 +168,20 @@ public class ConsoleInteraction {
             switch (userAnswer){ // Επιλογή ενέργειας
                 case BEGIN_GAME: // Επέλεξε "Εκκίνηση Παιχνιδιού"
                     executionContinues = gameProcess(); // Μετάβαση στην μέθοδο που χειρίζεται την εκτέλεση του παιχνιδιού, αποθηκεύω την κατάσταση επιτυχίας (αν κατάφερε να ξεκινήσει το παιχνίδι)
-                    System.out.println();
-                    System.out.println("--------------------------------"); // Εκτύπωση μηνύματος που σηματοδοτεί το τέλος όλων των γύρων.
-                    System.out.println("-----   Τέλος Παιχνιδιού   -----");
-                    System.out.println("--------------------------------");
-                    System.out.println();
+                    if (executionContinues){ // Άν δεν έγινε εκκίνηση παιχνιδιού δεν πρέπει να τυπωθεί το μήνυμα
+                        System.out.println();
+                        System.out.println("--------------------------------"); // Εκτύπωση μηνύματος που σηματοδοτεί το τέλος όλων των γύρων.
+                        System.out.println("-----   Τέλος Παιχνιδιού   -----");
+                        System.out.println("--------------------------------");
+                        System.out.println();
+                    }
                     break;
                 case MAIN_MENU: // Επέλεξε "Κύριο Μενού"
                     executionContinues = false; // Τερματίζω το βρόχο για να επιστρέψω στο προηγούμενο μενού
                     break;
                 case HELP: // Επέλεξε "Βοήθεια"
                     UserAssistingMessages.printHelpMenu(availableCommands); // Εκτύπωση ονομάτων και περιγραφών των διαθέσιμων ενεργειών (εντολών)
+                    System.out.println();
                     break;
                 default: // Δεν επέλεξε επιτρεπτή ενέργεια
                     break;
@@ -215,13 +233,14 @@ public class ConsoleInteraction {
             } else if (currentRound instanceof  Bet){
                 gamePointSum += playBet((Bet) currentRound, selectedPlayer);
             }
+            System.out.println();
 
         }
 
         // Εκτύπωση στατιστικών παιχνιδιού στον χρήστη
-        System.out.println("Σύνολο πόντων που κερδίθηκαν αυτό το παιχνίδι: " + gamePointSum);
-        System.out.println("Τρέχον σκόρ παίχτη " + selectedPlayer + " :" + playerController.getPlayerScore(selectedPlayer));
-        System.out.println("Μέγιστο σκόρ παίχτη (highscore) " + selectedPlayer + " :" + playerController.getPlayerHighScore(selectedPlayer));
+        System.out.println("Σύνολο πόντων που αποκτήθηκαν αυτό το παιχνίδι: " + gamePointSum);
+        System.out.println("Τρέχον σκόρ παίχτη " + selectedPlayer + " : " + playerController.getPlayerScore(selectedPlayer));
+        System.out.println("Μέγιστο σκόρ παίχτη (highscore) " + selectedPlayer + " : " + playerController.getPlayerHighScore(selectedPlayer));
 
         return true; // Επιτυχία εκκίνησης
     }
@@ -236,12 +255,14 @@ public class ConsoleInteraction {
         int pointSum = 0; // Αρχικοποίηση μεταβλητής που αποθηκεύει το σύνολο των κερδισμένων πόντων σε αυτό τον γύρο
 
         UserAssistingMessages.printRoundInfo(currentRound); // Εκτύπωση πληροφοριών γύρου
-        parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
+        parser.prompt("Πάτησε enter για να αρχίσει ο γύρος...");
 
         while (! currentRound.isOver() ){ // Δίνουμε ερωτήσεις που πρέπει να απαντήσει ο παίκτης μέχρι αυτές να τελειώσουν (Αυτό καθορίζεται απο την μέθοδο isOver() της round)
             System.out.printf("Κατηγορία ερώτησης: %s%n%n", currentRound.getQuestionCategory()); // Εκτύπωση κατηγορίας ερώτησης
 
-            parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να εμφανιστεί η ερώτηση...");
+            parser.prompt("Πάτησε enter για να εμφανιστεί η ερώτηση...");
+            System.out.println();
+
             UserAssistingMessages.printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers()); // Εκτύπωση εκφώνησης ερώτησης και πιθανών απαντήσεων της
 
             int gain = currentRound.answerQuestion(currentRound.getQuestionAnswers()[parser.promptAnswer()-1]); // Υπολογισμός σκόρ που αποκτήθηκε απο την απάντηση στην ερώτηση
@@ -251,7 +272,9 @@ public class ConsoleInteraction {
             UserAssistingMessages.printGain(gain, currentRound.getRightQuestionAnswer()); // Εκτύπωση του αποτελέσματος της απάντησης
 
             currentRound.proceed(); // "Φόρτωση" επόμενης ερώτησης
+            System.out.println();
         }
+        System.out.println("Σύνολο πόντων που αποκτήθηκαν αυτό τον γύρο: " + pointSum);
         System.out.printf("-----   Τέλος Γύρου: Σωστή Ερώτηση   -----%n%n"); // Σηματοδοτεί στον χρήστη το τέλος του γύρου
         return pointSum; // Επιστρέφει σύνολο πόντων που κερδήθηκαν σε αυτό τον γύρο
     }
@@ -266,12 +289,14 @@ public class ConsoleInteraction {
         int pointSum = 0; // Αρχικοποίηση μεταβλητής που αποθηκεύει το σύνολο των κερδισμένων πόντων σε αυτό τον γύρο
 
         UserAssistingMessages.printRoundInfo(currentRound);  // Εκτύπωση πληροφοριών γύρου
-        parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να αρχίσει ο γύρος...");
+        parser.prompt("Πάτησε enter για να αρχίσει ο γύρος...");
         String userBetState; // Αποθηκεύει την κατάσταση επιτυχίας της προσπάθειας πονταρίσματος
 
 
         while (! currentRound.isOver() ){ // Δίνουμε ερωτήσεις που πρέπει να απαντήσει ο παίκτης μέχρι αυτές να τελειώσουν (Αυτό καθορίζεται απο την μέθοδο isOver() της round)
-            parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να εμφανιστεί η κατηγορία της ερώτησης...");
+            parser.prompt("Πάτησε enter για να εμφανιστεί η κατηγορία της ερώτησης...");
+
+            System.out.println();
 
             System.out.printf("Κατηγορία ερώτησης: %s%n%n", currentRound.getQuestionCategory()); // Εκτύπωση κατηγορίας ερώτησης
 
@@ -280,7 +305,8 @@ public class ConsoleInteraction {
                 System.out.println(userBetState + "!");
             }while (!userBetState.equals("Επιτυχία")); // Επαναλαμβάνεται το πάνω μέχρι ο χρήστης να δώσει επιτρεπτή τιμή πονταρίσματος
 
-            parser.prompt("Πάτησε οποιοδήποτε πλήκτρο για να εμφανιστεί η ερώτηση...");
+            parser.prompt("Πάτησε enter για να εμφανιστεί η ερώτηση...");
+            System.out.println();
             UserAssistingMessages.printQuestion(currentRound.getQuestion(), currentRound.getQuestionAnswers()); // Εκτύπωση εκφώνησης ερώτησης και πιθανών απαντήσεων της
 
             int gain = currentRound.answerQuestion(currentRound.getQuestionAnswers()[parser.promptAnswer()-1], playerName); // Υπολογισμός σκόρ που αποκτήθηκε απο την απάντηση στην ερώτηση
@@ -290,7 +316,9 @@ public class ConsoleInteraction {
             UserAssistingMessages.printGain(gain, currentRound.getRightQuestionAnswer()); // Εκτύπωση του αποτελέσματος της απάντησης
 
             currentRound.proceed(); // "Φόρτωση" επόμενης ερώτησης
+            System.out.println();
         }
+        System.out.println("Σύνολο πόντων που αποκτήθηκαν αυτό τον γύρο: " + pointSum);
         System.out.printf("-----   Τέλος Γύρου: Ποντάρισμα   -----%n%n"); // Σηματοδοτεί στον χρήστη το τέλος του γύρου
         return pointSum; // Επιστρέφει σύνολο πόντων που κερδήθηκαν σε αυτό τον γύρο
     }

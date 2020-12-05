@@ -87,10 +87,12 @@ public class InputParser {
     public Command promptCommand(String userMessage, Command[] acceptedCommands){
         boolean isIncomplete; // Μεταβλητή λήξης βρόχου
         String aPrompt = prompt(userMessage); // Διαβάζω συμβολοσειρά απο τον χρήστη
+        System.out.println();
         isIncomplete = !isAcceptedCommand(aPrompt, acceptedCommands); // Ελέγχω αν η συμβολοσειρά είναι αποδεκτή εντολή
         while(isIncomplete){ // Ζητάω απο τον χρήστη να δώσει ενέργεια (εντολή) μέχρι να δώσει μία έγκυρη
             System.out.println("Λάθος είσοδος! Προσπάθησε ξανά..."); // Τυπώνω μήνυμα λάθους
             aPrompt = prompt(userMessage); // Ξαναδιαβάζω συμβολοσειρά
+            System.out.println();
             isIncomplete = !isAcceptedCommand(aPrompt, acceptedCommands); // Ο βρόχος θα λήξει όταν ο χρήστης έχει δώσει αποδεκτή εντολή
         }
         return Command.valueOfGreek(aPrompt); // Μετατρέπω την (τελικά αποδεκτή) συμβολοσειρά στην αντίστοιχη σταθερά Command και την επιστρέφω
@@ -107,9 +109,11 @@ public class InputParser {
      */
     public int promptPositiveInt(String userMessage){
         int aPositiveNumber = Integer.parseInt(prompt(userMessage)); // Εισάγω μία συμβολοσειρά απο τον χρήστη, την μετατρέπω σε αριθμό και τον αποθηκεύω.
+        System.out.println();
         while(aPositiveNumber<=0){ // Ελέγχω αν ο αριθμός είναι μη θετικός
             System.out.println("Πρέπει να δώσεις θετικό αριθμό!");
             aPositiveNumber = Integer.parseInt(prompt(userMessage)); // Εισάγω πάλι μία συμβολοσειρά απο τον χρήστη, την μετατρέπω σε αριθμό και τον αποθηκεύω.
+            System.out.println();
         }
         return aPositiveNumber; // Ο αριθμός είναι σίγουρα θετικός, το επιστρέφω.
     }
@@ -127,9 +131,11 @@ public class InputParser {
      */
     public int promptIntInRange(String userMessage,int low, int high){
         int aNumber = Integer.parseInt(prompt(userMessage)); // Διαβάζω ακέραιο απο τον χρήστη ως συμβολοσειρά και τον αποθηκεύω αφού τον μετατρέψω
+        System.out.println();
         while(aNumber<low || aNumber>high ){ // Η επανάληψη συνεχίζεται όσο ο χρήστης δίνει αριθμό εντός ορίων
             System.out.println("Πρέπει να δώσεις ακέραιο αριθμό από " + low + " μέχρι και " + high);
             aNumber = Integer.parseInt(prompt(userMessage));
+            System.out.println();
         }
         return aNumber; // Επιστρέφω τον (τελικά) εντός ορίων ακέραιο
     }
@@ -151,6 +157,7 @@ public class InputParser {
 
         do{ // Κάνω επανάληψη μέχρι ο χρήστης να δώσει έναν απο τους αριθμούς 1, 2, 3 ή 4
             aPrompt = prompt(); // Διαβάζω είσοδο χρήστη
+            System.out.println();
             switch (aPrompt){ // Μετατρέπω είσοδο σε αριθμό και σταματάω την επανάληψη αν χρειαστεί
                 case "1":
                     answer = 1;
