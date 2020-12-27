@@ -1,5 +1,7 @@
 package internals.player;
 
+import java.io.Serializable;
+
 /**
  * Η κλάση {@code Player}, μοντελοποιεί την οντότητα του παίχτη στην εφαρμογή.
  *
@@ -8,10 +10,11 @@ package internals.player;
  *
  * @version 2020.11.17
  */
-public class Player {
+public class Player implements Serializable {
     private String name; // Το όνομα του παίχτη.
-    private int score; // Το σύνολο των πόντων που έχει συγκεντρώσει ο παίχτης.
+    transient private int score; // Το σύνολο των πόντων που έχει συγκεντρώσει ο παίχτης.
     private int highScore; // Το μέγιστο σύνολο πόντων που έχει συγκεντρώσει μέχρι στιγμής ο παίχτης.
+    private int multiplayerWins; // Ο αριθμός των νικών του παίχτη σε παιχνίδι πολλών παιχτών.
 
     /**
      * Ο τυπικός κατασκευαστής της κλάσης. Αρχικοποιεί τα δεδομένα του αντικειμένου.
@@ -21,6 +24,7 @@ public class Player {
         this.name = name;
         this.score = 0;
         this.highScore = 0;
+        this.multiplayerWins = 0;
     }
 
     /**
@@ -75,5 +79,28 @@ public class Player {
         name = newName;
 
         return temp;
+    }
+
+    /**
+     * Μηδενίζει το τρέχον σκορ του παίχτη
+     */
+    public void clearCurrentScore(){
+        score = 0;
+    }
+
+    /**
+     * Επιστρέφει τον αριθμό των νικών του παίχτη σε παιχνίδι πολλών παιχτών.
+     * @return αριθμός νικών παίχτη σε παιχνίδι πολλών παιχτών.
+     */
+    public int getMultiplayerWins(){
+        return multiplayerWins;
+    }
+
+    /**
+     * Αυξάνει τον αριθμό των νικών του παίχτη σε παιχνίδι πολλών παιχτών κατά 1 και επιστρέφει τον νέο αριθμό.
+     * @return νέος αριθμός νικών του παίχτη σε παιχνίδι πολλών παιχτών.
+     */
+    public int countMultiplayerWin(){
+        return ++multiplayerWins;
     }
 }

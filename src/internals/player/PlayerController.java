@@ -91,20 +91,22 @@ public class PlayerController {
      * Επιστρέφει δισδιάστατο πίνακα συμβολοσειρών που αναπαριστούν τον πίνακα με τα σκορ όλων των αποθηκευμένων παιχτών.
      *
      * Συγκεκριμένα, αυτός ο δισδιάστατος πίνακας θα έχει αριθμό γραμμών ίσο με το πλήθος των παιχτών
-     * και αριθμό στηλών ίσο με τρία: Η πρώτη στήλη ({@code getScoreboard()[i][0]}) περιέχει το όνομα του (i-ου) παίχτη,
-     * η δεύτερη στήλη ({@code getScoreboard()[i][1]}) το τρέχον σκορ του (i-ου) παίχτη
-     * και η τρίτη στήλη ({@code getScoreboard()[i][2]}) το μέγιστο σκορ (highScore) του (i-ου) παίχτη.
+     * και αριθμό στηλών ίσο με τέσσερα: Η πρώτη στήλη ({@code getScoreboard()[i][0]}) περιέχει το όνομα του (i-ου) παίχτη,
+     * η δεύτερη στήλη ({@code getScoreboard()[i][1]}) το τρέχον σκορ του (i-ου) παίχτη,
+     * η τρίτη στήλη ({@code getScoreboard()[i][2]}) το μέγιστο σκορ (highScore) του (i-ου) παίχτη
+     * και η τέταρτη στήλη ({@code getScoreboard()[i][3]}) τον αριθμό των νικών σε παιχνίδι πολλών παιχτών του (i-ου) παίχτη.
      *
      * @return Δισδιάστατος πίνακας που αναπαριστά τον πίνακα με τα σκορ και highScore όλων των αποθηκευμένων παιχτών.
      */
     public String[][] getScoreboard(){
-        String[][] temp = new String[playerStore.size()][3];
+        String[][] temp = new String[playerStore.size()][4];
 
         int i = 0;
         for (Player p : playerStore.values()){
             temp[i][0] = p.getName();
             temp[i][1] = Integer.toString(p.getScore());
             temp[i][2] = Integer.toString(p.getHighScore());
+            temp[i][3] = Integer.toString(p.getMultiplayerWins());
             i++;
         }
 
@@ -209,7 +211,6 @@ public class PlayerController {
         }
     }
 
-
     /**
      * Επιστρέφει τον αριθμό των παιχτών του παιχνιδιού.
      *
@@ -218,4 +219,65 @@ public class PlayerController {
     public int getNumberOfPlayers(){
         return playerStore.size();
     }
+
+    /**
+     * Μηδενίζει το τρέχον σκορ του παίχτη του οποίου το όνομα δίνεται ως όρισμα.
+     * @param playerName όνομα του παίχτη.
+     * @return η κατάσταση επιτυχίας της μεθόδου. "Επιτυχία" σε περίπτωση επιτυχίας, "Δεν υπάρχει παίχτης με το συγκεκριμένο όνομα" διαφορετικά.
+     */
+    public String clearPlayerScore(String playerName){
+        if (playerStore.containsKey(playerName)){ // Ο παίχτης υπάρχει
+            playerStore.get(playerName).clearCurrentScore();
+            return "Επιτυχία";
+        }
+        else{ // Δεν υπάρχει
+            return "Δεν υπάρχει παίχτης με το συγκεκριμένο όνομα";
+        }
+    }
+
+    /**
+     * Μηδενίζει το τρέχον σκορ κάθε παίχτη
+     */
+    public void clearAllPlayersScore(){
+        for (Player p : playerStore.values()){
+            p.clearCurrentScore();
+        }
+    }
+
+    /**
+     * Επιστρέφει τον αριθμό των νικών του παίχτη (αν αυτός υπάρχει) σε παιχνίδι πολλών παιχτών του οποίου το όνομα δίνεται ως όρισμα.
+     * Αν υπάρχει παίχτης με αυτό το όνομα, η ενέργεια επιτυγχάνει και επιστρέφεται ο αριθμός των νικών του παίχτη, διαφορετικά επιστρέφεται -1.
+     *
+     * @param playerName όνομα του παίχτη.
+     * @return αριθμός νικών σε παιχνίδι πολλών παιχτών του παίχτη αν αυτός υπάρχει, διαφορετικά -1.
+     */
+    public int getMultiplayerWins(String playerName){
+        if (playerStore.containsKey(playerName)){ // Ο παίχτης υπάρχει
+            Player p = playerStore.get(playerName);
+            return p.getMultiplayerWins();
+        }
+        else{ // Δεν υπάρχει
+            return -1;
+        }
+    }
+
+    /**
+     * Αυξάνει τον αριθμό των νικών του παίχτη (αν αυτός υπάρχει) σε παιχνίδι πολλών παιχτών κατά 1 και επιστρέφει τον νέο αριθμό.
+     * Αν υπάρχει παίχτης με αυτό το όνομα, η ενέργεια επιτυγχάνει και επιστρέφεται ο αριθμός των νικών του παίχτη, διαφορετικά επιστρέφεται -1.
+     *
+     * @param playerName όνομα του παίχτη.
+     * @return αριθμός νικών σε παιχνίδι πολλών παιχτών του παίχτη αν αυτός υπάρχει, διαφορετικά -1.
+     */
+    public int countMultiplayerWins(String playerName){
+        if (playerStore.containsKey(playerName)){ // Ο παίχτης υπάρχει
+            Player p = playerStore.get(playerName);
+            p.countMultiplayerWin();
+            return p.getMultiplayerWins();
+        }
+        else{ // Δεν υπάρχει
+            return -1;
+        }
+    }
+
+
 }
