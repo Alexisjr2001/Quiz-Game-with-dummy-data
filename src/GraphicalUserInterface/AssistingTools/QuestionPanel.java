@@ -14,14 +14,16 @@ public class QuestionPanel extends JPanel {
     private QuestionPanel(Question question, String[] selectedPlayerNames){
         super(new BorderLayout());
 
-        JPanel questionPanel = new JPanel(new GridLayout(2, 1));
+        JPanel questionPanel = new JPanel(new BorderLayout()); this.add(questionPanel);
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 30));
-        topPanel.setBorder( BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
-        questionPanel.add(topPanel);
+        topPanel.setBorder( BorderFactory.createTitledBorder(
+                BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()),
+                "Κατηγορία: " + question.getCategory() + "."));
+        questionPanel.add(topPanel, BorderLayout.PAGE_START);
 
 
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 2)); questionPanel.add(bottomPanel);
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 3)); questionPanel.add(bottomPanel);
 
 
         if (question instanceof Question){
@@ -35,7 +37,7 @@ public class QuestionPanel extends JPanel {
 
         bottomPanel.add(new JPanel());
 
-        JPanel answersPanel = new JPanel(new GridLayout(4, 1));
+        JPanel answersPanel = new JPanel(new GridLayout(4, 1)); bottomPanel.add(answersPanel);
         JPanel individualAnswerPanel;
 
         String[] answers = question.getAnswers();
@@ -46,6 +48,8 @@ public class QuestionPanel extends JPanel {
             individualAnswerPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             answersPanel.add(individualAnswerPanel);
         }
+
+        bottomPanel.add(new JPanel());
 
         playerAnswers = new HashMap<>(selectedPlayerNames.length);
 

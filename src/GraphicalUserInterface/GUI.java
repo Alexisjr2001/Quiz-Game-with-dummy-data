@@ -47,9 +47,7 @@ public class GUI {
     private final String GAME_ACTION = "GameAction";
 
     // Πεδία που αφορούν την εκτέλεση του παιχνιδιού
-    private Round currentRound;
-    private Question currentQuestion;
-    private QuestionPanel currentQuestionPanel;
+    private GameSequenceHandler gameplayManager;
 
     /**
      * Τυπικός (default) κατασκευαστής της κλάσης {@code GUI}. Αρχικοποιεί (ή/και φορτώνει) τα δεδομένα του παιχνιδιού και της γραφικής διεπαφής.
@@ -389,19 +387,31 @@ public class GUI {
         tempButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                int[] settings = GameSelectionDialog.showGameSettingSelection(mainWindow, 2, 1, 20, 1, 20, 1);
-//                if (settings != null){
-//                    String[] playerNames = PlayerSelectionDialog.selectPlayers(mainWindow, settings[0], playerController.listPlayers());
-//
-//                    if (playerNames != null){
-//                        // Εφαρμογή ρυθμίσεων σχετικά με τους γύρους
-//                        roundController.setPlayerNumber(settings[0]);
-//                        roundController.setNumberOfQuestionsPerRound(settings[2]);
-//
-//                        initGameAction(settings[0], settings[1], playerNames);
-//                        switchPanelTo(GAME_ACTION);
-//                    }
-//                }
+                if (playerController.getNumberOfPlayers() == 0){ // Έλεγχος για μη δημιουργία παιχτών
+                    JOptionPane.showMessageDialog(mainWindow, "Δεν έχουν δημιουργηθεί ακόμα παίκτες", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int[] settings = GameSelectionDialog.showGameSettingSelection(mainWindow, 2, 1, 20, 1, 20, 1);
+
+                if (settings != null){
+                    try {
+                        String[] playerNames = PlayerSelectionDialog.selectPlayers(mainWindow, settings[0], playerController.listPlayers());
+
+                        if (playerNames != null) {
+                            // Εφαρμογή ρυθμίσεων σχετικά με τους γύρους
+                            roundController.setPlayerNumber(settings[0]);
+                            roundController.setNumberOfQuestionsPerRound(settings[2]);
+
+                            initGameAction(settings[1], playerNames);
+                            switchPanelTo(GAME_ACTION);
+                        } else {
+                            return;
+                        }
+                    } catch (IllegalArgumentException e){
+                        JOptionPane.showMessageDialog(mainWindow, e.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
         });
 
@@ -428,108 +438,40 @@ public class GUI {
 
     }
 
-    private void initGameAction(int numberOfPlayers, int numberOfRounds, String[] selectedPlayerNames) {
+    private void initGameAction(int numberOfRounds, String[] selectedPlayerNames) {
         gameActionPanel.setFocusable(true);
-        boolean[] playerHasAnswered = new boolean[numberOfPlayers];
-        int[] playerGains = new int[numberOfPlayers];
-        KeyListener keyPressResponder;
 
-        for (int i = 0;  i <numberOfRounds; i++){
-            for (int j = 0; j < numberOfPlayers; j++) {
-                playerHasAnswered[j] = false;
-            }
+        
 
-            currentRound = roundController.getRandomRoundType();
-            currentRound.proceed();
-
-
-            while (!currentRound.isOver()){
-                currentQuestion = new Question(currentRound.getQuestion(), currentRound.getQuestionAnswers(), // Κατασκευάζω "αντίγραφο" ερώτησης
-                        currentRound.getRightQuestionAnswer(), currentRound.getQuestionCategory());
-
-                gameActionPanel.removeAll();
-                currentQuestionPanel = QuestionPanel.constructQuestionPanel(currentQuestion, selectedPlayerNames);
-                gameActionPanel.add(currentQuestionPanel);
-                gameActionPanel.revalidate();
-                gameActionPanel.repaint();
-
-                boolean allPlayersHaveAnswered = false;
-                while (!allPlayersHaveAnswered) {
-                    allPlayersHaveAnswered = true;
-                    for (boolean b : playerHasAnswered) {
-                        if (!b){
-                            allPlayersHaveAnswered = false;
-                            break;
-                        }
-                    }
-                }
-
-
-
-            }
-        }
-
-        gameActionPanel.addKeyListener(new KeyAdapter() {
+        ActionListener returnListener = new ActionListener() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                char pressed = Character.toLowerCase(e.getKeyChar());
-                int correspondingInt = 0;
+            public void actionPerformed(ActionEvent actionEvent) {
+                gameActionPanel.removeAll();
+                switchPanelTo(GAME_LOBBY);
+            }
+        };
 
-                if ("1234".indexOf(pressed) != -1) {
-                    switch (pressed) {
-                        case '1':
-                            correspondingInt = 0;
-                            break;
-                        case '2':
-                            correspondingInt = 1;
-                            break;
-                        case '3':
-                            correspondingInt = 2;
-                            break;
-                        case '4':
-                            correspondingInt = 3;
-                            break;
-                    }
-                    if (!playerHasAnswered[0]) {
-                        playerGains[0] = playerAnswer(selectedPlayerNames[0], currentQuestion.getAnswers()[correspondingInt],
-                                currentQuestion, currentRound);
-                        playerHasAnswered[0] = true;
-                        currentQuestionPanel.markAnswer(selectedPlayerNames[0], correspondingInt + 1);
-                    }
+        JPopupMenu rightClickMenu = new JPopupMenu();
+        JMenuItem exitItem = new JMenuItem("Επιστροφή στο μενού"); rightClickMenu.add(exitItem);
+        exitItem.addActionListener(returnListener);
 
-                } else if (numberOfPlayers == 2) {
-                    if ("vbnmωβνμ".indexOf(pressed) != -1) {
-                        switch (pressed) {
-                            case 'v':
-                            case 'ω':
-                                correspondingInt = 0;
-                            case 'b':
-                            case 'β':
-                                correspondingInt = 1;
-                            case 'n':
-                            case 'ν':
-                                correspondingInt = 2;
-                            case 'm':
-                            case 'μ':
-                                correspondingInt = 3;
-                        }
-                        if (!playerHasAnswered[1]) {
-                            playerGains[1] = playerAnswer(selectedPlayerNames[1], currentQuestion.getAnswers()[correspondingInt],
-                                    currentQuestion, currentRound);
-                            playerHasAnswered[1] = true;
-                            currentQuestionPanel.markAnswer(selectedPlayerNames[1], correspondingInt + 1);
-                        }
+        gameActionPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    rightClickMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
 
-                    }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    rightClickMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
         });
 
-
-    }
-
-    private int playerAnswer(String playerName, String givenAnswer, Question currentQuestion, Round currentRound){
-        return 0;
+        gameplayManager = new GameSequenceHandler(gameActionPanel, returnListener, roundController, playerController, numberOfRounds, selectedPlayerNames);
     }
 
     private void switchPanelTo(String panelConstantName){
@@ -549,6 +491,7 @@ public class GUI {
             case GAME_ACTION:
                 mainWindowLayout.show(mainWindow.getContentPane(), GAME_ACTION);
                 mainWindow.setSize(900, 610);
+                gameplayManager.begin();
                 break;
         }
     }

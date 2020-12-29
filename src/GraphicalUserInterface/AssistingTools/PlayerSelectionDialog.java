@@ -105,7 +105,7 @@ public class PlayerSelectionDialog extends JDialog {
      *
      * Αν το παράθυρο κλείσει χωρίς να πατηθεί το κουμπί με την περιγραφή "ΟΚ" επιστρέφεται null.
      *
-     * Αν ο αριθμός των παικτών είναι διαφορετικός απο το μήκος του πίνακα επιστρέφεται IllegalArgumentException.
+     * Αν ο αριθμός των παικτών είναι μεγαλύτερος απο το μήκος του πίνακα ή ο αριθμός είναι μη θετικός επιστρέφεται IllegalArgumentException.
      *
      * @param owner το Frame το οποίο προκάλεσε την δημιουργία του διαλόγου
      * @param numberOfPlayers ο αριθμός των παιχτών προς επιλογή
@@ -113,8 +113,10 @@ public class PlayerSelectionDialog extends JDialog {
      * @return πίνακα συμβολοσειρών με τα ονόματα επιλεγμένων παιχτών ή null σε περίπτωση εξόδου χωρίς επιλογή
      */
     public static String[] selectPlayers(Frame owner, int numberOfPlayers, String[] playerNames){
-        if (numberOfPlayers != playerNames.length){
-            throw new IllegalArgumentException("Length of array and numberOfPlayers don't match");
+        if (numberOfPlayers > playerNames.length){
+            throw new IllegalArgumentException(String.format("Δεν μπορεί να γίνει η επιλογή %d διαφορετικών παικτών με %d δημιουργημένους παίκτες", numberOfPlayers, playerNames.length));
+        } else if (numberOfPlayers<=0){
+            throw new IllegalArgumentException("Μη επιτρεπτός αριθμός παικτών");
         }
 
         PlayerSelectionDialog psd = new PlayerSelectionDialog(owner, numberOfPlayers, playerNames);
