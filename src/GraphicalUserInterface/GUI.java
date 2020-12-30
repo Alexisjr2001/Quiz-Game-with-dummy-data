@@ -1,19 +1,14 @@
 package GraphicalUserInterface;
 
 import GraphicalUserInterface.AssistingTools.*;
+import GraphicalUserInterface.AssistingTools.customDialogs.*;
 import internals.player.PlayerController;
-import internals.question.Question;
 import internals.question.QuestionLibrary;
-import internals.round.RightAnswer;
-import internals.round.Round;
 import internals.round.RoundController;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
 
 /**
  * Η κλάση που μοντελοποιεί την αλληλεπίδραση της εφαρμογής με τον χρήστη (με διεπαφή γραφικού περιβάλλοντος).
@@ -57,18 +52,6 @@ public class GUI {
      * όπου έχουν χρησιμοποιηθεί 5, αυτές οι 5 δεν θα ξανά εμφανιστούν σε επόμενο παιχνίδι μέχρι να "Χρησιμοποιηθούν" οι υπόλοιπες 95).
      */
     public GUI(){
-        /*TODO: DEBUGGING -- REMOVE IN FINAL*/
-        JFrame sizeManager = new JFrame(); sizeManager.setVisible(true);
-        JButton managerButton = new JButton("-----------PRESS FOR SIZE-----------"); sizeManager.add(managerButton);
-        managerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ((JButton)actionEvent.getSource()).setText(mainWindow.getSize().toString());
-            }
-        });
-        sizeManager.setSize(400, 200); sizeManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        sizeManager.setLocation(0, 0);
-
         // Αρχικοποίηση δεδομένων παιχνιδιού
         playerController = new PlayerController();
         questionLibrary = new QuestionLibrary(true);
@@ -78,8 +61,8 @@ public class GUI {
         // Αρχικοποίηση δεδομένων κυρίου παραθύρου
         mainWindow = new JFrame("Buzz! Quiz World");
         mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Το κλείσιμο του παραθύρου διαχειρίζεται (παρακάτω) ένας WindowListener
-        mainWindow.setLocationRelativeTo(null);
         mainWindow.setSize(675, 264);
+        mainWindow.setLocationRelativeTo(null);
         mainWindowLayout = new CardLayout();
         mainWindow.setLayout(mainWindowLayout);
 
@@ -88,14 +71,36 @@ public class GUI {
         initPlayLobby(); mainWindow.add(gameLobbyPanel, GAME_LOBBY);
         gameActionPanel = new JPanel(new BorderLayout()); mainWindow.add(gameActionPanel, GAME_ACTION);
 
+        // Προσθέτω WindowListener ώστε αν ο χρήστης επιθυμεί να κάνει έξοδο μέσω του Χ και όχι του κουμπιού "Έξοδος" να μπορεί να γίνει αποθήκευση δεδομένων
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 exitRoutine();
             }
         });
+
+        /*TODO: DEBUGGING -- REMOVE IN FINAL*/
+//        JFrame sizeManager = new JFrame(); sizeManager.setVisible(true);
+//        JButton managerButton = new JButton("-----------PRESS FOR SIZE-----------"); sizeManager.add(managerButton);
+//        managerButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                ((JButton)actionEvent.getSource()).setText(sizeManager.getSize().toString());
+//            }
+//        });
+//        sizeManager.setSize(400, 200); sizeManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        sizeManager.setLocation(0, 0);
+
+        playerController.createPlayer("debug1");
+        playerController.createPlayer("debug2");
+
+        /* TODO: Μέχρι εδώ */
+
     }
 
+    /**
+     * Η μέθοδος που καλείται για να διαχειριστεί την αποθήκευση των δεδομένων πριν την έξοδο.
+     */
     private void exitRoutine(){
         int userResponse = JOptionPane.showConfirmDialog(mainWindow, "Πριν την έξοδο, θέλεις να αποθηκευτούν τα δεδομένα παιχτών;");
         if (userResponse == 0){
@@ -114,6 +119,9 @@ public class GUI {
     }
 
 
+    /**
+     * Η μέθοδος που αρχικοποιεί το JPanel που αποτελεί το κύριο μενού της εφαρμογής.
+     */
     private void initMainMenu(){
         mainMenuPanel = new JPanel(new GridLayout(2, 1)); mainWindow.add(mainMenuPanel);
 
@@ -158,11 +166,15 @@ public class GUI {
 
     }
 
+    /**
+     * Η μέθοδος που αρχικοποιεί το JPanel που αποτελεί το μενού διαχείρισης παιχτών της εφαρμογής.
+     */
     private void initPlayerManagement(){
         playerManagementPanel = new JPanel(new GridLayout(5, 1, 20, 20));
 
         JButton tempButton;
 
+        /* Κουμπί "Δημιουργία Παίχτη" */
         tempButton = new JButton("Δημιουργία Παίχτη");
         tempButton.addActionListener(new ActionListener() {
             @Override
@@ -181,26 +193,29 @@ public class GUI {
         tempButton.setToolTipText("Δημιουργείται ένας νέος παίχτης στο παιχνίδι");
         playerManagementPanel.add(StaticTools.wrapInFlowLayout(tempButton));
 
+        /* Κουμπί "Μετονομασία Παίχτη" */
         tempButton = new JButton("Μετονομασία Παίχτη");
         tempButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-               new RenameDialog();
+               new RenameDialog(mainWindow, playerController);
             }
         });
         tempButton.setToolTipText("Αλλάζεις το όνομα του παίχτη");
         playerManagementPanel.add(StaticTools.wrapInFlowLayout(tempButton));
 
+        /* Κουμπί "Διαγραφή Παίχτη" */
         tempButton = new JButton("Διαγραφή Παίχτη");
         tempButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                new DeleteDialog();
+                new DeleteDialog(mainWindow, playerController);
             }
         });
         tempButton.setToolTipText("Διαγράφεται η εγγραφή ενός παίχτη απο το παιχνίδι");
         playerManagementPanel.add(StaticTools.wrapInFlowLayout(tempButton));
 
+        /* Κουμπί "Εμφάνιση Πίνακα Σκορ" */
         tempButton = new JButton("Εμφάνιση Πίνακα Σκορ");
         tempButton.addActionListener(new ActionListener() {
             @Override
@@ -215,153 +230,21 @@ public class GUI {
         tempButton.setToolTipText("Εμφανίζεται ο πίνακας με το τρέχον και μέγιστο σκόρ κάθε παίχτη");
         playerManagementPanel.add(StaticTools.wrapInFlowLayout(tempButton));
 
+        /* Κουμπί "Επιστροφή στο κύριο μενού" */
         tempButton = new JButton("Επιστροφή στο κύριο μενού");
         tempButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                switchPanelTo(MAIN_MENU);
+                switchPanelTo(MAIN_MENU); // Αλλαγή κυρίου JPanel σε αυτό του κυρίου μενού
             }
         });
         tempButton.setToolTipText("Επιστρέφει στο κύριο μενού επιλογών του παιχνιδιού");
         playerManagementPanel.add(StaticTools.wrapInFlowLayout(tempButton));
     }
 
-    private class RenameDialog extends JDialog {
-        public RenameDialog(){
-            super(mainWindow, "Μετονομασία Παίχτη", true);
-
-            if (playerController.getNumberOfPlayers() == 0){
-                JOptionPane.showMessageDialog(mainWindow, "Δεν υπάρχουν αποθηκευμένοι παίχτες, οπότε δεν μπορείς να μετονομάσεις κάποιον", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-                disposeSelf();
-            } else {
-                setLocationRelativeTo(mainWindow);
-                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-                JPanel mainPanel = new JPanel(new GridLayout(3, 1));
-                this.setContentPane(mainPanel);
-
-                JPanel selectionPanel = new JPanel(new BorderLayout());
-                mainPanel.add(selectionPanel);
-                TitledBorder border = BorderFactory.createTitledBorder("Δώσε το όνομα του παίχτη που θέλεις να μετονομάσεις");
-                selectionPanel.setBorder(border);
-                JComboBox<String> dropdownList = new JComboBox<>(playerController.listPlayers());
-                dropdownList.setEditable(false);
-                selectionPanel.add(dropdownList);
-
-
-                JPanel newNamePanel = new JPanel(new BorderLayout());
-                mainPanel.add(newNamePanel);
-                border = BorderFactory.createTitledBorder("Δώσε νέο όνομα παίχτη");
-                newNamePanel.setBorder(border);
-                JTextField newNameField = new JTextField();
-                newNamePanel.add(newNameField);
-
-                JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
-                mainPanel.add(buttonPanel);
-
-                JButton button = new JButton("OK");
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        String result = playerController.changePlayerName(dropdownList.getItemAt(dropdownList.getSelectedIndex()), newNameField.getText());
-                        if (result.equals("Επιτυχία")) {
-                            JOptionPane.showMessageDialog(getRootDialog(), String.format("Η μετονομασία παίχτη απο %s σε %s, ήταν επιτυχής", dropdownList.getItemAt(dropdownList.getSelectedIndex()), newNameField.getText()), "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
-                            disposeSelf();
-                        } else {
-                            JOptionPane.showMessageDialog(getRootDialog(), result, "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                });
-                buttonPanel.add(StaticTools.wrapInFlowLayout(button));
-
-                button = new JButton("Cancel");
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        disposeSelf();
-                    }
-                });
-                buttonPanel.add(StaticTools.wrapInFlowLayout(button));
-
-
-                this.pack();
-                this.setVisible(true);
-            }
-        }
-
-        private void disposeSelf(){
-            this.dispose();
-        }
-
-        private RenameDialog getRootDialog(){
-            return this;
-        }
-    }
-
-    private class DeleteDialog extends JDialog {
-        public DeleteDialog(){
-            super(mainWindow, "Διαγραφή", true);
-
-            if (playerController.getNumberOfPlayers() == 0){
-                JOptionPane.showMessageDialog(mainWindow, "Δεν υπάρχουν αποθηκευμένοι παίχτες, οπότε δεν μπορείς να διαγράψεις κάποιον", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-                disposeSelf();
-            } else {
-                setLocationRelativeTo(mainWindow);
-                setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-                JPanel mainPanel = new JPanel(new GridLayout(3, 1));
-                this.setContentPane(mainPanel);
-
-                JPanel selectionPanel = new JPanel(new BorderLayout());
-                mainPanel.add(selectionPanel);
-                TitledBorder border = BorderFactory.createTitledBorder("Δώσε το όνομα του παίχτη που θέλεις να διαγράψεις");
-                selectionPanel.setBorder(border);
-                JComboBox<String> dropdownList = new JComboBox<>(playerController.listPlayers());
-                dropdownList.setEditable(false);
-                selectionPanel.add(dropdownList);
-
-                JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
-                mainPanel.add(buttonPanel);
-
-                JButton button = new JButton("OK");
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        String result = playerController.removePlayer(dropdownList.getItemAt(dropdownList.getSelectedIndex()));
-                        if (result.equals("Επιτυχία")) {
-                            JOptionPane.showMessageDialog(getRootDialog(), String.format("Η διαγραφή του παίχτη %s, ήταν επιτυχής", dropdownList.getItemAt(dropdownList.getSelectedIndex())), "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
-                            disposeSelf();
-                        } else {
-                            JOptionPane.showMessageDialog(getRootDialog(), result, "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                });
-                buttonPanel.add(StaticTools.wrapInFlowLayout(button));
-
-                button = new JButton("Cancel");
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        disposeSelf();
-                    }
-                });
-                buttonPanel.add(StaticTools.wrapInFlowLayout(button));
-
-
-                this.pack();
-                this.setVisible(true);
-            }
-        }
-
-        private void disposeSelf(){
-            this.dispose();
-        }
-
-        private DeleteDialog getRootDialog(){
-            return this;
-        }
-    }
-
+    /**
+     * Η μέθοδος που αρχικοποιεί το JPanel που αποτελεί το μενού εκκίνησης του παιχνιδιού.
+     */
     private void initPlayLobby(){
         gameLobbyPanel = new JPanel(new GridLayout(2, 1)); mainWindow.add(gameLobbyPanel, GAME_LOBBY);
 
@@ -392,23 +275,23 @@ public class GUI {
                     return;
                 }
 
-                int[] settings = GameSelectionDialog.showGameSettingSelection(mainWindow, 2, 1, 20, 1, 20, 1);
+                int[] settings = GameSelectionDialog.showGameSettingSelection(mainWindow, 2, 1, 20, 1, 20, 1); // Επιλογή ρυθμίσεων για το παιχνίδι
 
-                if (settings != null){
+                if (settings != null){ // Έλεγχος για το αν ο χρήστης επέλεξε όντως ρυθμίσεις και δεν πάτησε το κουμπί "Cancel" ή το Χ.
                     try {
-                        String[] playerNames = PlayerSelectionDialog.selectPlayers(mainWindow, settings[0], playerController.listPlayers());
+                        String[] playerNames = PlayerSelectionDialog.selectPlayers(mainWindow, settings[0], playerController.listPlayers()); // Επιλογή παιχτών
 
-                        if (playerNames != null) {
+                        if (playerNames != null) { //  Υπάρχουν παίκτες που ταυτίζονται
                             // Εφαρμογή ρυθμίσεων σχετικά με τους γύρους
                             roundController.setPlayerNumber(settings[0]);
                             roundController.setNumberOfQuestionsPerRound(settings[2]);
 
-                            initGameAction(settings[1], playerNames);
-                            switchPanelTo(GAME_ACTION);
+                            initGameAction(settings[1], playerNames); // Αρχικοποιώ το JPanel "πάνω" στο οποίο διαδραματίζεται το παιχνίδι
+                            switchPanelTo(GAME_ACTION); // Αλλαγή κυρίου JPanel σε αυτό του παιχνιδιού
                         } else {
-                            return;
+                            return; // Υπάρχουν παίχτες που ταυτίζονται: Επιστροφή στο μενού
                         }
-                    } catch (IllegalArgumentException e){
+                    } catch (IllegalArgumentException e){ // Σφάλμα επιλογών ρυθμίσεων χρήστη
                         JOptionPane.showMessageDialog(mainWindow, e.getMessage(), "Σφάλμα", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -434,23 +317,25 @@ public class GUI {
         });
         tempButton.setToolTipText("Εμφανίζει πληροφορίες σχετικά με το παιχνίδι");
         buttonsPanel.add(StaticTools.wrapInFlowLayout(tempButton));
-
-
     }
 
+    /**
+     * Αρχικοποίηση του JPanel "πάνω" στο οποίο διαδραματίζεται το παιχνίδι.
+     * @param numberOfRounds αριθμός γύρων που θα παιχτούν
+     * @param selectedPlayerNames ονόματα των παιχτών που έχουν επιλεγεί να παίξουν
+     */
     private void initGameAction(int numberOfRounds, String[] selectedPlayerNames) {
-        gameActionPanel.setFocusable(true);
+        gameActionPanel.setFocusable(true); // Επιτρέπω την εστίαση για να είναι δυνατή η δημιουργία popup μενού με δεξί κλίκ
 
-        
-
-        ActionListener returnListener = new ActionListener() {
+        ActionListener returnListener = new ActionListener() { // Όταν κληθεί έχει σηματοδοτηθεί η λήξη του παιχνιδιού και το κύριο JPanel αλλάζει σε αυτό του μενού
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                gameActionPanel.removeAll();
-                switchPanelTo(GAME_LOBBY);
+                gameActionPanel.removeAll(); // Αφαιρώ τυχόν στοιχεία του JPanel του παιχνιδιού
+                switchPanelTo(GAME_LOBBY); // Μετάβαση σε JPanel μενού εκκίνησης παιχνιδιού
             }
         };
 
+        /* Δημιουργία μενού με δεξί κλικ για άμεση επιστροφή στο μενού */
         JPopupMenu rightClickMenu = new JPopupMenu();
         JMenuItem exitItem = new JMenuItem("Επιστροφή στο μενού"); rightClickMenu.add(exitItem);
         exitItem.addActionListener(returnListener);
@@ -471,9 +356,17 @@ public class GUI {
             }
         });
 
+        // Δημιουργία αντικειμένου που "ελέγχει" την ροή του παιχνιδιού
         gameplayManager = new GameSequenceHandler(gameActionPanel, returnListener, roundController, playerController, numberOfRounds, selectedPlayerNames);
     }
 
+    /**
+     * Εναλλάσσει το κύριο (αυτό που φαίνεται στο παράθυρο) JPanel σε ένα απο αυτά που έχουν προκαθοριστεί σύμφωνα με την παράμετρο.
+     * Παράλληλα, αλλάζει το μέγεθος του παραθύρου στο προκαθορισμένο και κατάλληλο μέγεθος και τοποθετεί το παράθυρο στο κέντρο της οθόνης.
+     * Έχουν προκαθοριστεί: κύριο μενού με σταθερά MAIN_MENU, μενού διαχείρισης παιχτών με σταθερά PLAYER_MANAGE, μενού εκκίνησης παιχνιδιού με σταθερά GAME_LOBBY και
+     * JPanel διαδραμάτισης παιχνιδιού με σταθερά GAME_ACTION.
+     * @param panelConstantName η σταθερά που ορίζει το JPanel στο οποίο θα μεταβεί το κεντρικό παράθυρο
+     */
     private void switchPanelTo(String panelConstantName){
         switch (panelConstantName){
             case MAIN_MENU:
@@ -491,10 +384,13 @@ public class GUI {
             case GAME_ACTION:
                 mainWindowLayout.show(mainWindow.getContentPane(), GAME_ACTION);
                 mainWindow.setSize(900, 610);
-                gameplayManager.begin();
+                gameplayManager.proceedToNextQuestion();
                 break;
         }
+
+        mainWindow.setLocationRelativeTo(null);
     }
+
 
     public static void main(String[] args) { // TODO: DEBUGGING -- REMOVE IN FINAL
         (new GUI()).begin();

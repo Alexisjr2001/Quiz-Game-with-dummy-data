@@ -20,7 +20,7 @@ public class RightAnswer extends Round {
      * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο.
      */
     public RightAnswer(QuestionLibrary questionStore, int questionNumber) {
-        super(questionStore,1, 1, questionNumber);
+        super(questionStore,1, 2, questionNumber);
     }
 
     /**
