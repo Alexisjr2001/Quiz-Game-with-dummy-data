@@ -5,8 +5,8 @@ import java.awt.*;
 
 /**
  * Η κλάση ScoreboardDialog υλοποιεί ένα παράθυρο διαλόγου που περιέχει τον πίνακα σκορ.
- * Ο πίνακας αυτός περιέχει το όνομα, τρέχον σκορ (το σκορ που έχει συγκεντρώσει απο την στιγμή που ξεκίνησε η εκτέλεση του παιχνιδιού), το μέγιστο σκορ και
- * τις νίκες παιχνιδιού πολλών παιχτών του κάθε παίχτη.
+ * Ο πίνακας αυτός περιέχει το όνομα, τρέχον σκορ (το σκορ που έχει συγκεντρώσει στο παιχνίδι ενός παίχτη απο την στιγμή που ξεκίνησε η εκτέλεση του παιχνιδιού),
+ * το μέγιστο σκορ και τις νίκες παιχνιδιού πολλών παιχτών του κάθε παίχτη.
  *
  * Η πρόσβαση σε παράθυρα διαλόγου γίνεται και μέσω της χρήσης της στατικής μεθόδου {@code showTableDialog} τρέχουσας κλάσης,
  * όπου δεν απαιτείται η δημιουργία αντικειμένου.
@@ -31,13 +31,14 @@ public class ScoreboardDialog{
         baseDialog.setLocationRelativeTo(owner);
 
         /* Τμήμα με πίνακα */
-        JTable scoreboard = new JTable(tableElements, new String[]{"Όνομα παίχτη", "Τρέχον σκόρ", "Μέγιστο σκόρ", "Νίκες παιχνιδιού πολλών παιχτών"});
+        JTable scoreboard = new JTable(tableElements, new String[]{"Όνομα παίχτη", "Τρέχον σκορ σε ατομικό παιχνίδι",
+                "Μέγιστο σκορ σε ατομικό παιχνίδι", "Νίκες παιχνιδιού πολλών παιχτών"});
         scoreboard.setEnabled(false);
         JScrollPane dialogPane = new JScrollPane(scoreboard);
         baseDialog.setContentPane(dialogPane);
 
         /* Τμήμα ρυθμίσεων παραθύρου διαλόγου */
-        baseDialog.setSize(950, 350);
+        baseDialog.setSize(970, 350);
         baseDialog.setLocationRelativeTo(null);
         baseDialog.setVisible(true);
     }
