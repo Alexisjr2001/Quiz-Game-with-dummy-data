@@ -80,7 +80,11 @@ public class GameSequenceHandler {
 
     /**
      * Θέτει ως εμφανιζόμενο αντικείμενο στο JFrame του παιχνιδιού στο κεντρικό παράθυρο την οθόνη τέλους του παιχνιδιού
-     * (που περιέχει κουμπί που επιστρέφει στο μενού εκκίνησης παιχνιδιού)
+     * (που περιέχει κουμπί που επιστρέφει στο μενού εκκίνησης παιχνιδιού).
+     *
+     * Η οθόνη τέλους παιχνιδιού περιέχει τα αποτελέσματα του παιχνιδιού δηλαδή το τελικό (άθροισμα απο κάθε γύρο) σκορ
+     * κάθε παίχτη και (αν είναι παιχνίδι πολλών παιχτών) τον νικητή του παιχνιδιού (μπορεί να είναι και ισοπαλία όπου
+     * θεωρούνται και οι δύο παίχτες νικητές).
      */
     public void gameFinishedMenu() {
         JPanel gameFinishedScreen = new JPanel(new BorderLayout());
@@ -179,7 +183,9 @@ public class GameSequenceHandler {
             gains = ((Bet)currentRound).answerQuestion(givenAnswer, playerName);
         }
 
-        playerController.playerCalculateGain(playerName, gains); // Αποθήκευση βαθμολογίας
+        if (selectedPlayerNames.length == 1){ // Ελέγχω αν είναι παιχνίδι ενός παίχτη
+            playerController.playerCalculateGain(playerName, gains); // Αποθήκευση βαθμολογίας σε παιχνίδι ενός παίχτη
+        }
 
         return gains;
     }

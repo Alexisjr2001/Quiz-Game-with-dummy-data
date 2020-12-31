@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public class Player implements Serializable {
     private String name; // Το όνομα του παίχτη.
-    transient private int score; // Το σύνολο των πόντων που έχει συγκεντρώσει ο παίχτης.
+    transient private int score; // Το σύνολο των πόντων που έχει συγκεντρώσει ο παίχτης στο παιχνίδι ενός παίχτη απο την στιγμή εκκίνησης της εφαρμογής.
     private int highScore; // Το μέγιστο σύνολο πόντων που έχει συγκεντρώσει μέχρι στιγμής ο παίχτης.
     private int multiplayerWins; // Ο αριθμός των νικών του παίχτη σε παιχνίδι πολλών παιχτών.
 
