@@ -23,7 +23,7 @@ public class Bet extends Round {
      * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο.
      */
     public Bet(QuestionLibrary questionStore, int questionNumber) {
-        super(questionStore, 1, 1, questionNumber);
+        super(questionStore, 1, 2, questionNumber);
         bets = new HashMap<>();
     }
 
