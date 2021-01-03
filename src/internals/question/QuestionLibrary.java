@@ -1,8 +1,7 @@
 package internals.question;
 
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Stack;
+import java.io.*;
+import java.util.*;
 
 /**
  * Η κλάση {@code QuestionLibrary} μοντελοποιεί την έννοια της "βιβλιοθήκης" ερωτήσεων.
@@ -11,7 +10,7 @@ import java.util.Stack;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.11.29
+ * @version 2020.12.31
  */
 
 public class QuestionLibrary {
@@ -139,6 +138,67 @@ public class QuestionLibrary {
             // Η κατηγορία έχει όνομα αυτό που ορίστηκε παραπάνω, ερωτήσεις αυτές που δημιουργήθηκαν στον πάνω βρόχο και επιτρέπεται το αυτόματο "ανακάτεμα"
             QuestionCategory temp = new QuestionCategory(categoryName, questionTempStore, true);
             categoryStore.put(temp.getCategoryName(), temp); // Αντιστοιχίζω όνομα κατηγορίας με αντικείμενο κατηγορίας
+        }
+    }
+
+
+    /**
+     * Διαβάζει τις ερωτήσεις καθώς και τα σχετικά τους δεδομένα.
+     * Η κάθε γραμμή του αρχείου έχει την εξής γραμμογράφηση:
+     * Όνομα_Κατηγορίας, Εκφώνηση_Ερώτησης, Απάντηση1, Απάντηση2, Απάντηση3, Απάντηση4, Σωστή_Απάντηση, ImageFileName/Null
+     * χωρισμένα με ένα tab.
+     * Παρατήρηση: Το ImageFileName μπορεί να πάρει την τιμή null εάν πρόκειται για ερώτηση χωρίς εικόνα.
+     * @param fileName Το όνομα του αρχείου κειμένου, από όπου θα διαβάσουμε όλες τις ερωτήσεις.
+     * @throws IOException Σε περίπτωση που υπάρχει πρόβλημα κατά το άνοιγμα και διάβασμα από το αρχείο κειμένου.
+     */
+    private void loadQuestionFromFile(String fileName) throws IOException {
+        //Η δομή αυτή αποθηκεύει όλες τις ερωτήσεις της κάθε κατηγορίας
+        //Το String αναπαριστά το όνομα της κατηγορίας
+        //Το ArrayList αποθηκεύει τις ερωτήσεις της κατηγορίας
+        HashMap<String, ArrayList<Question>> temp = new HashMap<>();
+        String[] answers = new String[4]; //Πίνακας συμβολοσειρών που περιέχει τις απαντήσεις της κάθε ερώτησης
+        Question question;
+
+        try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String aLine;
+            while ((aLine = br.readLine()) != null){
+
+                String[] parts = aLine.split("\t"); //Διαχωρισμός της γραμμής σε κομμάτια με βάση το tab
+
+                for (int i = 2; i < 6; i++) {//Αποθηκεύω τις απαντήσεις της ερώτησης
+                    answers[i] = parts[i];
+                }
+
+                //Δημιουργία ερώτησης
+                if (parts[7]==null) { //ερώτηση χωρίς εικόνα
+                    question = new Question(parts[1], answers, parts[6], parts[0]);
+                }
+                else { //ερώτηση με εικόνα
+                    question = new ImageQuestion(parts[1], answers, parts[6], parts[0],parts[7]);
+                }
+
+                ArrayList<Question> questions = temp.get(parts[0]);
+
+                if(questions == null){  //Έλεγχος εάν είναι η πρώτη φορά που έχουμε αυτή την κατηγορία και εκτέλεση των απαιτούμενων ενεργειών
+                    questions = new ArrayList<>();
+                    temp.put(parts[0], questions);
+                }
+
+                questions.add(question); //Προσθέτω την ερώτηση στην κατηγορία που ανήκει
+            }
+
+            for (Map.Entry<String, ArrayList<Question>> e : temp.entrySet()){ //Διατρέχουμε το HashMap με όνομα temp
+                /* Μετατροπή του ArrayList της κάθε κατηγορίας σε array */
+                Question[] questionsOfCategory = new Question[e.getValue().size()];
+
+                e.getValue().toArray(questionsOfCategory);
+
+                //Δημιουργία της κατηγορίας
+                QuestionCategory aQuestionCategory = new QuestionCategory(e.getKey(),questionsOfCategory,true);
+                // Αποθήκευση της κατηγορίας στην δομή που περιέχει όλες τις κατηγορίες
+                categoryStore.put(aQuestionCategory.getCategoryName(),aQuestionCategory);
+            }
+
         }
     }
 

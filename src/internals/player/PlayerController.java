@@ -1,5 +1,6 @@
 package internals.player;
 
+import java.io.*;
 import java.util.HashMap;
 
 
@@ -10,7 +11,7 @@ import java.util.HashMap;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.12.3
+ * @version 2020.12.31
  */
 public class PlayerController {
     private HashMap<String, Player> playerStore; // Αποθηκεύει τους παίχτες, δίνοντας την δυνατότητα να αντιστοιχίσουμε εύκολα τα ονόματα τους με το αντίστοιχο αντικείμενο που τούς διαχειρίζεται.
@@ -53,7 +54,7 @@ public class PlayerController {
         Player temp = playerStore.remove(playerName); // Διαγράφω απο το HashMap το αντικείμενο που αντιστοιχεί στην συμβολοσειρά ορίσματος και παίρνω αναφορά στο αντικείμενο αυτό
         if (temp != null){ // Άν το παραπάνω αντικείμενο δεν είναι το null, τότε ο παίχτης υπάρχει και τον διέγραψα απο την δομή
             return "Επιτυχία";
-        } else { // Ο παίχτης δεν υπάρχει και δεν τον διέγραψα απο την δομή
+        } else { // Ο παίχτης δεν υπάρχει και δεν τον διέγραψα από την δομή
             return "Δεν υπάρχει παίχτης με αυτό το όνομα";
         }
     }
@@ -93,7 +94,7 @@ public class PlayerController {
      * Συγκεκριμένα, αυτός ο δισδιάστατος πίνακας θα έχει αριθμό γραμμών ίσο με το πλήθος των παιχτών
      * και αριθμό στηλών ίσο με τέσσερα: Η πρώτη στήλη ({@code getScoreboard()[i][0]}) περιέχει το όνομα του (i-ου) παίχτη,
      * η δεύτερη στήλη ({@code getScoreboard()[i][1]}) το τρέχον σκορ του (i-ου) παίχτη,
-     * η τρίτη στήλη ({@code getScoreboard()[i][2]}) το μέγιστο σκορ (highScore) του (i-ου) παίχτη
+     * η τρίτη στήλη ({@code getScoreboard()[i][2]}) το μέγιστο σκορ (highScore) του (i-ου) παίχτη στο ατομικό παιχνίδι
      * και η τέταρτη στήλη ({@code getScoreboard()[i][3]}) τον αριθμό των νικών σε παιχνίδι πολλών παιχτών του (i-ου) παίχτη.
      *
      * @return Δισδιάστατος πίνακας που αναπαριστά τον πίνακα με τα σκορ και highScore όλων των αποθηκευμένων παιχτών.
@@ -274,8 +275,37 @@ public class PlayerController {
             p.countMultiplayerWin();
             return p.getMultiplayerWins();
         }
-        else{ // Δεν υπάρχει
+        else{ // Δεν υπάρχει ο παίχτης
             return -1;
+        }
+    }
+
+
+    /**
+     * Για κάθε παίχτη, αποθηκεύει σε δυαδικό αρχείο το όνομα του, τις νίκες του σε παιχνίδι 2 παιχτών,
+     * καθώς και το υψηλότερο του σκορ στο ατομικό παιχνίδι.
+     * @param fileName Το όνομα του αρχείου στο οποίο θα αποθηκευτούν τα στατιστικά του παιχνιδιού.
+     * @throws IOException Σε περίπτωση που εμφανιστεί πρόβλημα κατά την αποθήκευση των στατιστικών σε δυαδικό αρχείο ή υπάρχει πρόβλημα με το serialization.
+     */
+    public void saveGameStatistics(String fileName) throws IOException{
+
+        try(ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))){
+            out.writeObject(playerStore);
+        }
+    }
+
+    /**
+     * Φορτώνει στην μνήμη τα στατιστικά των παιχτών, δηλαδή όνομα,High Score και τον αριθμό των νικών του σε παιχνίδι πολλών παιχτών,
+     * από προηγούμενα παιχνίδια.
+     * @param fileName Το όνομα του αρχείου από το οποίο θα φορτωθούν τα στατιστικά από προηγούμενα παιχνίδια.
+     * @throws IOException Σε περίπτωση που υπάρχει πρόβλημα κατά το άνοιγμα και το διάβασμα του αρχείου.
+     * @throws ClassNotFoundException Σε περίπτωση που δεν μπορεί να βρεθεί κλάση Serialized αντικειμένου.
+     */
+    public void loadGameStatistics(String fileName) throws IOException,ClassNotFoundException{
+
+        try(ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)))){
+            clearAllPlayersScore();
+            playerStore = (HashMap<String, Player>) in.readObject();
         }
     }
 
