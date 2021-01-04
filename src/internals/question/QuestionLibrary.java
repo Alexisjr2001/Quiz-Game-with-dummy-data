@@ -191,7 +191,7 @@ public class QuestionLibrary {
                 /* Μετατροπή του ArrayList της κάθε κατηγορίας σε array */
                 Question[] questionsOfCategory = new Question[e.getValue().size()];
 
-                e.getValue().toArray(questionsOfCategory);
+                questionsOfCategory =  e.getValue().toArray(questionsOfCategory);
 
                 //Δημιουργία της κατηγορίας
                 QuestionCategory aQuestionCategory = new QuestionCategory(e.getKey(),questionsOfCategory,true);

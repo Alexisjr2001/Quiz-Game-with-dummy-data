@@ -12,11 +12,12 @@ import java.awt.event.ActionListener;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2021.1.3
+ * @version 2021.1.4
  */
 public class StopChronometer extends Round{
     private int count; //Τα milliseconds που απέμεναν ακόμα, όταν απάντησε ο παίχτης
     private final int timeAllowed; //Βοηθητική μεταβλητή που αρχικοποιεί την count και περιέχει τα δευτερόλεπτα που θα μετρηθούν αντίστροφα
+    private Timer timer; // Το Timer που θα χρησιμοποιήσουμε
 
     /**
      * Τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
@@ -56,7 +57,7 @@ public class StopChronometer extends Round{
         count = timeAllowed*1000; //Μετατροπή από seconds σε milliseconds
 
         //Ορίζουμε ένα Timer που θα μειώνει ανά 100 τα milliseconds μέχρι να μηδενιστεί
-        Timer timer =new Timer(100, new ActionListener() {
+        timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(count <= 0){

@@ -11,7 +11,7 @@ import java.util.HashMap;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.12.31
+ * @version 2020.1.4
  */
 public class PlayerController {
     private HashMap<String, Player> playerStore; // Αποθηκεύει τους παίχτες, δίνοντας την δυνατότητα να αντιστοιχίσουμε εύκολα τα ονόματα τους με το αντίστοιχο αντικείμενο που τούς διαχειρίζεται.
@@ -304,8 +304,9 @@ public class PlayerController {
     public void loadGameStatistics(String fileName) throws IOException,ClassNotFoundException{
 
         try(ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)))){
-            clearAllPlayersScore();
-            playerStore = (HashMap<String, Player>) in.readObject();
+
+            playerStore = (HashMap<String, Player>) in.readObject(); //Φορτώνω τα στατιστικά των παιχτών
+            clearAllPlayersScore(); //Μηδενίζω το τρέχον σκορ κάθε παίχτη
         }
     }
 
