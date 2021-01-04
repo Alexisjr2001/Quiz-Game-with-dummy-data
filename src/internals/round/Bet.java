@@ -82,7 +82,7 @@ public class Bet extends Round {
      *
      * @param answer Η απάντηση που έδωσε ο παίχτης.
      * @param playerName Το όνομα του παίχτη που απαντάει.
-     * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση των ορισμάτων.
+     * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση του ορίσματος.
      */
     public int answerQuestion(String answer, String playerName){
         Question temp = getQuestionInstance(); // Παίρνω αναφορά στην τρέχουσα ερώτηση

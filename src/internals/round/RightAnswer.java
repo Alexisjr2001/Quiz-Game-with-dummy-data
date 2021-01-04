@@ -38,7 +38,7 @@ public class RightAnswer extends Round {
      */
     @Override
     public String getRoundDescription(){
-        return "Άν ο παίκτης απαντήσει σωστά κερδίζει 1000 πόντους";
+        return "Άν ο παίκτης απαντήσει σωστά κερδίζει 1000 πόντους.";
     }
 
 
