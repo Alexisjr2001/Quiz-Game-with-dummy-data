@@ -5,10 +5,7 @@ import GraphicalUserInterface.AssistingTools.customPanels.QuestionPanel;
 import GraphicalUserInterface.AssistingTools.customPanels.RoundPrefacePanel;
 import internals.player.PlayerController;
 import internals.question.Question;
-import internals.round.Bet;
-import internals.round.RightAnswer;
-import internals.round.Round;
-import internals.round.RoundController;
+import internals.round.*;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -18,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Η κλάση GameSequenceHandler αποτελεί την μονάδα που χειρίζεται το "λειτουργικό" μέρος του παιχνιδιού.
@@ -41,6 +39,8 @@ public class GameSequenceHandler {
 
     private KeyAdapter keyboardListener; // Ο KeyAdapter που ανιχνεύει και αντιδρά στο πάτημα των κουμπιών που αποτελεί απάντηση των παιχτών (ή παίχτη)
 
+    private HashMap<String, JDialog> assistingDialogs; // Ένας χάρτης με τα (πιθανά) βοηθητικά παράθυρα που μπορεί να χρειαστούν. Αντιστοιχίζει "ονόματα" παραθύρων σε αντικείμενα JDialog
+
     /**
      * Ο τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
      * Για να ξεκινήσει το παιχνίδι αρκεί να εκκινηθεί με πρώτη ερώτηση και για να γίνει αυτό αρκεί να κληθεί μια φόρα η μέθοδος proceedToNextQuestion.
@@ -55,11 +55,14 @@ public class GameSequenceHandler {
     public GameSequenceHandler(JPanel basePanel, ActionListener returnToMenuButtonListener, RoundController roundController, PlayerController playerController, int numberOfRounds, String[] selectedPlayerNames) {
         this.basePanel = basePanel;
 
+        this.basePanel.setFocusable(true);
+
         this.roundController = roundController;
         this.playerController = playerController;
         this.numberOfRounds = numberOfRounds;
         this.selectedPlayerNames = selectedPlayerNames;
         this.returnToMenuButtonListener = returnToMenuButtonListener;
+        this.assistingDialogs = new HashMap<>();
 
         currentRound = null;
 
@@ -157,12 +160,24 @@ public class GameSequenceHandler {
             gameWinnersPanel.add(gameWinners);
         }
 
+        killAllAssistingWindows(); // Κλείσιμο (τυχόν) ανοικτών βοηθητικών παραθύρων
+
         JButton returnToMenuButton = new JButton("Επιστροφή στο μενού"); // Κουμπί επιστροφής
         returnToMenuButton.addActionListener(returnToMenuButtonListener);
         gameFinishedScreen.add(StaticTools.wrapInFlowLayout(returnToMenuButton), BorderLayout.PAGE_END);
 
         basePanel.removeKeyListener(keyboardListener);
         StaticTools.switchPanelTo(basePanel, gameFinishedScreen);
+    }
+
+    /**
+     * Κλείσιμο (τυχόν) ανοικτών βοηθητικών παραθύρων
+     */
+    public void killAllAssistingWindows(){
+        for (JDialog jd : assistingDialogs.values()){
+            jd.dispose();
+        }
+        assistingDialogs.clear();
     }
 
     /**
@@ -174,13 +189,21 @@ public class GameSequenceHandler {
      * @return ο αριθμός των πόντων που απέκτησε ο παίκτης απο την απάντηση που έδωσε
      */
     public int playerAnswer(String playerName, String givenAnswer){
-        int gains = 0;
+        int gains;
 
         // Εκτέλεση της απάντησης και υπολογισμός βαθμολογίας που (πιθανώς) κερδίζεται
         if (currentRound instanceof RightAnswer){
             gains = ((RightAnswer)currentRound).answerQuestion(givenAnswer);
         } else if (currentRound instanceof Bet){
             gains = ((Bet)currentRound).answerQuestion(givenAnswer, playerName);
+        } else if (currentRound instanceof StopChronometer){
+            gains = ((StopChronometer) currentRound).answerQuestion(playerName);
+        } else if (currentRound instanceof QuickAnswer){
+            gains = ((QuickAnswer) currentRound).answerQuestion(playerName);
+        } else if (currentRound instanceof Thermometer){
+            gains = ((Thermometer) currentRound).answerQuestion(givenAnswer, playerName);
+        } else {
+            gains = 0;
         }
 
         if (selectedPlayerNames.length == 1){ // Ελέγχω αν είναι παιχνίδι ενός παίχτη
@@ -270,8 +293,43 @@ public class GameSequenceHandler {
     public boolean nextQuestionInitialisation() {
         if (currentRound instanceof RightAnswer){ // Περίπτωση γύρου RightAnswer
             return true; // Καμία αρχικοποίηση δεν είναι απαραίτητη
-        } else { // Περίπτωση γύρου Bet
+        } else if (currentRound instanceof Bet){ // Περίπτωση γύρου Bet
             return (new BetInitialisationDialog(basePanel, (Bet) currentRound, selectedPlayerNames)).getDialogSuccessResult();
+        } else if (currentRound instanceof StopChronometer){ // Περίπτωση γύρου StopChronometer
+            JOptionPane.showConfirmDialog(basePanel, "Πάτησε ΟΚ για να αρχίσει ο γύρος", "Εκκίνηση γύρου", JOptionPane.DEFAULT_OPTION);
+
+            JFrame baseFrame = (JFrame) basePanel.getTopLevelAncestor();
+
+            JDialog timeRemainingDialog = new JDialog(baseFrame, "Απομείναντας χρόνος", false);
+            assistingDialogs.put("timeRemainingDialog", timeRemainingDialog);
+            timeRemainingDialog.setFocusable(false);
+            timeRemainingDialog.setFocusableWindowState(false);
+            timeRemainingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            timeRemainingDialog.setSize(200, 200);
+            timeRemainingDialog.setLocation(baseFrame.getX()+baseFrame.getWidth(), baseFrame.getY() + 100);
+
+
+            JLabel time = new JLabel("00000");
+            timeRemainingDialog.setLayout(new GridBagLayout());
+            timeRemainingDialog.add(time);
+
+            ((StopChronometer) currentRound).beginTimer(new ActionListener() {
+                JLabel timeLabel = time;
+                StopChronometer timeController = (StopChronometer) currentRound;
+
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    timeLabel.setText(String.valueOf(timeController.getTime()));
+                }
+            });
+
+            timeRemainingDialog.setVisible(true);
+            //timeRemainingDialog.toBack();
+            return true;
+        } else if (currentRound instanceof QuickAnswer){ // Περίπτωση γύρου QuickAnswer
+            return true; // Καμία αρχικοποίηση δεν είναι απαραίτητη
+        } else { // Περίπτωση γύρου Thermometer
+            return true; // Καμία αρχικοποίηση δεν είναι απαραίτητη
         }
     }
 
@@ -343,6 +401,7 @@ public class GameSequenceHandler {
                 }
             }
             if (everyoneAnswered){
+                killAllAssistingWindows();
                 JOptionPane.showMessageDialog(basePanel, "Η σωστή απάντηση ήταν: " + currentRound.getRightQuestionAnswer(), "Σωστή απάντηση", JOptionPane.INFORMATION_MESSAGE);
                 proceedToNextQuestion();
             }
