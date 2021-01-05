@@ -330,6 +330,7 @@ public class GUI {
         ActionListener returnListener = new ActionListener() { // Όταν κληθεί έχει σηματοδοτηθεί η λήξη του παιχνιδιού και το κύριο JPanel αλλάζει σε αυτό του μενού
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                gameplayManager.killAllAssistingWindows();
                 gameActionPanel.removeAll(); // Αφαιρώ τυχόν στοιχεία του JPanel του παιχνιδιού
                 switchPanelTo(GAME_LOBBY); // Μετάβαση σε JPanel μενού εκκίνησης παιχνιδιού
             }

@@ -84,6 +84,9 @@ public class RoundController {
         availableRoundTypes.clear(); // Αγνοώ τους τύπους που δεν έχουν εμφανιστεί για να τους συμπεριλάβω όλους εκ νέου.
         availableRoundTypes.add(new RightAnswer(questionStore, numberOfQuestionsPerRound));
         availableRoundTypes.add(new Bet(questionStore, numberOfQuestionsPerRound));
+        availableRoundTypes.add(new StopChronometer(questionStore, numberOfQuestionsPerRound, 5));
+        availableRoundTypes.add(new QuickAnswer(questionStore, numberOfQuestionsPerRound));
+        availableRoundTypes.add(new Thermometer(questionStore, numberOfQuestionsPerRound));
     }
 
     /**

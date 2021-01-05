@@ -1,6 +1,7 @@
 package GraphicalUserInterface.AssistingTools.customPanels;
 
 import GraphicalUserInterface.AssistingTools.StaticTools;
+import internals.question.ImageQuestion;
 import internals.question.Question;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class QuestionPanel{
         basePanel = new JPanel(new BorderLayout());
 
         JPanel questionPanel = new JPanel(new BorderLayout()); basePanel.add(questionPanel);
+        questionPanel.setFocusable(true);
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 30));
         topPanel.setBorder( BorderFactory.createTitledBorder( // Εκφώνηση ερώτησης
@@ -41,13 +43,11 @@ public class QuestionPanel{
         JPanel bottomPanel = new JPanel(new GridLayout(1, 3)); questionPanel.add(bottomPanel);
 
 
-        if (question instanceof Question){ // Δυναμική κατασκευή αντικειμένου ανάλογα με το αν είναι ερώτηση κειμένου ή εικόνας
-            topPanel.add(new JLabel(question.getQuestion()));
-
-
-
+        if (question instanceof ImageQuestion){ // Δυναμική κατασκευή αντικειμένου ανάλογα με το αν είναι ερώτηση κειμένου ή εικόνας
+            ImageQuestion questionWithImage = (ImageQuestion) question;
+            topPanel.add(new JLabel(questionWithImage.getQuestion(), questionWithImage.getImageIcon(), JLabel.LEFT));
         } else {
-            // Προσθήκη περίπτωση ερώτησης με εικόνα όταν η κλάση είναι διαθέσιμη
+            topPanel.add(new JLabel(question.getQuestion()));
         }
 
         bottomPanel.add(new JPanel());
