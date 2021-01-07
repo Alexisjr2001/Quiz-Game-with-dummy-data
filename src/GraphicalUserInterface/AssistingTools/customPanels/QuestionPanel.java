@@ -40,17 +40,38 @@ public class QuestionPanel{
         questionPanel.add(topPanel, BorderLayout.PAGE_START);
 
 
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 3)); questionPanel.add(bottomPanel);
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 1)); questionPanel.add(bottomPanel);
 
+        topPanel.add(new JLabel(question.getQuestion()));
 
         if (question instanceof ImageQuestion){ // Δυναμική κατασκευή αντικειμένου ανάλογα με το αν είναι ερώτηση κειμένου ή εικόνας
-            ImageQuestion questionWithImage = (ImageQuestion) question;
-            topPanel.add(new JLabel(questionWithImage.getQuestion(), questionWithImage.getImageIcon(), JLabel.LEFT));
-        } else {
-            topPanel.add(new JLabel(question.getQuestion()));
-        }
+            ImageIcon tempImageIcon = ((ImageQuestion)question).getImageIcon();
 
-        bottomPanel.add(new JPanel());
+
+            int newWidth, newHeight;
+
+            if (tempImageIcon.getIconWidth() > tempImageIcon.getIconHeight()){
+                double widthFactor = tempImageIcon.getIconWidth()/450.0; // Βρίσκω κατά πόσο πρέπει να διαιρεθεί το πλάτος για να "χωρέσει" ομοιόμορφα στο κενό που υπάρχει
+                if (widthFactor <= 0){
+                    widthFactor = 1;
+                }
+
+                newWidth = (int)(tempImageIcon.getIconWidth()/widthFactor);
+                newHeight = (int)( (double)tempImageIcon.getIconHeight() / tempImageIcon.getIconWidth() * newWidth );
+            } else {
+                double heightFactor = tempImageIcon.getIconHeight()/400.0; // Βρίσκω κατά πόσο πρέπει να διαιρεθεί το "ύψος" για να "χωρέσει" ομοιόμορφα στο κενό που υπάρχει
+                if (heightFactor <= 0){
+                    heightFactor = 1;
+                }
+
+                newHeight = (int)(tempImageIcon.getIconHeight()/heightFactor);
+                newWidth = (int) ( tempImageIcon.getIconWidth() / (double)tempImageIcon.getIconHeight() * newHeight);
+            }
+
+            ImageIcon imageIcon = new ImageIcon(tempImageIcon.getImage().getScaledInstance(newWidth, // Δημιουργώ την επεξεργασμένη εικόνα
+                    newHeight, Image.SCALE_SMOOTH));
+            bottomPanel.add(new JLabel(imageIcon));
+        }
 
         /* Δημιουργία τμήματος με πιθανές απαντήσεις */
         JPanel answersPanel = new JPanel(new GridLayout(4, 1)); bottomPanel.add(answersPanel);
@@ -59,13 +80,11 @@ public class QuestionPanel{
         String[] answers = question.getAnswers();
 
         for (int i = 0; i<answers.length; i++){
-            individualAnswerPanel = new JPanel(new BorderLayout());
+            individualAnswerPanel = new JPanel(new GridBagLayout());
             individualAnswerPanel.add(new JLabel(i+1 + ": " + answers[i]));
             individualAnswerPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             answersPanel.add(individualAnswerPanel);
         }
-
-        bottomPanel.add(new JPanel());
 
         /* Δημιουργία τμήματος όπου φαίνονται οι απαντήσεις κάθε παίχτη που παίζει */
         playerAnswers = new HashMap<>(selectedPlayerNames.length);

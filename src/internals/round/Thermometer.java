@@ -23,7 +23,7 @@ public class Thermometer extends Round{
      * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο.
      */
     public Thermometer(QuestionLibrary questionStore, int questionNumber){
-        super(questionStore,2,2,questionNumber);
+        super(questionStore,2,2, Math.max(questionNumber, 5));
         rightAnswerCounter = new HashMap<>();
         gameIsOver = false;
     }

@@ -1,4 +1,9 @@
+import GraphicalUserInterface.GUI;
 import consoleUI.ConsoleInteraction;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Υλοποιεί την μοναδική μέθοδο main της εφαρμογής και αποτελεί σημείο εκκίνησης του προγράμματος.
@@ -20,8 +25,7 @@ public class Main {
      * @param args Ορίσματα κονσόλας, δεν χρησιμοποιούνται
      */
     public static void main(String[] args) {
-        ConsoleInteraction playGame = new ConsoleInteraction(); // Δημιουργία περιβάλλοντος
-        playGame.beginApp(); // Εκκίνηση περιβάλλοντος
-        System.out.println("Αντίο...");
+        GUI playGame = new GUI(); // Δημιουργία περιβάλλοντος
+        playGame.begin(); // Εκκίνηση περιβάλλοντος
     }
 }

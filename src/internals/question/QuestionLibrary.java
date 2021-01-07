@@ -31,6 +31,19 @@ public class QuestionLibrary {
     }
 
     /**
+     * Τυπικός κατασκευαστής της κλάσης. Αρχικοποιεί τα δεδομένα της κλάσης φορτώνοντας ερωτήσεις απο αρχείο χρησιμοποιώντας την μέθοδο loadQuestionFromFile.
+     * @param automaticShuffle κατάσταση αυτόματου "ανακατέματος". true για ενεργοποίηση, false διαφορετικά.
+     * @param questionFile Όνομα αρχείου απο όπου θα φορτωθούν οι ερωτήσεις
+     */
+
+    public QuestionLibrary(boolean automaticShuffle, String questionFile) throws IOException {
+        this.automaticShuffle = automaticShuffle;
+        categoryStore = new HashMap<>();
+        loadQuestionFromFile(questionFile); // "Φόρτωση" ερωτήσεων στην κλάση.
+        reshuffle(); // Πρέπει αμέσως μετά την δημιουργία να μπορώ να πάρω τυχαίες κατηγορίες, οπότε κάνω τυχαιοποίηση τους.
+    }
+
+    /**
      * Επιστρέφει μια τυχαία κατηγορία ερωτήσεων.
      *
      * Αν έχουν ήδη επιστραφεί όλες οι κατηγορίες τότε:
@@ -151,7 +164,7 @@ public class QuestionLibrary {
      * @param fileName Το όνομα του αρχείου κειμένου, από όπου θα διαβάσουμε όλες τις ερωτήσεις.
      * @throws IOException Σε περίπτωση που υπάρχει πρόβλημα κατά το άνοιγμα και διάβασμα από το αρχείο κειμένου.
      */
-    private void loadQuestionFromFile(String fileName) throws IOException {
+    public void loadQuestionFromFile(String fileName) throws IOException {
         //Η δομή αυτή αποθηκεύει όλες τις ερωτήσεις της κάθε κατηγορίας
         //Το String αναπαριστά το όνομα της κατηγορίας
         //Το ArrayList αποθηκεύει τις ερωτήσεις της κατηγορίας
@@ -165,12 +178,13 @@ public class QuestionLibrary {
 
                 String[] parts = aLine.split("\t"); //Διαχωρισμός της γραμμής σε κομμάτια με βάση το tab
 
+                answers = new String[4];
                 for (int i = 2; i < 6; i++) {//Αποθηκεύω τις απαντήσεις της ερώτησης
-                    answers[i] = parts[i];
+                    answers[i-2] = parts[i];
                 }
 
                 //Δημιουργία ερώτησης
-                if (parts[7]==null) { //ερώτηση χωρίς εικόνα
+                if (parts[7].equals("Null")) { //ερώτηση χωρίς εικόνα
                     question = new Question(parts[1], answers, parts[6], parts[0]);
                 }
                 else { //ερώτηση με εικόνα

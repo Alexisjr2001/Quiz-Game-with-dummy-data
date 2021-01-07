@@ -1,5 +1,6 @@
 package internals.round;
 
+import internals.question.ImageQuestion;
 import internals.question.Question;
 import internals.question.QuestionLibrary;
 
@@ -155,7 +156,7 @@ public abstract class Round {
      */
 
     public String getRightQuestionAnswer(){
-        if (questionNumber > 0){ //
+        if (questionNumber > 0){
             if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
                 proceed();
             }
@@ -180,6 +181,23 @@ public abstract class Round {
             }
 
             return roundQuestion.getCategory();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Επιστρέφει αντίγραφο αντικειμένου της ερώτησης σε αυτό το στάδιο του γύρου της οποίας οι απαντήσεις έχουν τυχαία
+     * σειρά, σύμφωνα με την μέθοδο getQuestionAnswers της παρούσας κλάσης
+     * @return Επιστρέφει αντίγραφο αντικειμένου της ερώτησης σε αυτό το στάδιο του γύρου της οποίας οι απαντήσεις έχουν τυχαία σειρά ή null σε περίπτωση που έχουν τελειώσει οι ερωτήσεις
+     */
+    public Question getQuestionWithRandomizedAnswers(){
+        if (questionNumber > 0){ // Δεν έχουν τελειώσει οι ερωτήσεις
+            if (roundQuestion instanceof ImageQuestion){
+                return new ImageQuestion(getQuestion(), getQuestionAnswers(), getRightQuestionAnswer(), getQuestionCategory(), ((ImageQuestion)roundQuestion).getImageIcon());
+            } else {
+                return new Question(getQuestion(), getQuestionAnswers(), getRightQuestionAnswer(), getQuestionCategory());
+            }
         } else {
             return null;
         }

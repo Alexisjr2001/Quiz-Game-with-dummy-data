@@ -197,9 +197,9 @@ public class GameSequenceHandler {
         } else if (currentRound instanceof Bet){
             gains = ((Bet)currentRound).answerQuestion(givenAnswer, playerName);
         } else if (currentRound instanceof StopChronometer){
-            gains = ((StopChronometer) currentRound).answerQuestion(playerName);
+            gains = ((StopChronometer) currentRound).answerQuestion(givenAnswer);
         } else if (currentRound instanceof QuickAnswer){
-            gains = ((QuickAnswer) currentRound).answerQuestion(playerName);
+            gains = ((QuickAnswer) currentRound).answerQuestion(givenAnswer);
         } else if (currentRound instanceof Thermometer){
             gains = ((Thermometer) currentRound).answerQuestion(givenAnswer, playerName);
         } else {
@@ -226,7 +226,7 @@ public class GameSequenceHandler {
             currentRound.proceed(); // Μετάβαση στην πρώτη ερώτηση
 
             if (!currentRound.isOver()) { // Υπάρχει πρώτος γύρος
-                currentQuestionPanel = QuestionPanel.constructQuestionPanel(new Question(currentRound.getQuestion(), currentRound.getQuestionAnswers(), currentRound.getRightQuestionAnswer(), currentRound.getQuestionCategory()), selectedPlayerNames);
+                currentQuestionPanel = QuestionPanel.constructQuestionPanel(currentRound.getQuestionWithRandomizedAnswers(), selectedPlayerNames);
             }
         }
 
@@ -251,7 +251,7 @@ public class GameSequenceHandler {
             }
             /* Μετάβαση στην επόμενη ερώτηση */
             currentRound.proceed();
-            currentQuestionPanel = QuestionPanel.constructQuestionPanel(new Question(currentRound.getQuestion(), currentRound.getQuestionAnswers(), currentRound.getRightQuestionAnswer(), currentRound.getQuestionCategory()), selectedPlayerNames);   //TODO: null check
+            currentQuestionPanel = QuestionPanel.constructQuestionPanel(currentRound.getQuestionWithRandomizedAnswers(), selectedPlayerNames);
 
             StaticTools.switchPanelTo(basePanel, new RoundPrefacePanel(currentRound, new ActionListener() { // Εμφάνιση οδηγιών γύρου
                 @Override
@@ -270,6 +270,12 @@ public class GameSequenceHandler {
                 }
             }).getPanel());
         } else {
+            for (int i = 0; i < selectedPlayerNames.length; i++) { // Αρχικοποίηση / Επεξεργασία των πινάκων αριθμών πόντων
+                totalPlayerGains[i] += playerGains[i];
+                playerGains[i] = 0;
+            }
+
+
             /* Προετοιμασία και εμφάνιση νέας ερώτησης */
             basePanel.removeAll();
             basePanel.add(new JPanel());

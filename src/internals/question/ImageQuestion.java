@@ -1,6 +1,9 @@
 package internals.question;
 
+import Images.Resource;
+
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Η κλάση {@code ImageQuestion} επεκτείνει την κλάση {@code Question}
@@ -11,7 +14,7 @@ import javax.swing.*;
  *
  * @version 2020.12.31
  */
-public class ImageQuestion extends Question{
+public class ImageQuestion extends Question {
     private ImageIcon imageIcon; //Η εικόνα της ερώτησης
 
     /**
@@ -24,7 +27,20 @@ public class ImageQuestion extends Question{
      */
     public ImageQuestion(String question, String[] answers, String rightAnswer, String category, String imageFileName) {
         super(question, answers, rightAnswer, category);
-        imageIcon = new ImageIcon(imageFileName);
+        imageIcon = Resource.getImageIcon(imageFileName);
+    }
+
+    /**
+     * Ο τυπικός κατασκευαστής της κλάσης που αρχικοποιεί τα δεδομένα της σύμφωνα με τα ορίσματα.
+     * @param question Η εκφώνηση της ερώτησης.
+     * @param answers Οι πιθανές απαντήσεις της ερώτησης.
+     * @param rightAnswer Η σωστή απάντηση.
+     * @param category Το όνομα της κατηγορίας στην οποία ανήκει η ερώτηση.
+     * @param image Η εικόνα που συνδέεται με την ερώτηση
+     */
+    public ImageQuestion(String question, String[] answers, String rightAnswer, String category, ImageIcon image) {
+        super(question, answers, rightAnswer, category);
+        imageIcon = image;
     }
 
     /**

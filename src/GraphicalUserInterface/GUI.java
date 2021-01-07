@@ -9,6 +9,7 @@ import internals.round.RoundController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 /**
  * Η κλάση που μοντελοποιεί την αλληλεπίδραση της εφαρμογής με τον χρήστη (με διεπαφή γραφικού περιβάλλοντος).
@@ -54,9 +55,6 @@ public class GUI {
     public GUI(){
         // Αρχικοποίηση δεδομένων παιχνιδιού
         playerController = new PlayerController();
-        questionLibrary = new QuestionLibrary(true);
-        roundController = new RoundController(true, questionLibrary);
-
 
         // Αρχικοποίηση δεδομένων κυρίου παραθύρου
         mainWindow = new JFrame("Buzz! Quiz World");
@@ -79,23 +77,39 @@ public class GUI {
             }
         });
 
-        /*TODO: DEBUGGING -- REMOVE IN FINAL*/
-//        JFrame sizeManager = new JFrame(); sizeManager.setVisible(true);
-//        JButton managerButton = new JButton("-----------PRESS FOR SIZE-----------"); sizeManager.add(managerButton);
-//        managerButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent actionEvent) {
-//                ((JButton)actionEvent.getSource()).setText(sizeManager.getSize().toString());
-//            }
-//        });
-//        sizeManager.setSize(400, 200); sizeManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        sizeManager.setLocation(0, 0);
+        do { // Ρωτάμε συνεχώς τον χρήστη αν θέλει να συνεχίζει τις προσπάθειες
+            try {
+                questionLibrary = new QuestionLibrary(true, "Ερωτήσεις.txt");
+                break;
+            } catch (IOException e) {
+                if (0 != JOptionPane.showConfirmDialog(mainWindow, "Υπήρχε πρόβλημα με το άνοιγμα αρχείου με ερωτήσεις. Θέλεις να ξαναγίνει προσπάθεια;", "Σφάλμα", JOptionPane.YES_NO_CANCEL_OPTION)){
+                    System.exit(-1);
+                }
+            }
+        } while (true);
+        roundController = new RoundController(true, questionLibrary);
 
-        playerController.createPlayer("debug1");
-        playerController.createPlayer("debug2");
-
-        /* TODO: Μέχρι εδώ */
-
+        do{// Ρωτάμε συνεχώς τον χρήστη αν θέλει να συνεχίζει τις προσπάθειες
+            try {
+                playerController.loadGameStatistics("Στατιστικά Παιχνιδιού.bin");
+                break;
+            } catch (IOException e) {
+                int response = JOptionPane.showConfirmDialog(mainWindow, "Δεν υπάρχει αρχείο με στατιστικά.\n Πάτησε Yes για να δημιουργηθεί νέο αρχείο,NO για νέα προσπάθεια ανοίγματος αρχείου (αν υπάρχει) για ακύρωση ή Cancel για έξοδο απο το πρόγραμμα.", "Σφάλμα", JOptionPane.YES_NO_CANCEL_OPTION);
+                if (response == 0){ // Δημιουργία νέων στατιστικών
+                    break;
+                } else if (response == 1) { // Έξοδος
+                    System.exit(-1);
+                }
+                // Δημιουργία νέου αρχείο στο τέλος εκτέλεσης
+            } catch (ClassNotFoundException e){
+                int response = JOptionPane.showConfirmDialog(mainWindow, "Υπήρχε πρόβλημα με το άνοιγμα αρχείου με στατιστικά.\n Πάτησε ΟΚ για να δημιουργηθεί νέο αρχείο ή Cancel για νέα προσπάθεια ανοίγματος αρχείου.", "Σφάλμα", JOptionPane.DEFAULT_OPTION);
+                if (response == 0){ // Δημιουργία νέων στατιστικών
+                    break;
+                } else { // Έξοδος
+                    System.exit(-1);
+                }
+            }
+        } while (true);
     }
 
     /**
@@ -104,7 +118,16 @@ public class GUI {
     private void exitRoutine(){
         int userResponse = JOptionPane.showConfirmDialog(mainWindow, "Πριν την έξοδο, θέλεις να αποθηκευτούν τα δεδομένα παιχτών;");
         if (userResponse == 0){
-            //  save data
+            do {
+                try {
+                    playerController.saveGameStatistics("Στατιστικά Παιχνιδιού.bin");
+                    break;
+                } catch (IOException e) {
+                    if (0 != JOptionPane.showConfirmDialog(mainWindow, "Υπήρχε πρόβλημα κατά την αποθήκευση δεδομένων. Θέλεις να ξαναγίνει προσπάθεια;", "Σφάλμα", JOptionPane.YES_NO_CANCEL_OPTION)){
+                        break;
+                    }
+                }
+            } while (true);
             mainWindow.dispose();
         } else if (userResponse == 1){
             mainWindow.dispose();
