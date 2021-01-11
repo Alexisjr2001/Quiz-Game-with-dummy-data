@@ -64,8 +64,8 @@ public class GUI {
         mainWindowLayout = new CardLayout();
         mainWindow.setLayout(mainWindowLayout);
 
-        initMainMenu(); mainWindow.add(mainMenuPanel, "MainMenu"); // Αρχικοποίηση panel κυρίου μενού.
-        initPlayerManagement(); mainWindow.add(playerManagementPanel, "PlayerManagement"); // Αρχικοποίηση panel μενού διαχείρισης παιχτών.
+        initMainMenu(); mainWindow.add(mainMenuPanel, MAIN_MENU); // Αρχικοποίηση panel κυρίου μενού.
+        initPlayerManagement(); mainWindow.add(playerManagementPanel, PLAYER_MANAGE); // Αρχικοποίηση panel μενού διαχείρισης παιχτών.
         initPlayLobby(); mainWindow.add(gameLobbyPanel, GAME_LOBBY);
         gameActionPanel = new JPanel(new BorderLayout()); mainWindow.add(gameActionPanel, GAME_ACTION);
 
@@ -391,7 +391,7 @@ public class GUI {
     }
 
     /**
-     * Εναλλάσσει το κύριο (αυτό που φαίνεται στο παράθυρο) JPanel σε ένα απο αυτά που έχουν προκαθοριστεί σύμφωνα με την παράμετρο.
+     * Εναλλάσσει το κύριο (αυτό που φαίνεται στο παράθυρο) JPanel σε ένα απο αυτά που έχουν προκαθοριστεί σύμφωνα με την σταθερά της παραμέτρου.
      * Παράλληλα, αλλάζει το μέγεθος του παραθύρου στο προκαθορισμένο και κατάλληλο μέγεθος και τοποθετεί το παράθυρο στο κέντρο της οθόνης.
      * Έχουν προκαθοριστεί: κύριο μενού με σταθερά MAIN_MENU, μενού διαχείρισης παιχτών με σταθερά PLAYER_MANAGE, μενού εκκίνησης παιχνιδιού με σταθερά GAME_LOBBY και
      * JPanel διαδραμάτισης παιχνιδιού με σταθερά GAME_ACTION.
