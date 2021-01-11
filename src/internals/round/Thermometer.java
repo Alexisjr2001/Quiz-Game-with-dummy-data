@@ -20,7 +20,8 @@ public class Thermometer extends Round{
     /**
      * Τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
      * @param questionStore αναφορά σε αντικείμενο της κλάσης QuestionLibrary, απο την οποία θα "παρθούν" οι ερωτήσεις.
-     * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο.
+     * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο. Αν είναι λιγότερες απο 5,
+     *                       ο αριθμός αυτός αγνοείται και θεωρείται ως αριθμός ερωτήσεων το 5.
      */
     public Thermometer(QuestionLibrary questionStore, int questionNumber){
         super(questionStore,2,2, Math.max(questionNumber, 5));

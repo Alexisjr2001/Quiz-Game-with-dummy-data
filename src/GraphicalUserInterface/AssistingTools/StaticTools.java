@@ -1,5 +1,7 @@
 package GraphicalUserInterface.AssistingTools;
 
+import internals.round.*;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -50,4 +52,28 @@ public class StaticTools {
         temp.add(component);
         return temp;
     }
+
+    /**
+     * Εκτελείται η απάντηση και υπολογίζεται και επιστρέφεται η βαθμολογία που (πιθανώς) κερδίζεται.
+     * @param playerName Όνομα παίχτη που απαντάει
+     * @param givenAnswer Η απάντηση που έδωσε ο παίχτης
+     * @param round Ο γύρος, στον οποίο απαντάει ο παίχτης
+     * @return βαθμολογίας που (πιθανώς) κερδίζει ο παίχτης δίνοντας την συγκεκριμένη απάντηση
+     */
+    public static int calculatePlayerAnswerGain(String playerName, String givenAnswer, Round round){
+        if (round instanceof RightAnswer){
+            return  ((RightAnswer)round).answerQuestion(givenAnswer);
+        } else if (round instanceof Bet){
+            return ((Bet)round).answerQuestion(givenAnswer, playerName);
+        } else if (round instanceof StopChronometer){
+            return ((StopChronometer) round).answerQuestion(givenAnswer);
+        } else if (round instanceof QuickAnswer){
+            return ((QuickAnswer) round).answerQuestion(givenAnswer);
+        } else if (round instanceof Thermometer){
+            return ((Thermometer) round).answerQuestion(givenAnswer, playerName);
+        } else {
+            return 0;
+        }
+    }
+
 }

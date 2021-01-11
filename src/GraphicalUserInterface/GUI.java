@@ -330,11 +330,11 @@ public class GUI {
             public void actionPerformed(ActionEvent actionEvent) {
                 JOptionPane.showMessageDialog(mainWindow, String.format("Το παιχνίδι αποτελείται απο έναν αριθμό γύρων όπου κάθε ένας έχει έναν αριθμό ερωτήσεων.%n" +
                         "Κάθε ερώτηση έχει 4 πιθανές απαντήσεις με την αρίθμηση 1, 2, 3, 4 όπου μόνο μία είναι σωστή.%n" +
-                        "Καλείσαι να απαντήσεις σε αυτές τις ερωτήσεις δίνοντας τον αριθμό που αντιστοιχεί στην απάντηση που θέλεις να επιλέξεις %n" +
-                        "(πρέπει να πατήσεις το κουμπί της απάντησης 1, 2, 3 ή 4 που αντιστοιχούν στον αριθμό 1, 2, 3 ή 4 ή το γράμμα v, b, n, m αντίστοιχα για τον πρώτο ή δεύτερο παίκτη).%n" +
+                        "Καλείσαι να απαντήσεις σε αυτές τις ερωτήσεις δίνοντας τον αριθμό που αντιστοιχεί στην απάντηση που θέλεις να επιλέξεις: %n" +
+                        "Πρέπει να πατήσεις το κουμπί της απάντησης 1, 2, 3 ή 4 που αντιστοιχούν στον αριθμό 1, 2, 3 ή 4 για τον πρώτο ή το γράμμα v, b, n, m για τον δεύτερο παίκτη.%n" +
                         "Σημειώνεται ότι κάθε γύρος ίσως να έχει κάποιες παραλλαγές σε σχέση με αυτές τις οδηγίες, οι οποίες εξηγούνται προτού αρχίσει ο συγκεκριμένος γύρος.%n" +
                         "%n Ανα πάσα στιγμή κατά την διάρκεια του παιχνιδιού μπορείς να γυρίσεις στο μενού εκκίνησης παιχνιδιού κάνοντας δεξί κλικ και στην συνέχεια πατώντας επιστροφή στο μενού εκκίνησης.%n" +
-                        "Με την επιστροφή πριν τελειώσει κάποιος γύρος δεν προσμετράται η νίκη / ήττα για τον γύρο που μόλις διακόπηκε."),
+                        "Με την επιστροφή πριν τελειώσει κάποιος γύρος, προσμετράται η νίκη / ήττα απο την αρχή μέχρι την ερώτηση του γύρου που μόλις διακόπηκε."),
                         "Πληροφορίες", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -353,7 +353,6 @@ public class GUI {
         ActionListener returnListener = new ActionListener() { // Όταν κληθεί έχει σηματοδοτηθεί η λήξη του παιχνιδιού και το κύριο JPanel αλλάζει σε αυτό του μενού
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                gameplayManager.killAllAssistingWindows();
                 gameActionPanel.removeAll(); // Αφαιρώ τυχόν στοιχεία του JPanel του παιχνιδιού
                 switchPanelTo(GAME_LOBBY); // Μετάβαση σε JPanel μενού εκκίνησης παιχνιδιού
             }
@@ -362,7 +361,14 @@ public class GUI {
         /* Δημιουργία μενού με δεξί κλικ για άμεση επιστροφή στο μενού */
         JPopupMenu rightClickMenu = new JPopupMenu();
         JMenuItem exitItem = new JMenuItem("Επιστροφή στο μενού"); rightClickMenu.add(exitItem);
-        exitItem.addActionListener(returnListener);
+        exitItem.addActionListener(new ActionListener() { // Όταν έχει ζητηθεί απο μενού με δεξί κλικ η λήξη του παιχνιδιού και το κύριο JPanel αλλάζει σε αυτό του μενού
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                gameplayManager.gameFinishedMenu(); // Ζητώ τερματισμό παιχνιδιού και υπολογισμό αποτελεσμάτων μέχρι εκείνο το σημείο.
+                gameActionPanel.removeAll(); // Αφαιρώ τυχόν στοιχεία του JPanel του παιχνιδιού
+                switchPanelTo(GAME_LOBBY); // Μετάβαση σε JPanel μενού εκκίνησης παιχνιδιού
+            }
+        });
 
         gameActionPanel.addMouseListener(new MouseAdapter() {
             @Override

@@ -1,9 +1,6 @@
 package internals.question;
 
-import Images.Resource;
-
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Η κλάση {@code ImageQuestion} επεκτείνει την κλάση {@code Question}
@@ -23,11 +20,11 @@ public class ImageQuestion extends Question {
      * @param answers Οι πιθανές απαντήσεις της ερώτησης.
      * @param rightAnswer Η σωστή απάντηση.
      * @param category Το όνομα της κατηγορίας στην οποία ανήκει η ερώτηση.
-     * @param imageFileName Το όνομα της εικόνας που συνδέεται με την ερώτηση
+     * @param imageFileName Το όνομα της εικόνας που συνδέεται με την ερώτηση (που βρίσκεται στον φάκελο Images σε επίπεδο project).
      */
     public ImageQuestion(String question, String[] answers, String rightAnswer, String category, String imageFileName) {
         super(question, answers, rightAnswer, category);
-        imageIcon = Resource.getImageIcon(imageFileName);
+        imageIcon = new ImageIcon("Images/"+imageFileName);
     }
 
     /**
