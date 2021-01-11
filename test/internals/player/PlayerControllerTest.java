@@ -300,4 +300,112 @@ class PlayerControllerTest {
         assertEquals(-1,playerController.getMultiplayerWins("Mary"));
         assertEquals(-1,playerController.getPlayerScore("Mary"));
     }
+
+    @Test
+    void complexRenameResultsTest(){
+        assertEquals("Επιτυχία", playerController.createPlayer("John"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("John"));
+
+
+        assertEquals("Επιτυχία", playerController.createPlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("John"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("Jim"));
+
+
+        assertEquals("Επιτυχία", playerController.changePlayerName("Jim", "jim"));
+        assertEquals("Επιτυχία", playerController.playerExists("jim"));
+        assertNotEquals("Επιτυχία", playerController.playerExists("Jim"));
+        assertEquals("Επιτυχία", playerController.playerExists("John"));
+        assertNotEquals("Επιτυχία", playerController.playerExists("john"));
+
+
+        assertEquals(1, playerController.countMultiplayerWins("jim"));
+        assertEquals(-1, playerController.countMultiplayerWins("Jim"));
+        assertEquals(0, playerController.getMultiplayerWins("John"));
+        assertEquals(1, playerController.countMultiplayerWins("John"));
+
+
+        assertEquals("Επιτυχία", playerController.changePlayerName("John", "Jim"));
+        assertEquals(-1, playerController.countMultiplayerWins("John"));
+        assertEquals(-1, playerController.countMultiplayerWins("john"));
+        assertEquals(2, playerController.countMultiplayerWins("Jim"));
+        assertEquals(2, playerController.countMultiplayerWins("jim"));
+
+
+        assertEquals(3, playerController.countMultiplayerWins("Jim"));
+        assertEquals(4, playerController.countMultiplayerWins("Jim"));
+        assertEquals(5, playerController.countMultiplayerWins("Jim"));
+        assertEquals(3, playerController.countMultiplayerWins("jim"));
+
+        assertEquals(-1, playerController.countMultiplayerWins("John"));
+        assertEquals(-1, playerController.countMultiplayerWins("john"));
+
+        assertEquals(6, playerController.countMultiplayerWins("Jim"));
+        assertEquals(7, playerController.countMultiplayerWins("Jim"));
+        assertEquals(8, playerController.countMultiplayerWins("Jim"));
+        assertEquals(4, playerController.countMultiplayerWins("jim"));
+
+    }
+
+    @Test
+    void complexDeleteResultsTest(){
+        assertEquals("Επιτυχία", playerController.createPlayer("John"));
+        assertEquals("Επιτυχία", playerController.removePlayer("John"));
+        assertNotEquals("Επιτυχία", playerController.removePlayer("John"));
+        assertEquals("Επιτυχία", playerController.createPlayer("John"));
+
+
+        assertEquals("Επιτυχία", playerController.createPlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("John"));
+        assertEquals("Επιτυχία", playerController.removePlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("John"));
+        assertNotEquals("Επιτυχία", playerController.removePlayer("Bob"));
+        assertEquals("Επιτυχία", playerController.createPlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("John"));
+
+
+        assertEquals("Επιτυχία", playerController.createPlayer("jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.createPlayer("jim"));
+        assertEquals("Επιτυχία", playerController.playerExists("jim"));
+        assertEquals("Επιτυχία", playerController.playerExists("Jim"));
+        assertEquals("Επιτυχία", playerController.removePlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.playerExists("Jim"));
+        assertEquals("Επιτυχία", playerController.playerExists("jim"));
+
+
+        assertEquals(1, playerController.countMultiplayerWins("jim"));
+        assertEquals(-1, playerController.countMultiplayerWins("Jim"));
+        assertEquals(0, playerController.getMultiplayerWins("John"));
+        assertEquals(1, playerController.countMultiplayerWins("John"));
+
+
+        assertEquals("Επιτυχία", playerController.changePlayerName("John", "Jim"));
+        assertEquals(-1, playerController.countMultiplayerWins("John"));
+        assertEquals(-1, playerController.countMultiplayerWins("john"));
+        assertEquals(2, playerController.countMultiplayerWins("Jim"));
+        assertEquals(2, playerController.countMultiplayerWins("jim"));
+
+        assertEquals("Επιτυχία", playerController.removePlayer("Jim"));
+        assertNotEquals("Επιτυχία", playerController.playerExists("Jim"));
+        assertEquals("Επιτυχία", playerController.playerExists("jim"));
+
+
+        assertEquals(-1, playerController.countMultiplayerWins("Jim"));
+        assertEquals(-1, playerController.countMultiplayerWins("Jim"));
+        assertEquals(-1, playerController.countMultiplayerWins("Jim"));
+        assertEquals(3, playerController.countMultiplayerWins("jim"));
+
+        assertEquals(-1, playerController.countMultiplayerWins("John"));
+        assertEquals(-1, playerController.countMultiplayerWins("john"));
+
+        assertEquals("Επιτυχία", playerController.createPlayer("Jim"));
+
+        assertEquals(1, playerController.countMultiplayerWins("Jim"));
+        assertEquals(2, playerController.countMultiplayerWins("Jim"));
+        assertEquals(3, playerController.countMultiplayerWins("Jim"));
+        assertEquals(4, playerController.countMultiplayerWins("jim"));
+
+    }
 }

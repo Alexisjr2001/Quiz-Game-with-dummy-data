@@ -233,6 +233,31 @@ class QuickAnswerTest extends RoundTest{
 
     }
 
+    @Test
+    void multipleAnswerQuestion1() {
+        /* Ο πρώτος και ο δεύτερος και ο τρίτος απαντάνε λανθασμένα */
+
+        assertEquals(1000,quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Νότια Αμερική"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Ασία"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Ασία"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Νότια Αμερική"));
+
+        assertEquals(500,quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Ασία"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
+        assertEquals(0,quickAnswer.answerQuestion("Νότια Αμερική"));
+    }
+
 
     @Override
     QuickAnswer getObject() {

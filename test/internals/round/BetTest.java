@@ -183,6 +183,40 @@ class BetTest extends RoundTest{
     }
 
     @Test
+    void additionalPlaceBetTest() {
+        assertEquals("Επιτυχία",bet.placeBet("John",250));
+
+        assertEquals("Επιτυχία",bet.placeBet("Alex",500));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("Alex",752));
+
+        assertEquals("Επιτυχία",bet.placeBet("John",1000));
+
+        assertEquals("Επιτυχία",bet.placeBet("Alex",750));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("John",800));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("Ανδρέας",-1000));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("John",-250));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("Alex",-500));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("Alex",-10));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("John",10));
+
+        assertEquals("Επιτυχία",bet.placeBet("Γιάννης",750));
+
+        assertNotEquals("Επιτυχία",bet.placeBet("John",25));
+
+        assertEquals("Επιτυχία",bet.placeBet("Δημήτρης",500));
+
+    }
+
+
+
+    @Test
     void answerQuestion() {
         int result;
         bet.placeBet("Alex",250);
