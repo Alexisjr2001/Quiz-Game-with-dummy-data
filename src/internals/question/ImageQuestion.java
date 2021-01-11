@@ -9,13 +9,13 @@ import javax.swing.*;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.12.31
+ * @version 2021.01.11
  */
 public class ImageQuestion extends Question {
     private ImageIcon imageIcon; //Η εικόνα της ερώτησης
 
     /**
-     * Ο τυπικός κατασκευαστής της κλάσης που αρχικοποιεί τα δεδομένα της σύμφωνα με τα ορίσματα.
+     * Κατασκευαστής της κλάσης που αρχικοποιεί τα δεδομένα της σύμφωνα με τα ορίσματα.
      * @param question Η εκφώνηση της ερώτησης.
      * @param answers Οι πιθανές απαντήσεις της ερώτησης.
      * @param rightAnswer Η σωστή απάντηση.
@@ -28,7 +28,7 @@ public class ImageQuestion extends Question {
     }
 
     /**
-     * Ο τυπικός κατασκευαστής της κλάσης που αρχικοποιεί τα δεδομένα της σύμφωνα με τα ορίσματα.
+     * Κατασκευαστής της κλάσης που αρχικοποιεί τα δεδομένα της σύμφωνα με τα ορίσματα.
      * @param question Η εκφώνηση της ερώτησης.
      * @param answers Οι πιθανές απαντήσεις της ερώτησης.
      * @param rightAnswer Η σωστή απάντηση.

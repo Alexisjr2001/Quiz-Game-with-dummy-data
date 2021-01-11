@@ -17,6 +17,11 @@ import java.util.ArrayList;
  * απο τον χρήστη τα απαραίτητα δεδομένα για αρχικοποίηση του γύρου Bet.
  * Συγκεκριμένα ζητάει απο κάθε χρήστη που παίζει να ποντάρει έναν προκαθορισμένο αριθμό πόντων και θέτει αυτόν τον αριθμό
  * στο αντικείμενο γύρου που δέχεται.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.30
  */
 public class BetInitialisationDialog{
     private boolean result; // Αποτέλεσμα επιτυχίας αρχικοποίησης

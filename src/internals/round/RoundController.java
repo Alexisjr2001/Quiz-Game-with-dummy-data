@@ -114,8 +114,6 @@ public class RoundController {
     /**
      * Επιστρέφει το πλήθος των τύπων των γύρων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomType()}.
      *
-     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστραφεί 0 εαν έχουν "εξαντληθεί" οι τύποι των γύρων
-     * (μέχρι ο διαχειριστής της κλάσης να έχει κάνει reshuffle()).
      * @return πλήθος των τύπων των γύρων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomType()}
      */
     public int getRemainingRoundsNumber(){

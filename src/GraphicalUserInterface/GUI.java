@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.12.28
+ * @version 2021.01.11
  */
 public class GUI {
     // Πεδία που αφορούν την λογική του παιχνιδιού
@@ -36,7 +36,7 @@ public class GUI {
     private JPanel gameLobbyPanel;  // Το panel του μενού εκκίνησης του παιχνιδιού
     private JPanel gameActionPanel; // Το panel στο οποίο διαδραματίζεται το παιχνίδι
 
-    // Στεθερές που αντιστοιχούν στα ονόματα των panel στο CardLayout του κυρίου παραθύρου
+    // Σταθερές που αντιστοιχούν στα ονόματα των panel στο CardLayout του κυρίου παραθύρου
     private final String MAIN_MENU = "MainMenu";
     private final String PLAYER_MANAGE = "PlayerManagement";
     private final String GAME_LOBBY = "GameLobby";
@@ -421,9 +421,5 @@ public class GUI {
         mainWindow.setLocationRelativeTo(null);
     }
 
-
-    public static void main(String[] args) { // TODO: DEBUGGING -- REMOVE IN FINAL
-        (new GUI()).begin();
-    }
 }
 

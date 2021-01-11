@@ -17,6 +17,11 @@ import java.util.HashSet;
  * Αν τα επιλεγμένα ονόματα δεν είναι όλα διαφορετικά μεταξύ τους θα εμφανιστεί παράθυρο σφάλματος και δεν θα τερματιστεί αυτόματα η επιλογή.
  *
  * Αν το παράθυρο κλείσει χωρίς να πατηθεί το κουμπί με την περιγραφή "ΟΚ" επιστρέφεται null.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.30
  */
 public class PlayerSelectionDialog{
     private String[] selectedPlayerNames; // Τα ονόματα των παιχτών που παίζουν

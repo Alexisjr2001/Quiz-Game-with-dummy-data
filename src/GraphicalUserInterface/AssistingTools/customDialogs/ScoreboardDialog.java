@@ -10,6 +10,11 @@ import java.awt.*;
  *
  * Η πρόσβαση σε παράθυρα διαλόγου γίνεται και μέσω της χρήσης της στατικής μεθόδου {@code showTableDialog} τρέχουσας κλάσης,
  * όπου δεν απαιτείται η δημιουργία αντικειμένου.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2021.01.11
  */
 public class ScoreboardDialog{
     private JDialog baseDialog; // Το JDialog που "επεκτείνεται" μέσω σύνθεσης

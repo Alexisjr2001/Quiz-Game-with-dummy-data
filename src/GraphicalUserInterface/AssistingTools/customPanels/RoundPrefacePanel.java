@@ -10,6 +10,11 @@ import java.awt.event.ActionListener;
  * Η κλάση RoundPrefacePanel υλοποιεί (με σύνθεση) ένα JPanel που εμφανίζει πληροφορίες για έναν γύρο, πριν αυτός αρχίσει.
  * Σε αυτό εμφανίζονται: το όνομα του γύρου και οι πληροφορίες σχετικά με τον γύρο.
  * Επίσης, περιλαμβάνει ένα κουμπί.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.30
  */
 public class RoundPrefacePanel{
     private JPanel basePanel; // Το JPanel που "επεκτείνεται" μέσω σύνθεσης

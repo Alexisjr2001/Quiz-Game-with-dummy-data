@@ -1,9 +1,4 @@
 import GraphicalUserInterface.GUI;
-import consoleUI.ConsoleInteraction;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Υλοποιεί την μοναδική μέθοδο main της εφαρμογής και αποτελεί σημείο εκκίνησης του προγράμματος.
@@ -11,7 +6,7 @@ import java.awt.event.ActionListener;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.12.3
+ * @version 2021.01.21
  */
 public class Main {
 
