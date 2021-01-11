@@ -20,7 +20,7 @@ public class RightAnswer extends Round {
      * @param questionNumber αριθμός ερωτήσεων που θα πρέπει να απαντηθούν σε αυτό τον γύρο.
      */
     public RightAnswer(QuestionLibrary questionStore, int questionNumber) {
-        super(questionStore,1, 1, questionNumber);
+        super(questionStore,1, 2, questionNumber);
     }
 
     /**
@@ -38,7 +38,7 @@ public class RightAnswer extends Round {
      */
     @Override
     public String getRoundDescription(){
-        return "Άν ο παίκτης απαντήσει σωστά κερδίζει 1000 πόντους";
+        return "Άν ο παίκτης απαντήσει σωστά κερδίζει 1000 πόντους.";
     }
 
 

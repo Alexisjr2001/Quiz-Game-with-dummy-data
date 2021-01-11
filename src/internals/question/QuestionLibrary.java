@@ -1,8 +1,7 @@
 package internals.question;
 
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Stack;
+import java.io.*;
+import java.util.*;
 
 /**
  * Η κλάση {@code QuestionLibrary} μοντελοποιεί την έννοια της "βιβλιοθήκης" ερωτήσεων.
@@ -11,7 +10,7 @@ import java.util.Stack;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.11.29
+ * @version 2020.12.31
  */
 
 public class QuestionLibrary {
@@ -20,7 +19,7 @@ public class QuestionLibrary {
     private boolean automaticShuffle;   // Αποθηκεύει την επιλογή που δόθηκε ως όρισμα στον κατασκευαστή για αυτόματο "ανακάτεμα".
 
     /**
-     * Τυπικός κατασκευαστής της κλάσης. Αρχικοποιεί τα δεδομένα της κλάσης.
+     * Κατασκευαστής της κλάσης, για τυχαία δεδομένα. Αρχικοποιεί τα δεδομένα της κλάσης με "τυχαία" δεδομένα (ερωτήσεις με πρότυπη μορφή με σκοπό τον έλεγχο της κλάσης).
      * @param automaticShuffle κατάσταση αυτόματου "ανακατέματος". true για ενεργοποίηση, false διαφορετικά.
      */
 
@@ -28,6 +27,20 @@ public class QuestionLibrary {
         this.automaticShuffle = automaticShuffle;
         categoryStore = new HashMap<>();
         loadQuestions(); // "Φόρτωση" ερωτήσεων στην κλάση.
+        reshuffle(); // Πρέπει αμέσως μετά την δημιουργία να μπορώ να πάρω τυχαίες κατηγορίες, οπότε κάνω τυχαιοποίηση τους.
+    }
+
+    /**
+     * Κατασκευαστής της κλάσης, για ανάγνωση δεδομένων απο αρχείο. Αρχικοποιεί τα δεδομένα της κλάσης φορτώνοντας ερωτήσεις απο αρχείο χρησιμοποιώντας την μέθοδο loadQuestionFromFile.
+     * @param automaticShuffle κατάσταση αυτόματου "ανακατέματος". true για ενεργοποίηση, false διαφορετικά.
+     * @param questionFile Όνομα αρχείου απο όπου θα φορτωθούν οι ερωτήσεις
+     * @throws IOException Σε περίπτωση που υπάρχει πρόβλημα κατά το άνοιγμα και διάβασμα από το αρχείο κειμένου
+     */
+
+    public QuestionLibrary(boolean automaticShuffle, String questionFile) throws IOException {
+        this.automaticShuffle = automaticShuffle;
+        categoryStore = new HashMap<>();
+        loadQuestionFromFile(questionFile); // Φόρτωση ερωτήσεων στην κλάση.
         reshuffle(); // Πρέπει αμέσως μετά την δημιουργία να μπορώ να πάρω τυχαίες κατηγορίες, οπότε κάνω τυχαιοποίηση τους.
     }
 
@@ -84,9 +97,6 @@ public class QuestionLibrary {
     /**
      * Επιστρέφεται το πλήθος των κατηγοριών ερωτήσεων που είναι διαθέσιμες για επιστροφή απο την μέθοδο {@code getRandomQuestionCategory()}.
      *
-     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστρέφει 0 εαν έχουν "εξαντληθεί" οι κατηγορίες
-     * (μέχρι ο διαχειριστής της κλάσης να έχει κάνει reshuffle()).
-     *
      * @return αριθμό των κατηγοριών που απομένουν για επιστροφή απο την μέθοδο {@code getRandomQuestionCategory()}.
      */
 
@@ -140,6 +150,71 @@ public class QuestionLibrary {
             QuestionCategory temp = new QuestionCategory(categoryName, questionTempStore, true);
             categoryStore.put(temp.getCategoryName(), temp); // Αντιστοιχίζω όνομα κατηγορίας με αντικείμενο κατηγορίας
         }
+    }
+
+
+    /**
+     * Διαβάζει τις ερωτήσεις καθώς και τα σχετικά τους δεδομένα.
+     * Η κάθε γραμμή του αρχείου έχει την εξής γραμμογράφηση:
+     * Όνομα_Κατηγορίας, Εκφώνηση_Ερώτησης, Απάντηση1, Απάντηση2, Απάντηση3, Απάντηση4, Σωστή_Απάντηση, ImageFileName/Null
+     * χωρισμένα με ένα tab.
+     * Παρατήρηση: Το ImageFileName πρέπει να είναι Null εάν πρόκειται για ερώτηση χωρίς εικόνα. Επίσης, το ImageFileName αποτελεί πλήρες όνομα της εικόνας στον φάκελο Images (σε επίπεδο project).
+     * @param fileName Το όνομα του αρχείου κειμένου, από όπου θα διαβάσουμε όλες τις ερωτήσεις.
+     * @throws IOException Σε περίπτωση που υπάρχει πρόβλημα κατά το άνοιγμα και διάβασμα από το αρχείο κειμένου.
+     */
+    public void loadQuestionFromFile(String fileName) throws IOException {
+        //Η δομή αυτή αποθηκεύει όλες τις ερωτήσεις της κάθε κατηγορίας
+        //Το String αναπαριστά το όνομα της κατηγορίας
+        //Το ArrayList αποθηκεύει τις ερωτήσεις της κατηγορίας
+        HashMap<String, ArrayList<Question>> temp = new HashMap<>();
+        String[] answers = new String[4]; //Πίνακας συμβολοσειρών που περιέχει τις απαντήσεις της κάθε ερώτησης
+        Question question;
+
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String aLine;
+                while ((aLine = br.readLine()) != null) {
+
+                    String[] parts = aLine.split("\t"); //Διαχωρισμός της γραμμής σε κομμάτια με βάση το tab
+
+                    answers = new String[4];
+                    for (int i = 2; i < 6; i++) {//Αποθηκεύω τις απαντήσεις της ερώτησης
+                        answers[i - 2] = parts[i];
+                    }
+
+                    //Δημιουργία ερώτησης
+                    if (parts[7].equals("Null")) { //ερώτηση χωρίς εικόνα
+                        question = new Question(parts[1], answers, parts[6], parts[0]);
+                    } else { //ερώτηση με εικόνα
+                        question = new ImageQuestion(parts[1], answers, parts[6], parts[0], parts[7]);
+                    }
+
+                    ArrayList<Question> questions = temp.get(parts[0]);
+
+                    if (questions == null) {  //Έλεγχος εάν είναι η πρώτη φορά που έχουμε αυτή την κατηγορία και εκτέλεση των απαιτούμενων ενεργειών
+                        questions = new ArrayList<>();
+                        temp.put(parts[0], questions);
+                    }
+
+                    questions.add(question); //Προσθέτω την ερώτηση στην κατηγορία που ανήκει
+                }
+
+                for (Map.Entry<String, ArrayList<Question>> e : temp.entrySet()) { //Διατρέχουμε το HashMap με όνομα temp
+                    /* Μετατροπή του ArrayList της κάθε κατηγορίας σε array */
+                    Question[] questionsOfCategory = new Question[e.getValue().size()];
+
+                    questionsOfCategory = e.getValue().toArray(questionsOfCategory);
+
+                    //Δημιουργία της κατηγορίας
+                    QuestionCategory aQuestionCategory = new QuestionCategory(e.getKey(), questionsOfCategory, true);
+                    // Αποθήκευση της κατηγορίας στην δομή που περιέχει όλες τις κατηγορίες
+                    categoryStore.put(aQuestionCategory.getCategoryName(), aQuestionCategory);
+                }
+
+            } catch (IOException e){
+                throw e;
+            } catch (Exception e){
+                throw new IOException("Σφάλμα κατά την αποκωδικοποίηση του αρχείου");
+            }
     }
 
 }

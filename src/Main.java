@@ -1,4 +1,4 @@
-import consoleUI.ConsoleInteraction;
+import GraphicalUserInterface.GUI;
 
 /**
  * Υλοποιεί την μοναδική μέθοδο main της εφαρμογής και αποτελεί σημείο εκκίνησης του προγράμματος.
@@ -6,7 +6,7 @@ import consoleUI.ConsoleInteraction;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2020.12.3
+ * @version 2021.01.21
  */
 public class Main {
 
@@ -20,8 +20,7 @@ public class Main {
      * @param args Ορίσματα κονσόλας, δεν χρησιμοποιούνται
      */
     public static void main(String[] args) {
-        ConsoleInteraction playGame = new ConsoleInteraction(); // Δημιουργία περιβάλλοντος
-        playGame.beginApp(); // Εκκίνηση περιβάλλοντος
-        System.out.println("Αντίο...");
+        GUI playGame = new GUI(); // Δημιουργία περιβάλλοντος
+        playGame.begin(); // Εκκίνηση περιβάλλοντος
     }
 }

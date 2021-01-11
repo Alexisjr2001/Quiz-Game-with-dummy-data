@@ -1,5 +1,6 @@
 package internals.round;
 
+import internals.question.ImageQuestion;
 import internals.question.Question;
 import internals.question.QuestionLibrary;
 
@@ -55,7 +56,7 @@ public abstract class Round {
     public abstract String getRoundDescription();
 
     /**
-     * Επιστρέφει true, αν έχει τελειώσει (έχει χρησιμοποιηθεί ο αριθμός των ερωτήσεων που δόθηκε ως όρισμα στην κατασκευή)
+     * Επιστρέφει true, αν έχει τελειώσει ο γύρος(έχει χρησιμοποιηθεί ο αριθμός των ερωτήσεων που δόθηκε ως όρισμα στην κατασκευή)
      * Επιστρέφει false, σε διαφορετική περίπτωση.
      * @return boolean τιμή ανάλογα με το αν έχει τελειώσει ο γύρος.
      */
@@ -76,7 +77,7 @@ public abstract class Round {
         }
 
         questionAnswers = null; /* Την συγκεκριμένη μεταβλητή την θέτουμε ίση με null,
-        ώστε να είναι σε θέση να υποδεχτεί την πιθανές απαντήσεις της νέας ερώτησης.
+        ώστε να είναι σε θέση να υποδεχτεί τις πιθανές απαντήσεις της νέας ερώτησης.
         Επίσης, σηματοδοτεί ότι δεν έχει γίνει αρχικοποίηση του πίνακα με τις απαντήσεις της νέας ερώτησης. */
 
         return this;
@@ -155,7 +156,7 @@ public abstract class Round {
      */
 
     public String getRightQuestionAnswer(){
-        if (questionNumber > 0){ //
+        if (questionNumber > 0){
             if (roundQuestion == null){ // Είναι η πρώτη ερώτηση που επιστρέφεται, άρα πρέπει να γίνει ένα proceed για σωστή λειτουργία.
                 proceed();
             }
@@ -180,6 +181,23 @@ public abstract class Round {
             }
 
             return roundQuestion.getCategory();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Επιστρέφει αντίγραφο αντικειμένου της ερώτησης σε αυτό το στάδιο του γύρου της οποίας οι απαντήσεις έχουν τυχαία
+     * σειρά, σύμφωνα με την μέθοδο getQuestionAnswers της παρούσας κλάσης
+     * @return Επιστρέφει αντίγραφο αντικειμένου της ερώτησης σε αυτό το στάδιο του γύρου της οποίας οι απαντήσεις έχουν τυχαία σειρά ή null σε περίπτωση που έχουν τελειώσει οι ερωτήσεις
+     */
+    public Question getQuestionWithRandomizedAnswers(){
+        if (questionNumber > 0){ // Δεν έχουν τελειώσει οι ερωτήσεις
+            if (roundQuestion instanceof ImageQuestion){
+                return new ImageQuestion(getQuestion(), getQuestionAnswers(), getRightQuestionAnswer(), getQuestionCategory(), ((ImageQuestion)roundQuestion).getImageIcon());
+            } else {
+                return new Question(getQuestion(), getQuestionAnswers(), getRightQuestionAnswer(), getQuestionCategory());
+            }
         } else {
             return null;
         }

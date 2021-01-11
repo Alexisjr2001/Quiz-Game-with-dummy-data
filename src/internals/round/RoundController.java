@@ -84,6 +84,9 @@ public class RoundController {
         availableRoundTypes.clear(); // Αγνοώ τους τύπους που δεν έχουν εμφανιστεί για να τους συμπεριλάβω όλους εκ νέου.
         availableRoundTypes.add(new RightAnswer(questionStore, numberOfQuestionsPerRound));
         availableRoundTypes.add(new Bet(questionStore, numberOfQuestionsPerRound));
+        availableRoundTypes.add(new StopChronometer(questionStore, numberOfQuestionsPerRound, 5));
+        availableRoundTypes.add(new QuickAnswer(questionStore, numberOfQuestionsPerRound));
+        availableRoundTypes.add(new Thermometer(questionStore, numberOfQuestionsPerRound));
     }
 
     /**
@@ -111,8 +114,6 @@ public class RoundController {
     /**
      * Επιστρέφει το πλήθος των τύπων των γύρων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomType()}.
      *
-     * Αν το automaticReshuffle == false τότε υπάρχει η περίπτωση να επιστραφεί 0 εαν έχουν "εξαντληθεί" οι τύποι των γύρων
-     * (μέχρι ο διαχειριστής της κλάσης να έχει κάνει reshuffle()).
      * @return πλήθος των τύπων των γύρων που απομένουν για επιστροφή απο την μέθοδο {@code getRandomType()}
      */
     public int getRemainingRoundsNumber(){
