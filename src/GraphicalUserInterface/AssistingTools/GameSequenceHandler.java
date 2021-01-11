@@ -32,6 +32,7 @@ public class GameSequenceHandler {
     private int[] totalPlayerGains; // Ο πίνακας που αποθηκεύει τον αριθμό των πόντων που έχει συγκεντρώσει ο παίχτης στην διάρκεια του παιχνιδιού (όλων των γύρων)
 
     private JDialog timeRemainingDialog; // Ο διάλογος χρονομέτρου
+    private String currentRightAnswer; // Η σωστή απάντηση για την τρέχουσα ερώτηση
 
     /**
      * Ο τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
@@ -126,6 +127,7 @@ public class GameSequenceHandler {
 
             if (!currentRound.isOver()) { // Υπάρχει πρώτος γύρος
                 currentQuestionPanel = QuestionPanel.constructQuestionPanel(currentRound.getQuestionWithRandomizedAnswers(), selectedPlayerNames);
+                currentRightAnswer = currentRound.getRightQuestionAnswer();
             }
         }
 
@@ -151,6 +153,7 @@ public class GameSequenceHandler {
             /* Μετάβαση στην επόμενη ερώτηση */
             currentRound.proceed();
             currentQuestionPanel = QuestionPanel.constructQuestionPanel(currentRound.getQuestionWithRandomizedAnswers(), selectedPlayerNames);
+            currentRightAnswer = currentRound.getRightQuestionAnswer();
 
             StaticTools.switchPanelTo(basePanel, new RoundPrefacePanel(currentRound, new ActionListener() { // Εμφάνιση οδηγιών γύρου
                 @Override
@@ -228,7 +231,6 @@ public class GameSequenceHandler {
             });
 
             timeRemainingDialog.setVisible(true);
-            //timeRemainingDialog.toBack();
             return true;
         } else if (currentRound instanceof QuickAnswer){ // Περίπτωση γύρου QuickAnswer
             return true; // Καμία αρχικοποίηση δεν είναι απαραίτητη
@@ -309,7 +311,7 @@ public class GameSequenceHandler {
                     timeRemainingDialog.dispose(); // Αν έχω γύρο σταμάτησε το χρονόμετρο, κλείνω τον διάλογο χρονομέτρου.
                 }
 
-                JOptionPane.showMessageDialog(basePanel, "Η σωστή απάντηση ήταν: " + currentRound.getRightQuestionAnswer(), "Σωστή απάντηση", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(basePanel, "Η σωστή απάντηση ήταν: " + currentRightAnswer, "Σωστή απάντηση", JOptionPane.INFORMATION_MESSAGE);
                 proceedToNextQuestion();
             }
 
