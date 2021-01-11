@@ -4,7 +4,7 @@ import internals.question.Question;
 import internals.question.QuestionLibrary;
 
 /**
- * Η {@code Thermometer} επεκτείνει την {@code Round}, μοντελοποιώντας τον τύπο γύρου Θερμόμετρο.
+ * Η {@code QuickAnswer} επεκτείνει την {@code Round}, μοντελοποιώντας τον τύπο γύρου Θερμόμετρο.
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
