@@ -170,7 +170,6 @@ public class QuestionLibrary {
         String[] answers = new String[4]; //Πίνακας συμβολοσειρών που περιέχει τις απαντήσεις της κάθε ερώτησης
         Question question;
 
-        try {
             try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
                 String aLine;
                 while ((aLine = br.readLine()) != null) {
@@ -211,12 +210,11 @@ public class QuestionLibrary {
                     categoryStore.put(aQuestionCategory.getCategoryName(), aQuestionCategory);
                 }
 
+            } catch (IOException e){
+                throw e;
+            } catch (Exception e){
+                throw new IOException("Σφάλμα κατά την αποκωδικοποίηση του αρχείου");
             }
-        } catch (IOException e){
-            throw new IOException(e.getMessage());
-        } catch (Exception e){
-            throw new IOException("Σφάλμα κατά την αποκωδικοποίηση του αρχείου");
-        }
     }
 
 }

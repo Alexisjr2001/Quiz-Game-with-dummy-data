@@ -173,25 +173,48 @@ class QuickAnswerTest extends RoundTest{
 
     @Test
     void answerQuestion1() {
-        String[] answers = {"Βόρεια Αμερική","Ασία","Νότια Αμερική","Ωκεανία"};
+        /* Ο πρώτος και ο δεύτερος και ο τρίτος απαντάνε σωστά */
 
         assertEquals(1000,quickAnswer.answerQuestion("Βόρεια Αμερική"));
 
         assertEquals(500,quickAnswer.answerQuestion("Βόρεια Αμερική"));
 
+        assertEquals(0,quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
     }
 
     @Test
     void answerQuestion2() {
+        /* Ο πρώτος απαντάει σωστά και ο δεύτερος απαντάει λανθασμένα και ο τρίτος απαντάει σωστά */
+
         assertEquals(1000,quickAnswer.answerQuestion("Βόρεια Αμερική"));
 
         assertEquals(0,quickAnswer.answerQuestion("Ασία"));
+
+        assertEquals(500,quickAnswer.answerQuestion("Βόρεια Αμερική"));
 
     }
 
 
     @Test
     void answerQuestion3() {
+        /* Ο πρώτος απαντάει λανθασμένα και ο δεύτερος απαντάει σωστά και ο τρίτος απαντάει σωστά */
+
+        assertEquals(0,quickAnswer.answerQuestion("Νότια Αμερική"));
+
+        assertEquals(1000,quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
+        assertEquals(500, quickAnswer.answerQuestion("Βόρεια Αμερική"));
+
+
+    }
+
+    @Test
+    void answerQuestion4() {
+        /* Ο πρώτος απαντάει λανθασμένα και ο δεύτερος απαντάει λανθασμένα και ο τρίτος απαντάει σωστά */
+
+        assertEquals(0,quickAnswer.answerQuestion("Ωκεανία"));
+
         assertEquals(0,quickAnswer.answerQuestion("Νότια Αμερική"));
 
         assertEquals(1000,quickAnswer.answerQuestion("Βόρεια Αμερική"));
@@ -199,12 +222,17 @@ class QuickAnswerTest extends RoundTest{
     }
 
     @Test
-    void answerQuestion4() {
+    void answerQuestion5() {
+        /* Ο πρώτος και ο δεύτερος και ο τρίτος απαντάνε λανθασμένα */
+
         assertEquals(0,quickAnswer.answerQuestion("Ωκεανία"));
 
         assertEquals(0,quickAnswer.answerQuestion("Νότια Αμερική"));
 
+        assertEquals(0,quickAnswer.answerQuestion("Ασία"));
+
     }
+
 
     @Override
     QuickAnswer getObject() {

@@ -145,4 +145,26 @@ class QuestionLibraryTest {
 
         assertNull(questionLibrary.getRandomQuestionCategory());
     }
+
+    @Test
+    void loadQuestionFromFile(){
+
+        // Εδώ ελέγχεται η περίπτωση που το αρχείο κειμένου έχει μη έγκυρη μορφή
+        try {
+            questionLibrary.loadQuestionFromFile("TestLoadFile.txt");
+            fail("Θα έπρεπε να έχει επιστραφεί ένα IOException");
+        }
+        catch (IOException e){
+
+        }
+
+        // Εδώ ελέγχεται η περίπτωση που υπάρχει αδυναμία στο άνοιγμα του αρχείου
+        try {
+            questionLibrary.loadQuestionFromFile("InvalidFile.txt");
+            fail("Θα έπρεπε να έχει επιστραφεί ένα IOException");
+        }
+        catch (IOException e){
+
+        }
+    }
 }
