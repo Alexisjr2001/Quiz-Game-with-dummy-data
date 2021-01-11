@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
- * @version 2021.1.2
+ * @version 2021.1.11
  */
 
 public class Thermometer extends Round{

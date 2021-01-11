@@ -9,6 +9,11 @@ import java.awt.event.*;
 /**
  * Η κλάση GameSelectionDialog υλοποιεί ένα παράθυρο διαλόγου (μέσω σύνθεσης) που ζητάει στον χρήστη να κάνει επιλογές σχετικά με παραμέτρους του παιχνιδιού, πριν αυτό ξεκινήσει.
  * Οι ρυθμίσεις αφορούν τον αριθμό παιχτών, αριθμό γύρων και αριθμό ερωτήσεων ανα γύρο.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.30
  */
 public class GameSelectionDialog{
     private int[] settings; // Πίνακας με ρυθμίσεις που έχει επιλέξει ο χρήστης

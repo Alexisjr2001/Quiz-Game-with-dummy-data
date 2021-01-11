@@ -13,6 +13,11 @@ import java.awt.event.ActionListener;
  * Η κλάση RenameDialog επεκτείνει (μέσω σύνθεσης) την κλάση JDialog και υλοποιεί την λειτουργία του να ζητάει
  * απο τον χρήστη να επιλέξει το όνομα του παίκτη του οποίου την το όνομα θέλει να αλλάξει και το νέο όνομα και εκτελεί
  * την ενέργεια αυτή εφόσον το νέο όνομα δεν είναι όνομα ήδη υπάρχον παίχτη.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.30
  */
 public class RenameDialog {
     private JDialog baseDialog; // Το JDialog που "επεκτείνεται" μέσω σύνθεσης

@@ -14,6 +14,11 @@ import java.util.HashMap;
  * Η κλάση QuestionPanel επεκτείνει (με σύνθεση) ένα JPanel που αντιστοιχεί σε μία ερώτηση.
  * Σε αυτό εμφανίζονται: η εκφώνηση της ερώτησης, οι πιθανές απαντήσεις και η απάντηση που επέλεξε ο κάθε παίχτης.
  * (η απάντηση που έδωσε κάποιος παίχτης μπορεί να αλλάξει με την χρήση της κατάλληλης μεθόδου).
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2021.01.11
  */
 public class QuestionPanel{
     private HashMap<String, JLabel> playerAnswers; // Αντιστοίχηση ονόματος παίχτη και JLabel που εμφανίζει την απάντηση του

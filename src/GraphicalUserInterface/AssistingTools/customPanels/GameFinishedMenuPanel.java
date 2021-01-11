@@ -16,6 +16,11 @@ import java.util.ArrayList;
  * Η οθόνη τέλους παιχνιδιού περιέχει τα αποτελέσματα του παιχνιδιού δηλαδή το τελικό (άθροισμα απο κάθε γύρο) σκορ
  * κάθε παίχτη και (αν είναι παιχνίδι πολλών παιχτών) τον νικητή του παιχνιδιού (μπορεί να είναι και ισοπαλία όπου
  * θεωρούνται και οι δύο παίχτες νικητές).
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2021.01.11
  */
 public class GameFinishedMenuPanel {
     private JPanel internalPanel; // Το JPanel που "επεκτείνεται" μέσω σύνθεσης

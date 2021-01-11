@@ -4,7 +4,7 @@ import internals.question.Question;
 import internals.question.QuestionLibrary;
 
 /**
- * Η {@code QuickAnswer} επεκτείνει την {@code Round}, μοντελοποιώντας τον τύπο γύρου Θερμόμετρο.
+ * Η {@code QuickAnswer} επεκτείνει την {@code Round}, μοντελοποιώντας τον τύπο γύρου Γρήγορη απάντηση.
  * @author Ioannis Baraklilis
  * @author Alexandros Tsingos
  *
@@ -12,7 +12,7 @@ import internals.question.QuestionLibrary;
  */
 
 public class QuickAnswer extends Round{
-    private boolean questionAnsweredCorrectly; // T/F ανάλογα με το εάν έχει απαντηθεί σωστά η ερώτηση
+    private int questionAnsweredCorrectly; // Ο αριθμός των παιχτών που έχουν απαντήσει σωστά, ανάλογα με το εάν έχει απαντηθεί σωστά η ερώτηση
 
     /**
      * Τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης.
@@ -47,14 +47,14 @@ public class QuickAnswer extends Round{
      */
     @Override
     public Round proceed() {
-        questionAnsweredCorrectly = false; //Εφόσον προχωράμε σε καινούργια ερώτηση, αρχικοποιώ την μεταβλητή σε false
+        questionAnsweredCorrectly = 0; //Εφόσον προχωράμε σε καινούργια ερώτηση, αρχικοποιώ την μεταβλητή σε 0
         return super.proceed();
     }
 
     /**
      * Υπολογίζει και επιστρέφει τον αριθμό πόντων που (πιθανόν μπορεί να) κερδίζει ο παίχτης δεδομένης της απάντησης που έδωσε
      * και της σειράς που απάντησε την ερώτηση.
-     * Αν ο παίχτης είναι ο πρώτος που απαντάει σωστά τότε επιστρέφονται 1000 πόντοι, ενώ εάν είναι ο δεύτερος επιστρέφονται 500.
+     * Αν ο παίχτης είναι ο πρώτος που απαντάει σωστά τότε επιστρέφονται 1000 πόντοι, ενώ εάν είναι ο δεύτερος επιστρέφονται 500, διαφορετικά επιστρέφονται 0.
      * Αν ο παίχτης δώσει λανθασμένη απάντηση τότε επιστρέφονται μηδέν πόντοι.
      * @param answer Η απάντηση που έδωσε ο παίχτης.
      * @return αριθμός πόντων που αντιστοιχούν στην δοθείσα απάντηση του ορίσματος.
@@ -64,12 +64,15 @@ public class QuickAnswer extends Round{
 
         if(temp!=null){// Άν υπάρχουν διαθέσιμες ερωτήσεις
             if(temp.isRight(answer)){ //Αν ο παίχτης απάντησε σωστά
-                if(!questionAnsweredCorrectly){ //Αν είναι ο πρώτος που απαντάει σωστά
-                    questionAnsweredCorrectly = true;
+                if(questionAnsweredCorrectly == 0){ //Αν είναι ο πρώτος που απαντάει σωστά
+                    questionAnsweredCorrectly++;
                     return 1000;
                 }
-                else { // Ο δεύτερος που απαντάει σωστά
+                else if (questionAnsweredCorrectly == 1){ // Ο δεύτερος που απαντάει σωστά
+                    questionAnsweredCorrectly++;
                     return 500;
+                } else { // Έχει νόημα να απαντάνε 2 παίχτες, οπότε επιστρέφω 0
+                    return 0;
                 }
             }
             else { //Απάντησε λάθος

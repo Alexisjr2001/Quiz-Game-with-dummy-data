@@ -13,6 +13,11 @@ import java.awt.event.ActionListener;
  * Η κλάση DeleteDialog επεκτείνει (μέσω σύνθεσης) την κλάση JDialog και υλοποιεί την λειτουργία του να ζητάει
  * απο τον χρήστη να επιλέξει το όνομα του παίκτη του οποίου την εγγραφή απο το παιχνίδι θέλει να διαγράψει
  * και εκτελεί την ενέργεια αυτή.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2020.12.30
  */
 public class DeleteDialog {
     private JDialog baseDialog; // Το JDialog που "επεκτείνεται" μέσω σύνθεσης

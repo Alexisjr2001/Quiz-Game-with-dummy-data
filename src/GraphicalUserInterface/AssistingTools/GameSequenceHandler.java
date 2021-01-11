@@ -14,6 +14,11 @@ import java.awt.event.*;
 /**
  * Η κλάση GameSequenceHandler αποτελεί την μονάδα που χειρίζεται το "λειτουργικό" μέρος του παιχνιδιού.
  * Δηλαδή αρμοδιότητα της είναι να εμφανίζει τις ερωτήσεις και δέχεται απαντήσεις και να εμφανίζει σχετικά αποτελέσματα.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2021.01.11
  */
 public class GameSequenceHandler {
     private final RoundController roundController; // Χρησιμοποιούμε το playerController για διαχείριση των δεδομένων των παιχτών
@@ -102,7 +107,7 @@ public class GameSequenceHandler {
      * @param givenAnswer η απάντηση που επέλεξε ο παίχτης
      * @return ο αριθμός των πόντων που απέκτησε ο παίκτης απο την απάντηση που έδωσε
      */
-    public int playerAnswer(String playerName, String givenAnswer){
+    private int playerAnswer(String playerName, String givenAnswer){
         // Εκτέλεση της απάντησης και υπολογισμός βαθμολογίας που (πιθανώς) κερδίζεται
         int gains = StaticTools.calculatePlayerAnswerGain(playerName, givenAnswer, currentRound);
 

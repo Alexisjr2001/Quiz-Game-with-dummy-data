@@ -7,6 +7,11 @@ import java.awt.*;
 
 /**
  * Η κλάση StaticTools αποτελεί μία βοηθητική κλάση και παρέχει ένα σύνολο στατικών μεθόδων για την υποβοήθηση ανάπτυξης γραφικού περιβάλλοντος.
+ *
+ * @author Ioannis Baraklilis
+ * @author Alexandros Tsingos
+ *
+ * @version 2021.01.11
  */
 public class StaticTools {
 
