@@ -25,6 +25,15 @@ import java.util.ArrayList;
 public class GameFinishedMenuPanel {
     private JPanel internalPanel; // Το JPanel που "επεκτείνεται" μέσω σύνθεσης
 
+    /**
+     * Ο τυπικός κατασκευαστής που αρχικοποιεί τα δεδομένα της κλάσης και εκτελεί τις κατάλληλες ενέργειες.
+     * Παράλληλα, δημιουργεί το JFrame που μπορεί να ληφθεί μέσω της μεθόδου getPanel().
+     *
+     * @param selectedPlayerNames τα ονόματα των παιχτών που είχαν επιλεγεί να παίξουν στο παιχνίδι
+     * @param totalPlayerGains οι συνολικές βαθμολογίες των παιχτών στο τέλος του παιχνιδιού
+     * @param playerController ο PlayerController του παιχνιδιού
+     * @param returnToMenuButtonListener ο ActionListener που πρέπει να ενεργοποιηθεί απο το στοιχείο το οποίο επιστρέφει σε προηγούμενο μενού
+     */
     public GameFinishedMenuPanel(String[] selectedPlayerNames, int[] totalPlayerGains, PlayerController playerController, ActionListener returnToMenuButtonListener){
         internalPanel = new JPanel(new BorderLayout());
 

@@ -112,7 +112,7 @@ public class QuestionPanel{
     }
 
     /**
-     * Σημειώνεται (εμφανίζεται) στο panel η απάντηση που έδωσε ο χρήστης.
+     * Σημειώνεται (εμφανίζεται) στο panel ο αριθμός απάντησης που έδωσε ο χρήστης.
      * @param playerName ο χρήστης που απάντησε
      * @param answerNumber ο αριθμός της απάντησης που έδωσε
      */
@@ -131,6 +131,7 @@ public class QuestionPanel{
     /**
      * Κατασκευάζει και επιστέφει JPanel που αντιστοιχεί σε μία ερώτηση.
      * @param question ερώτηση σύμφωνα με την οποία θα κατασκευαστεί JPanel
+     * @param selectedPlayerNames Τα ονόματα των επιλεγμένων παιχτών.
      * @return το JPanel που αντιστοιχεί στην ερώτηση του ορίσματος
      */
     public static QuestionPanel constructQuestionPanel(Question question, String[] selectedPlayerNames){
