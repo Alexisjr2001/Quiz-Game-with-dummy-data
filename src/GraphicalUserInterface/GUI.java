@@ -100,7 +100,7 @@ public class GUI {
                 int response = JOptionPane.showConfirmDialog(mainWindow, "Δεν υπάρχει αρχείο με στατιστικά.\n Πάτησε Yes για να δημιουργηθεί νέο αρχείο,NO για νέα προσπάθεια ανοίγματος αρχείου (αν υπάρχει) για ακύρωση ή Cancel για έξοδο απο το πρόγραμμα.", "Σφάλμα", JOptionPane.YES_NO_CANCEL_OPTION);
                 if (response == 0){ // Δημιουργία νέων στατιστικών
                     break;
-                } else if (response == 1) { // Έξοδος
+                } else if (response == 2) { // Έξοδος
                     System.exit(-1);
                 }
                 // Δημιουργία νέου αρχείο στο τέλος εκτέλεσης
