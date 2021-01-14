@@ -301,7 +301,7 @@ public class GUI {
                     return;
                 }
 
-                int[] settings = GameSelectionDialog.showGameSettingSelection(mainWindow, 2, 1, 20, 1, 20, 1); // Επιλογή ρυθμίσεων για το παιχνίδι
+                int[] settings = GameSelectionDialog.showGameSettingSelection(mainWindow, 2, 1, 5, 1, 6, 1); // Επιλογή ρυθμίσεων για το παιχνίδι
 
                 if (settings != null){ // Έλεγχος για το αν ο χρήστης επέλεξε όντως ρυθμίσεις και δεν πάτησε το κουμπί "Cancel" ή το Χ.
                     try {
